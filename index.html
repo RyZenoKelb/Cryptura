@@ -185,16 +185,16 @@
                             <i class="fas fa-user-secret"></i>
                             <h3 data-i18n="encode.secret.title">Contenu Secret</h3>
                             <p data-i18n="encode.secret.description">Message ou fichier à dissimuler</p>
-                                <option value="aes">AES-256-GCM</option>
-                                <option value="ultra">UltraCrypte™</option>
-                            </select>
+                            <textarea id="secret-text" data-i18n="encode.secret.placeholder" placeholder="Votre message confidentiel..."></textarea>
+                            <div class="file-option">
+                                <label data-i18n="encode.secret.file">Ou sélectionner un fichier : </label>
+                                <input type="file" id="secret-file">
+                            </div>
                         </div>
-                        
+                    </div>
+                    
+                    <div class="options-grid">
                         <div class="option-group">
-                            <label>Mot de passe de chiffrement</label>
-                            <div class="password-input">
-                                <input type="password" id="encode-password" placeholder="Phrase de passe sécurisée">
-                                <button type="button" class="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
