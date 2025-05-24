@@ -506,26 +506,26 @@ class ObscuraApp {
             console.log('✅ Encodage terminé avec succès');
             
         } catch (error) {
+            this.hideProgress('encode-progress');
+            console.error('❌ Erreur d\'encodage:', error);
+            this.showMessage(`Erreur d'encodage: ${error.message}`, 'error');
+        }
+    }
 
     validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
-        if (!carrierFile) {');
-            return { valid: false, message: 'Veuillez sélectionner un fichier porteur' };lt = await this.steganography.autoDetectAndExtract(decodeFile);
+        if (!carrierFile) {
+            return { valid: false, message: 'Veuillez sélectionner un fichier porteur' };
         }
         
         if (!secretText && !secretFile) {
-            return { valid: false, message: 'Veuillez entrer un message ou sélectionner un fichier secret' }; else {
-        }    this.updateProgress('decode-progress', `Extraction via ${detectionMode}...`);
-        this.steganography.extractData(decodeFile, detectionMode);
-        if (cryptoLevel !== 'none' && !password) { method: detectionMode, confidence: 75 };
+            return { valid: false, message: 'Veuillez entrer un message ou sélectionner un fichier secret' };
+        }
+        
+        if (cryptoLevel !== 'none' && !password) {
             return { valid: false, message: 'Un mot de passe est requis pour le chiffrement' };
         }
         
-        if (cryptoLevel === 'ultra' && password.length < 8) {let detectedMethod = result.method;
-            return { valid: false, message: 'UltraCrypte nécessite un mot de passe d\'au moins 8 caractères' };
-        }
-        xtraites: ${extractedData.length} octets via ${detectedMethod}`);
-        return { valid: true };
-    }e passe fourni
+        if (cryptoLevel === 'ultra' && password.length < 8) {
 
     mapCryptoComplexity(cryptoLevel) {cryptoType = 'Aucun';
         const mapping = {
