@@ -54,17 +54,17 @@ class ObscuraApp {
                     const lang = e.currentTarget.dataset.lang;
                     this.i18n.setLanguage(lang);
                     languageDropdown.classList.remove('active');
+                    
+                    // Mettre à jour l'indicateur visuel
+                    document.querySelectorAll('.language-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    e.currentTarget.classList.add('active');
                 });
             });
             
             // Close dropdown on outside click
             document.addEventListener('click', () => {
-                languageDropdown.classList.remove('active');
-            });
-        }
-        
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 this.themeManager.toggleTheme();

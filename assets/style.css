@@ -130,6 +130,18 @@ body::before {
     content: '';
     position: fixed;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--bg-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern Background with theme support */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100%;
     height: 100%;
@@ -148,39 +160,27 @@ body::before {
     display: flex;
     flex-direction: column;
     position: relative;
+    transition: background-color 0.3s ease, 
+                border-color 0.3s ease, 
+                color 0.3s ease,
+                box-shadow 0.3s ease,
+                backdrop-filter 0.3s ease;
 }
 
-/* Modern Header */
+/* Modern Header - Fixed for theme consistency */
 .header {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(var(--bg-white-rgb), 0.8);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-light);
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 50;
+    transition: var(--transition-base);
 }
 
 .header-content {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.logo {
-    width: 40px;
-    height: 40px;
-    color: var(--primary-500);
-    transition: var(--transition-base);
 }
 
 .logo:hover {
@@ -313,38 +313,38 @@ body::before {
         linear-gradient(to bottom, 
             #b22234 0%, #b22234 7.69%, 
             #ffffff 7.69%, #ffffff 15.38%, 
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--bg-gray);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    font-weight: 500;
+            #b22234 15.38%, #b22234 23.08%, 
+            #ffffff 23.08%, #ffffff 30.77%, 
+            #b22234 30.77%, #b22234 38.46%, 
+            #ffffff 38.46%, #ffffff 46.15%, 
+            #b22234 46.15%, #b22234 53.85%, 
+            #ffffff 53.85%, #ffffff 61.54%, 
+            #b22234 61.54%, #b22234 69.23%, 
+            #ffffff 69.23%, #ffffff 76.92%, 
+            #b22234 76.92%, #b22234 84.62%, 
+            #ffffff 84.62%, #ffffff 92.31%, 
+            #b22234 92.31%, #b22234 100%
+        );
+    position: relative;
 }
 
-.status-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.language-flag.us::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 53.8%;
+    background: #3c3b6e;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* Modern Navigation */
-.nav-container {
-    background: var(--bg-white);
-    border-bottom: 1px solid var(--border-light);
-    padding: 0;
-}
-
+.language-flag.us::after {
+    content: '★';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    color: #ffffff;
+    font-size: 6px;
 .nav-content {
     max-width: 1200px;
     margin: 0 auto;
