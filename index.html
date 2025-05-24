@@ -385,112 +385,120 @@
                         <div class="ultra-info">
                             <h3 data-i18n="ultra.features.title">Technologies Avancées</h3>
                             <ul class="feature-list">
-                    </div>
-                    
-                    <div class="ultra-controls">
-                        <div class="option-group">
-                            <label data-i18n="ultra.complexity.label">Niveau de Complexité</label>
-                            <select id="ultra-complexity" data-i18n-options>
-                                <option value="standard" data-i18n="ultra.complexity.standard">Standard (Rapide)</option>
-                                <option value="enhanced" data-i18n="ultra.complexity.enhanced">Renforcé (Équilibré)</option>
-                                <option value="paranoid" data-i18n="ultra.complexity.paranoid">Paranoïaque (Maximum)</option>
-                            </select>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.postquantum">Chiffrement post-quantique certifié</span></li>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.chaos">Algorithmes chaotiques propriétaires</span></li>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.differential">Protection contre l'analyse différentielle</span></li>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.sidechannel">Résistance aux attaques par canaux cachés</span></li>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.noise">Masquage par bruit cryptographique</span></li>
+                                <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.deniable">Déni plausible intégré</span></li>
+                            </ul>
                         </div>
                         
-                        <div class="option-group">
-                            <label data-i18n="ultra.masterkey.label">Phrase de passe maîtresse</label>
-                            <input type="password" id="ultra-master-key" data-i18n="ultra.masterkey.placeholder" placeholder="Phrase longue et complexe requise...">
-                            <div class="key-strength">
-                                <div class="strength-bar">
-                                    <div class="strength-fill"></div>
+                        <div class="ultra-controls">
+                            <div class="option-group">
+                                <label data-i18n="ultra.complexity.label">Niveau de Complexité</label>
+                                <select id="ultra-complexity" data-i18n-options>
+                                    <option value="standard" data-i18n="ultra.complexity.standard">Standard (Rapide)</option>
+                                    <option value="enhanced" data-i18n="ultra.complexity.enhanced">Renforcé (Équilibré)</option>
+                                    <option value="paranoid" data-i18n="ultra.complexity.paranoid">Paranoïaque (Maximum)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label data-i18n="ultra.masterkey.label">Phrase de passe maîtresse</label>
+                                <input type="password" id="ultra-master-key" data-i18n="ultra.masterkey.placeholder" placeholder="Phrase longue et complexe requise...">
+                                <div class="key-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill"></div>
+                                    </div>
+                                    <span class="strength-text">Entropie insuffisante</span>
                                 </div>
-                                <span class="strength-text">Entropie insuffisante</span>
+                            </div>
+                            
+                            <div class="ultra-options">
+                                <label><input type="checkbox" id="ultra-stealth"> <span data-i18n="ultra.options.stealth">Mode furtif maximum</span></label>
+                                <label><input type="checkbox" id="ultra-deniable"> <span data-i18n="ultra.options.deniable">Déni plausible activé</span></label>
+                                <label><input type="checkbox" id="ultra-volatile"> <span data-i18n="ultra.options.volatile">Protection anti-dump mémoire</span></label>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Help Panel -->
+                <div class="panel" id="help-panel">
+                    <div class="panel-header">
+                        <h1 class="panel-title" data-i18n="help.title">Documentation</h1>
+                        <p class="panel-subtitle" data-i18n="help.subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
+                    </div>
+                    
+                    <div class="help-content">
+                        <div class="help-section">
+                            <h3><i class="fas fa-shield-alt"></i> <span data-i18n="help.encode.title">Guide d'Encodage</span></h3>
+                            <p>La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.</p>
+                            <ol>
+                                <li>Sélectionnez un fichier porteur de haute qualité</li>
+                                <li>Préparez votre contenu secret (texte ou fichier)</li>
+                                <li>Choisissez la méthode adaptée à votre fichier</li>
+                                <li>Configurez le chiffrement selon vos besoins</li>
+                                <li>Lancez l'encodage et sauvegardez le résultat</li>
+                            </ol>
+                        </div>
                         
-                        <div class="ultra-options">
-                            <label><input type="checkbox" id="ultra-stealth"> <span data-i18n="ultra.options.stealth">Mode furtif maximum</span></label>
-                            <label><input type="checkbox" id="ultra-deniable"> <span data-i18n="ultra.options.deniable">Déni plausible activé</span></label>
-                            <label><input type="checkbox" id="ultra-volatile"> <span data-i18n="ultra.options.volatile">Protection anti-dump mémoire</span></label>
+                        <div class="help-section">
+                            <h3><i class="fas fa-search"></i> <span data-i18n="help.decode.title">Guide d'Extraction</span></h3>
+                            <p>L'extraction automatisée détecte et récupère les données cachées intelligemment.</p>
+                            <ol>
+                                <li>Importez le fichier suspect ou encodé</li>
+                                <li>Activez la détection automatique</li>
+                                <li>Fournissez le mot de passe si nécessaire</li>
+                                <li>Analysez les résultats obtenus</li>
+                                <li>Exportez les données récupérées</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3><i class="fas fa-lock"></i> <span data-i18n="help.ultra.title">UltraCrypte™ Advanced</span></h3>
+                            <p>Notre technologie propriétaire offre une protection inégalée contre toutes formes d'attaques.</p>
+                            <ul>
+                                <li><strong>Post-Quantique</strong> : Résistant aux futurs ordinateurs quantiques</li>
+                                <li><strong>Multi-Couches</strong> : Combinaison d'algorithmes en cascade</li>
+                                <li><strong>Chaos Algorithmique</strong> : Transformations imprévisibles</li>
+                                <li><strong>Bruit Cryptographique</strong> : Masquage des signatures</li>
+                                <li><strong>Déni Plausible</strong> : Protection contre la coercition</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3><i class="fas fa-exclamation-triangle"></i> <span data-i18n="help.practices.title">Meilleures Pratiques</span></h3>
+                            <ul>
+                                <li>Utilisez des phrases de passe longues et uniques</li>
+                                <li>Activez le chiffrement pour les données sensibles</li>
+                                <li>Testez systématiquement l'extraction après encodage</li>
+                                <li>Conservez vos mots de passe en lieu sûr</li>
+                                <li>Privilégiez UltraCrypte™ pour la sécurité maximale</li>
+                                <li>Évitez les fichiers compressés comme porteurs</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
 
-            <!-- Help Panel -->
-            <div class="panel" id="help-panel">
-                <div class="panel-header">
-                    <h1 class="panel-title" data-i18n="help.title">Documentation</h1>
-                    <p class="panel-subtitle" data-i18n="help.subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
-                </div>
-                
-                <div class="help-content">
-                    <div class="help-section">
-                        <h3><i class="fas fa-shield-alt"></i> <span data-i18n="help.encode.title">Guide d'Encodage</span></h3>
-                        <p>La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.</p>
-                        <ol>
-                            <li>Sélectionnez un fichier porteur de haute qualité</li>
-                            <li>Préparez votre contenu secret (texte ou fichier)</li>
-                            <li>Choisissez la méthode adaptée à votre fichier</li>
-                            <li>Configurez le chiffrement selon vos besoins</li>
-                            <li>Lancez l'encodage et sauvegardez le résultat</li>
-                        </ol>
+            <!-- Modern Footer -->
+            <footer class="footer">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <span data-i18n="footer.copyright">© 2024 Obscura</span>
+                        <span class="separator">•</span>
+                        <span data-i18n="footer.subtitle">Stéganographie Professionnelle</span>
+                        <span class="separator">•</span>
+                        <span data-i18n="footer.mode">Mode Hors-ligne</span>
                     </div>
-                    
-                    <div class="help-section">
-                        <h3><i class="fas fa-search"></i> <span data-i18n="help.decode.title">Guide d'Extraction</span></h3>
-                        <p>L'extraction automatisée détecte et récupère les données cachées intelligemment.</p>
-                        <ol>
-                            <li>Importez le fichier suspect ou encodé</li>
-                            <li>Activez la détection automatique</li>
-                            <li>Fournissez le mot de passe si nécessaire</li>
-                            <li>Analysez les résultats obtenus</li>
-                            <li>Exportez les données récupérées</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="help-section">
-                        <h3><i class="fas fa-lock"></i> <span data-i18n="help.ultra.title">UltraCrypte™ Advanced</span></h3>
-                        <p>Notre technologie propriétaire offre une protection inégalée contre toutes formes d'attaques.</p>
-                        <ul>
-                            <li><strong>Post-Quantique</strong> : Résistant aux futurs ordinateurs quantiques</li>
-                            <li><strong>Multi-Couches</strong> : Combinaison d'algorithmes en cascade</li>
-                            <li><strong>Chaos Algorithmique</strong> : Transformations imprévisibles</li>
-                            <li><strong>Bruit Cryptographique</strong> : Masquage des signatures</li>
-                            <li><strong>Déni Plausible</strong> : Protection contre la coercition</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="help-section">
-                        <h3><i class="fas fa-exclamation-triangle"></i> <span data-i18n="help.practices.title">Meilleures Pratiques</span></h3>
-                        <ul>
-                            <li>Utilisez des phrases de passe longues et uniques</li>
-                            <li>Activez le chiffrement pour les données sensibles</li>
-                            <li>Testez systématiquement l'extraction après encodage</li>
-                            <li>Conservez vos mots de passe en lieu sûr</li>
-                            <li>Privilégiez UltraCrypte™ pour la sécurité maximale</li>
-                            <li>Évitez les fichiers compressés comme porteurs</li>
-                        </ul>
+                    <div class="footer-stats">
+                        <span id="files-processed">0</span> <span data-i18n="footer.files">fichiers traités</span>
                     </div>
                 </div>
-            </div>
-        </main>
-
-        <!-- Modern Footer -->
-        <footer class="footer">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <span data-i18n="footer.copyright">© 2024 Obscura</span>
-                    <span class="separator">•</span>
-                    <span data-i18n="footer.subtitle">Stéganographie Professionnelle</span>
-                    <span class="separator">•</span>
-                    <span data-i18n="footer.mode">Mode Hors-ligne</span>
-                </div>
-                <div class="footer-stats">
-                    <span id="files-processed">0</span> <span data-i18n="footer.files">fichiers traités</span>
-                </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
 
     <!-- Loading Overlay -->
