@@ -124,6 +124,33 @@ class ObscuraApp {
             tab.addEventListener('click', (e) => {
                 const tabName = e.currentTarget.dataset.tab;
                 this.showPanel(tabName);
+                console.log(`📱 Basculement vers ${tabName}`);
+            });
+        });
+
+        // Boutons d'upload de fichiers
+        document.getElementById('carrier-upload').addEventListener('click', () => {
+            document.getElementById('carrier-file').click();
+        });
+
+        document.getElementById('secret-upload').addEventListener('click', () => {
+            if (!document.getElementById('secret-text').value) {
+                document.getElementById('secret-file').click();
+            }
+        });
+
+        document.getElementById('decode-upload').addEventListener('click', () => {
+            document.getElementById('decode-file').click();
+        });
+
+        // Boutons d'action principaux
+        document.getElementById('encode-btn').addEventListener('click', () => {
+            this.handleEncode();
+        });
+
+        document.getElementById('decode-btn').addEventListener('click', () => {
+            this.handleDecode();
+        });
 
         document.getElementById('analyze-btn').addEventListener('click', () => {
             this.handleAnalyze();
@@ -492,33 +519,6 @@ class ObscuraApp {
             // Stéganographie
             this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`);
             
-            const resultFile = await this.steganography.hideData(carrierFile, secretData, stegoMethod, {
-                quality: 'high',
-                method: stegoMethod
-            });
-            
-            // Finalisation
-            this.hideProgress('encode-progress');
-            this.showEncodeResult(resultFile, stegoMethod, cryptoLevel);
-            this.filesProcessed++;
-            this.updateStats();
-            
-            console.log('✅ Encodage terminé avec succès');
-            
-        } catch (error) {
-            this.hideProgress('encode-progress');
-            console.error('❌ Erreur d\'encodage:', error);
-            this.showMessage(`Erreur d'encodage: ${error.message}`, 'error');
-        }
-    }
-
-    validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
-        if (!carrierFile) {
-            return { valid: false, message: 'Veuillez sélectionner un fichier porteur' };
-        }
-        
-        if (!secretText && !secretFile) {
-            return { valid: false, message: 'Veuillez entrer un message ou sélectionner un fichier secret' };
         }
         
         if (cryptoLevel !== 'none' && !password) {
