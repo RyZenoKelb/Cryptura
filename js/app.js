@@ -103,149 +103,149 @@ class ObscuraApp {
 
         // Boutons d'upload de fichiers
         document.getElementById('carrier-upload').addEventListener('click', () => {
+            document.getElementById('carrier-file').click();
+        });
+
+        document.getElementById('secret-upload').addEventListener('click', () => {
+            if (!document.getElementById('secret-text').value) {
                 document.getElementById('secret-file').click();
             }
-        });        // Gestion des changements de fichiers
-{
-        document.getElementById('decode-upload').addEventListener('click', () => {;
+        });
+
+        document.getElementById('decode-upload').addEventListener('click', () => {
             document.getElementById('decode-file').click();
         });
 
         // Boutons d'action principaux
         document.getElementById('encode-btn').addEventListener('click', () => {
             this.handleEncode();
-        });nge', (e) => {
+        });
 
         document.getElementById('decode-btn').addEventListener('click', () => {
             this.handleDecode();
-        });        // Surveillance des changements de méthode de stéganographie
-addEventListener('change', (e) => {
+        });
+
         document.getElementById('analyze-btn').addEventListener('click', () => {
             this.handleAnalyze();
         });
-        // Surveillance du niveau de chiffrement
-        document.getElementById('reset-encode').addEventListener('click', () => {l').addEventListener('change', (e) => {
+
+        document.getElementById('reset-encode').addEventListener('click', () => {
             this.resetEncode();
         });
 
-        // Boutons de téléchargement (ajoutés dynamiquement)eillance des options avancées
-        document.addEventListener('click', (e) => {ument.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            if (e.target.id === 'download-btn') {       checkbox.addEventListener('change', () => {
-                // Géré dans showEncodeResult                this.updateOptionsInfo();
+        // Boutons de téléchargement (ajoutés dynamiquement)
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'download-btn') {
+                // Géré dans showEncodeResult
             } else if (e.target.id === 'save-extracted') {
                 // Géré dans showDecodeResult
             }
         });
-pDragAndDrop() {
-        // Toggle visibilité des mots de passeon du drag & drop...');
+
+        // Toggle visibilité des mots de passe
         document.querySelectorAll('.toggle-password').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 this.togglePasswordVisibility(e);
-            });es.forEach(zone => {
-        });            // Prévention du comportement par défaut
-eave', 'drop'].forEach(eventName => {
-        // Vérification force mot de passe UltraCryptetDefaults, false);
+            });
+        });
+
+        // Vérification force mot de passe UltraCrypte
         const ultraKeyInput = document.getElementById('ultra-master-key');
         if (ultraKeyInput) {
-            ultraKeyInput.addEventListener('input', (e) => {isuel lors du drag
-                this.checkPasswordStrength(e.target.value);ragenter', 'dragover'].forEach(eventName => {
-            });                zone.addEventListener(eventName, () => {
+            ultraKeyInput.addEventListener('input', (e) => {
+                this.checkPasswordStrength(e.target.value);
+            });
         }
 
         // Gestion des changements de fichiers
         document.getElementById('carrier-file').addEventListener('change', (e) => {
-            this.handleFileSelect(e.target, 'carrier');ragleave', 'drop'].forEach(eventName => {
-        });                zone.addEventListener(eventName, () => {
-List.remove('dragover');
+            this.handleFileSelect(e.target, 'carrier');
+        });
+
         document.getElementById('secret-file').addEventListener('change', (e) => {
             this.handleFileSelect(e.target, 'secret');
         });
 
-        document.getElementById('decode-file').addEventListener('change', (e) => {'drop', (e) => {
-            this.handleFileSelect(e.target, 'decode');t files = e.dataTransfer.files;
+        document.getElementById('decode-file').addEventListener('change', (e) => {
+            this.handleFileSelect(e.target, 'decode');
         });
 
         // Surveillance des changements de méthode de stéganographie
         document.getElementById('stego-method').addEventListener('change', (e) => {
-            this.updateMethodInfo(e.target.value);=== 'carrier-upload') type = 'carrier';
-        });e = 'secret';
-lse if (zoneId === 'decode-upload') type = 'decode';
-        // Surveillance du niveau de chiffrement   
-        document.getElementById('crypto-level').addEventListener('change', (e) => {     if (type) {
-            this.updateCryptoInfo(e.target.value);             this.handleFileDrop(files[0], type);
-        });               }
-                }
+            this.updateMethodInfo(e.target.value);
+        });
+
+        // Surveillance du niveau de chiffrement
+        document.getElementById('crypto-level').addEventListener('change', (e) => {
+            this.updateCryptoInfo(e.target.value);
+        });
+
         // Surveillance des options avancées
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 this.updateOptionsInfo();
             });
-        });n', (e) => {
-    }/ Ctrl+E : Encodage
- === 'e') {
-    setupDragAndDrop() {
-        console.log('🎯 Configuration du drag & drop...');ode');
-        
-        const dropZones = document.querySelectorAll('.upload-zone');/ Ctrl+D : Décodage  
-        .key === 'd') {
-        dropZones.forEach(zone => {
-            // Prévention du comportement par défautode');
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                zone.addEventListener(eventName, this.preventDefaults, false);/ Ctrl+U : UltraCrypte
-            });ey && e.key === 'u') {
+        });
+    }
 
-            // Highlight visuel lors du dragracrypte');
+    setupDragAndDrop() {
+        console.log('🎯 Configuration du drag & drop...');
+        
+        const dropZones = document.querySelectorAll('.upload-zone');
+        
+        dropZones.forEach(zone => {
+            // Prévention du comportement par défaut
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, this.preventDefaults, false);
+            });
+
+            // Highlight visuel lors du drag
             ['dragenter', 'dragover'].forEach(eventName => {
-                zone.addEventListener(eventName, () => {/ Ctrl+H : Aide
-                    zone.classList.add('dragover');=== 'h') {
+                zone.addEventListener(eventName, () => {
+                    zone.classList.add('dragover');
                 }, false);
             });
 
-            ['dragleave', 'drop'].forEach(eventName => { // Escape : Reset/Annulation
-                zone.addEventListener(eventName, () => {       else if (e.key === 'Escape') {
-                    zone.classList.remove('dragover');                this.cancelOperations();
+            ['dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, () => {
+                    zone.classList.remove('dragover');
                 }, false);
-            });        });
+            });
 
             // Gestion du drop
-            zone.addEventListener('drop', (e) => {S FICHIERS ==========
+            zone.addEventListener('drop', (e) => {
                 const files = e.dataTransfer.files;
-                if (files.length > 0) {    preventDefaults(e) {
+                if (files.length > 0) {
                     const zoneId = zone.id;
                     let type = '';
                     
                     if (zoneId === 'carrier-upload') type = 'carrier';
-                    else if (zoneId === 'secret-upload') type = 'secret';andleFileSelect(input, type) {
-                    else if (zoneId === 'decode-upload') type = 'decode';        if (input.files.length > 0) {
-                    input.files[0], type);
+                    else if (zoneId === 'secret-upload') type = 'secret';
+                    else if (zoneId === 'decode-upload') type = 'decode';
+                    
                     if (type) {
                         this.handleFileDrop(files[0], type);
                     }
-                }leFileDrop(file, type) {
-            }); * 1024; // 100MB
+                }
+            });
         });
     }
 
-    setupKeyboardShortcuts() {/ Validation de la taille
-        document.addEventListener('keydown', (e) => {        if (file.size > maxSize) {
-            // Ctrl+E : Encodagevolumineux: ${this.formatFileSize(file.size)} (max 100MB)`, 'error');
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+E : Encodage
             if (e.ctrlKey && e.key === 'e') {
                 e.preventDefault();
                 this.showPanel('encode');
-            }        // Validation du type selon l'usage
+            }
             // Ctrl+D : Décodage  
             else if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
                 this.showPanel('decode');
-            }rface
-            // Ctrl+U : UltraCrypte= file;
+            }
+            // Ctrl+U : UltraCrypte
             else if (e.ctrlKey && e.key === 'u') {
                 e.preventDefault();
-                this.showPanel('ultracrypte');/ Actions spécifiques selon le type
-            }if (type === 'secret') {
-            // Ctrl+H : Aideest sélectionné
-            else if (e.ctrlKey && e.key === 'h') {ret-text').value = '';
-                e.preventDefault();   }
                 this.showPanel('help');        
             }ions contextuelles
             // Escape : Reset/Annulation
