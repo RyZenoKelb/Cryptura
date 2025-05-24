@@ -258,109 +258,109 @@ body::before {
     top: 50%;
     left: 50%;
     width: 0;
-    box-shadow: var(--shadow-lg);
-    padding: 0.5rem 0;
-    min-width: 120px;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
+    height: 0;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
     transition: var(--transition-base);
+    z-index: -1;
 }
 
-.language-dropdown.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+.theme-toggle:hover::before {
+    width: 100px;
+    height: 100px;
 }
 
+.theme-toggle:hover i {
+    transform: rotate(20deg) scale(1.1);
+}
+
+[data-theme="dark"] .theme-toggle:hover i.fa-sun {
+    color: #fbbf24;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+[data-theme="light"] .theme-toggle:hover i.fa-moon {
+    color: #6366f1;
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+.language-toggle:hover {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    border-color: var(--border-medium);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.toggle-text {
+    font-size: 0.75rem;
+    display: none;
+}
+
+/* Language Selector */
+.language-selector {
+    position: relative;
+}
+
+.language-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);*/
+    box-shadow: var(--shadow-lg);       linear-gradient(to bottom, 
+    padding: 0.5rem 0;            #b22234 0%, #b22234 7.69%, 
+    min-width: 120px;ffff 7.69%, #ffffff 15.38%, 
+    z-index: 100;4 15.38%, #b22234 23.08%, 
+    opacity: 0;8%, #ffffff 30.77%, 
+    visibility: hidden;234 30.77%, #b22234 38.46%, 
+    transform: translateY(-10px);%, #ffffff 46.15%, 
+    transition: var(--transition-base);2234 53.85%, 
+}, 
+69.23%, 
+.language-dropdown.active {3%, #ffffff 76.92%, 
+    opacity: 1;34 84.62%, 
+    visibility: visible;4.62%, #ffffff 92.31%, 
+    transform: translateY(0);           #b22234 92.31%, #b22234 100%
+}        );
+ relative;
 .language-option {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 0.75rem;
-    color: var(--text-secondary);
-    cursor: pointer;
+    color: var(--text-secondary);   top: 0;
+    cursor: pointer;    left: 0;
     transition: var(--transition-fast);
     font-size: 0.875rem;
 }
 
 .language-option:hover {
-    background: var(--bg-gray);
-    color: var(--text-primary);
+    background: var(--bg-gray);r {
+    color: var(--text-primary);;
 }
 
 .language-option.active {
-    background: var(--primary-500);
-    color: var(--text-white);
-}
-
+    background: var(--primary-500);   color: #ffffff;
+    color: var(--text-white);    font-size: 6px;
+}t: 1;
+px rgba(0,0,0,0.5);
 .language-flag {
     width: 16px;
-    height: 12px;
-    border-radius: 2px;
-    background-size: cover;
+    height: 12px;language-flag.en {
+    border-radius: 2px;    /* Remove old styles - this class is no longer used */
+    background-size: cover;: none;
     background-position: center;
 }
 
 .language-flag.fr {
     background-image: linear-gradient(to right, #002395 33%, #ffffff 33% 67%, #ed2939 67%);
-}
-
-.language-flag.us {
-    background: 
-        /* Red stripes */
-        linear-gradient(to bottom, 
-            #b22234 0%, #b22234 7.69%, 
-            #ffffff 7.69%, #ffffff 15.38%, 
-            #b22234 15.38%, #b22234 23.08%, 
-            #ffffff 23.08%, #ffffff 30.77%, 
-            #b22234 30.77%, #b22234 38.46%, 
-            #ffffff 38.46%, #ffffff 46.15%, 
-            #b22234 46.15%, #b22234 53.85%, 
-            #ffffff 53.85%, #ffffff 61.54%, 
-            #b22234 61.54%, #b22234 69.23%, 
-            #ffffff 69.23%, #ffffff 76.92%, 
-            #b22234 76.92%, #b22234 84.62%, 
-            #ffffff 84.62%, #ffffff 92.31%, 
-            #b22234 92.31%, #b22234 100%
-        );
-    position: relative;
-}
-
-.language-flag.us::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40%;
-    height: 53.8%;
-    background: #3c3b6e;
-}
-
-.language-flag.us::after {
-    content: '★';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    color: #ffffff;
-    font-size: 6px;
-    line-height: 1;
-    text-shadow: 0 0 1px rgba(0,0,0,0.5);
-}
-
-.language-flag.en {
-    /* Remove old styles - this class is no longer used */
-    display: none;
-}
-
-.status-badge {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+}   gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--bg-gray);
-    border: 1px solid var(--border-light);
+.language-flag.en {;
+    background: lid var(--border-light);
     border-radius: var(--radius-lg);
     font-size: 0.875rem;
     color: var(--text-secondary);
@@ -814,6 +814,48 @@ body::before {
 }
 
 .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: var(--radius-lg);
+}
+
+.progress-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* Result Areas */
+.result-area {
+    background: var(--bg-white);
+    border: 1px solid var(--success);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.result-area h3 {
+    color: var(--success);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.file-info,
+.extraction-info {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem 0;
