@@ -246,57 +246,62 @@ class ObscuraApp {
             // Ctrl+U : UltraCrypte
             else if (e.ctrlKey && e.key === 'u') {
                 e.preventDefault();
-                this.showPanel('help');        
-            }ions contextuelles
+                this.showPanel('ultracrypte');
+            }
+            // Ctrl+H : Aide
+            else if (e.ctrlKey && e.key === 'h') {
+                e.preventDefault();
+                this.showPanel('help');
+            }
             // Escape : Reset/Annulation
             else if (e.key === 'Escape') {
                 this.cancelOperations();
             }
-        });eganography.detectFileType(file);
-    }ase();
+        });
+    }
 
     // ========== GESTION DES FICHIERS ==========
-nst supportedTypes = {
-    preventDefaults(e) {    carrier: ['image', 'audio', 'video', 'document'],
-        e.preventDefault();re caché
+
+    preventDefaults(e) {
+        e.preventDefault();
         e.stopPropagation();
     }
 
-    handleFileSelect(input, type) {f (usage === 'carrier' && fileType === 'unknown') {
-        if (input.files.length > 0) {    this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
-            this.handleFileDrop(input.files[0], type);wMessage('Types supportés: Images (jpg, png, gif), Audio (mp3, wav), Vidéo (mp4, avi), Documents (pdf, txt)', 'info');
-        }       return false;
-    }        }
+    handleFileSelect(input, type) {
+        if (input.files.length > 0) {
+            this.handleFileDrop(input.files[0], type);
+        }
+    }
 
     handleFileDrop(file, type) {
         const maxSize = 100 * 1024 * 1024; // 100MB
         
         console.log(`📁 Fichier reçu: ${file.name} (${this.formatFileSize(file.size)}) -> ${type}`);
-        d);
-        // Validation de la tailleconst icon = zone.querySelector('i');
-        if (file.size > maxSize) {ySelector('h3');
-            this.showMessage(`Fichier trop volumineux: ${this.formatFileSize(file.size)} (max 100MB)`, 'error');'p');
+        
+        // Validation de la taille
+        if (file.size > maxSize) {
+            this.showMessage(`Fichier trop volumineux: ${this.formatFileSize(file.size)} (max 100MB)`, 'error');
             return;
         }
 
-        // Validation du type selon l'usageicon.className = 'fas fa-check-circle';
-        if (!this.validateFileType(file, type)) {olor = 'var(--success-color)';
+        // Validation du type selon l'usage
+        if (!this.validateFileType(file, type)) {
             return;
         }
 
-        // Stockage et mise à jour de l'interfaceif (small) {
-        this.currentFiles[type] = file;teganography.detectFileType(file);
-        this.updateUploadZone(type + '-upload', file);eType} - ${file.type || 'Type MIME inconnu'}`;
+        // Stockage et mise à jour de l'interface
+        this.currentFiles[type] = file;
+        this.updateUploadZone(type + '-upload', file);
         
         // Actions spécifiques selon le type
-        if (type === 'secret') {données
-            // Effacer le texte secret si un fichier est sélectionné{
-            document.getElementById('secret-text').value = ''; name: file.name,
-        }    size: file.size,
+        if (type === 'secret') {
+            // Effacer le texte secret si un fichier est sélectionné
+            document.getElementById('secret-text').value = '';
+        }
         
-        // Mise à jour des informations contextuellesified
-        this.updateFileInfo(type, file);   });
-    }        
+        // Mise à jour des informations contextuelles
+        this.updateFileInfo(type, file);
+    }
 
     validateFileType(file, usage) {
         const fileType = this.steganography.detectFileType(file);
@@ -304,18 +309,13 @@ nst supportedTypes = {
         
         // Types supportés selon l'usage
         const supportedTypes = {
-            carrier: ['image', 'audio', 'video', 'document'],type === 'carrier') {
-            secret: ['any'], // Tout type de fichier peut être cachér chaque méthode
-            decode: ['any']  // Tout fichier peut potentiellement contenir des données 'document-hidden'];
+            carrier: ['image', 'audio', 'video', 'document'],
+            secret: ['any'], // Tout type de fichier peut être caché
+            decode: ['any']  // Tout fichier peut potentiellement contenir des données
         };
         
-        if (usage === 'carrier' && fileType === 'unknown') {ds.forEach(method => {
-            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning'); const capacity = this.steganography.getCapacity(file, method);
-            this.showMessage('Types supportés: Images (jpg, png, gif), Audio (mp3, wav), Vidéo (mp4, avi), Documents (pdf, txt)', 'info');    if (capacity > 0) {
-            return false;ileSize(capacity);
-        }
-        
-        return true;
+        if (usage === 'carrier' && fileType === 'unknown') {
+            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
     }ject.keys(capacities).length > 0) {
 timées: `;
     updateUploadZone(zoneId, file) {const capList = Object.entries(capacities).map(([method, cap]) => 
