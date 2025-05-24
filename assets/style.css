@@ -54,20 +54,20 @@
     --bg-dark: #334155;
     --bg-darker: #020617;
     
-    /* Text Colors */ values for backdrop-filter */
-    --text-primary: #f1f5f9;42;
+    /* Background RGB values for backdrop-filter */
+    --bg-white-rgb: 15, 23, 42;
+    --bg-gray-rgb: 30, 41, 59;
+    
+    /* Text Colors */
+    --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
     --text-white: #f1f5f9;
-    --text-primary: #f1f5f9;
-    /* Border & Shadows */5e1;
+    
+    /* Border & Shadows */
     --border-light: #334155;
     --border-medium: #475569;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
-}   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
 /* Light Theme */0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 :root[data-theme="light"] {x -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
