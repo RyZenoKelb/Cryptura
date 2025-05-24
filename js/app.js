@@ -12,62 +12,62 @@ class ObscuraApp {
             decode: null
         };
         
+        // Initialize theme and i18n first
+        this.initializeCore();
+        
         console.log('🚀 Initialisation d\'Obscura v1.0');
         this.init();
     }
 
-    // ========== INITIALISATION ==========
+    // ========== CORE INITIALIZATION ==========
 
-    init() {
-        this.setupEventListeners();
-        this.setupDragAndDrop();
-        this.setupKeyboardShortcuts();
-        this.updateStats();
+    initializeCore() {
+        // Initialize theme manager
+        this.themeManager = new ThemeManager();
         
-        // Affichage du panneau initial
-        this.showPanel('encode');
+        // Initialize internationalization
+        this.i18n = new InternationalizationManager();
         
-        // Message de bienvenue
-        this.showMessage('Bienvenue dans Obscura - Stéganographie Ultra-Sécurisée', 'success');
+        // Make i18n globally available
+        window.i18n = this.i18n;
         
-        console.log('✅ Application initialisée avec succès');
+        // Setup theme and language event listeners
+        this.setupThemeAndLanguageHandlers();
+        
+        console.log('🎨 Systèmes core initialisés');
     }
 
-    setupEventListeners() {
-        console.log('🔧 Configuration des événements...');
+    setupThemeAndLanguageHandlers() {
+        // Language toggle functionality
+        const languageToggle = document.getElementById('language-toggle');
+        const languageDropdown = document.getElementById('language-dropdown');
         
-        // Navigation entre panneaux
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabName = e.currentTarget.dataset.tab;
-                this.showPanel(tabName);
-                console.log(`📱 Basculement vers ${tabName}`);
+        if (languageToggle && languageDropdown) {
+            languageToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
             });
-        });
+            
+            // Language options
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', (e) => {{
+                    const lang = e.currentTarget.dataset.lang;xtarea
+                    this.i18n.setLanguage(lang);
+                    languageDropdown.classList.remove('active');   return;
+                }); }
+            });            if (!document.getElementById('secret-text').value) {
+        }
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {e-upload').addEventListener('click', () => {
+            themeToggle.addEventListener('click', () => {
+                this.themeManager.toggleTheme();
+            });
+        }        // Boutons d'action principaux
+    }
 
-        // Boutons d'upload de fichiers
-        document.getElementById('carrier-upload').addEventListener('click', () => {
-            document.getElementById('carrier-file').click();
-        });
-
-        document.getElementById('secret-upload').addEventListener('click', (e) => {
-            // Ne pas ouvrir le sélecteur si on clique sur la textarea
-            if (e.target.tagName === 'TEXTAREA') {
-                return;
-            }
-            if (!document.getElementById('secret-text').value) {
-                document.getElementById('secret-file').click();
-            }
-        });
-
-        document.getElementById('decode-upload').addEventListener('click', () => {
-            document.getElementById('decode-file').click();
-        });
-
-        // Boutons d'action principaux
-        document.getElementById('encode-btn').addEventListener('click', () => {
-            this.handleEncode();
-        });
+    // ========== INITIALISATION ==========
 
         document.getElementById('decode-btn').addEventListener('click', () => {
             this.handleDecode();

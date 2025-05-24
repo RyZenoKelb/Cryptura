@@ -1078,25 +1078,74 @@ body::before {
 .message.info {
     background: rgba(59, 130, 246, 0.15);
     color: var(--info);
-    }
-    
-    .nav-tab span {
-        display: none;
-    }
+    border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
-/* Print Styles */
-@media print {
-    .header, .nav-container, .footer, .action-buttons {
-        display: none;
-    }
-    
-    .main-content {
-        padding: 0;
-        max-width: none;
-    }
-    
-    .panel {
-        display: block !important;
-    }
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 3px solid var(--border-light);
+    border-top: 3px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+[data-theme="light"] .loading-overlay {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+/* Utility Classes */
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {

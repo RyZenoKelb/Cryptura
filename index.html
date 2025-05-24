@@ -108,38 +108,38 @@
                 <div class="header-actions">
                     <div class="status-badge">
                         <div class="status-dot"></div>
-                        <span>Système actif</span>
+                        <span data-i18n="header.status">Système actif</span>
                     </div>
+                    
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button class="language-toggle" id="language-toggle">
+                            <i class="fas fa-globe"></i>
+                            <span class="toggle-text" data-i18n="settings.language">Langue</span>
+                        </button>
+                        <div class="language-dropdown" id="language-dropdown">
+                            <div class="language-option" data-lang="fr">
+                                <div class="language-flag fr"></div>
+                                <span data-i18n="settings.language.fr">Français</span>
+                            </div>
+                            <div class="language-option" data-lang="en">
+                                <div class="language-flag en"></div>
+                                <span data-i18n="settings.language.en">English</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-sun"></i>
+                        <span class="toggle-text" data-i18n="settings.theme.light">Mode clair</span>
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- Modern Navigation -->
         <nav class="nav-container">
-            <div class="nav-content">
-                <div class="nav-tabs">
-                    <button class="nav-tab active" data-tab="encode">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Encoder</span>
-                    </button>
-                    <button class="nav-tab" data-tab="decode">
-                        <i class="fas fa-search"></i>
-                        <span>Décoder</span>
-                    </button>
-                    <button class="nav-tab" data-tab="ultracrypte">
-                        <i class="fas fa-lock"></i>
-                        <span>UltraCrypte</span>
-                    </button>
-                    <button class="nav-tab" data-tab="help">
-                        <i class="fas fa-info-circle"></i>
-                        <span>Documentation</span>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
             <!-- Encode Panel -->
             <div class="panel active" id="encode-panel">
                 <div class="panel-header">
