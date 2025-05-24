@@ -608,6 +608,33 @@ class ObscuraApp {
             let finalData = extractedData;
             let cryptoType = 'Aucun';
             
+            if (password && password.length > 0) {
+                this.updateProgress('decode-progress', 'Tentative de déchiffrement...');
+                
+                const decryptResults = await this.attemptDecryption(extractedData, password);
+                if (decryptResults.success) {
+                    finalData = decryptResults.data;
+                    cryptoType = decryptResults.type;
+                    console.log(`🔓 Déchiffrement réussi: ${cryptoType}`);
+                }
+            }
+            
+            this.hideProgress('decode-progress');
+            this.showDecodeResult(finalData, detectedMethod, cryptoType, confidence);
+            
+            console.log('✅ Décodage terminé avec succès');
+            
+        } catch (error) {
+            this.hideProgress('decode-progress');
+            console.error('❌ Erreur de décodage:', error);
+            this.showMessage(`Erreur de décodage: ${error.message}`, 'error');
+        }
+    }
+
+    async attemptDecryption(data, password) {
+        const attempts = [
+            { method: 'ultra', type: 'UltraCrypte' },
+            { method: 'basic', type: 'AES-256' }
         ];
         
         for (const attempt of attempts) {
@@ -1021,33 +1048,6 @@ class ObscuraApp {
 
     resetUploadZone(zoneId, title, description, iconClass) {
         const zone = document.getElementById(zoneId);
-        const icon = zone.querySelector('i');
-        const titleElement = zone.querySelector('h3');
-        const descElement = zone.querySelector('p');
-        const small = zone.querySelector('small');
-        
-        icon.className = iconClass;
-        icon.style.color = 'var(--primary-color)';
-        titleElement.textContent = title;
-        descElement.textContent = description;
-        
-        if (small) {
-            small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
-        }
-        
-        delete zone.dataset.file;
-        zone.classList.remove('fade-in');
-    }
-
-    cancelOperations() {
-        // Annulation des opérations en cours
-        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');
-        progressElements.forEach(progress => {
-            this.hideProgress(progress.id);
-        });
-        
-        this.showMessage('Opérations annulées', 'warning');
-    }
 
     // ========== CHIFFREMENT DE BASE ==========
 
