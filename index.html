@@ -195,17 +195,41 @@
                     
                     <div class="options-grid">
                         <div class="option-group">
+                            <label data-i18n="encode.method.label">Méthode de Stéganographie</label>
+                            <select id="stego-method" data-i18n-options>
+                                <option value="lsb">LSB - Least Significant Bit</option>
+                                <option value="metadata">Métadonnées EXIF</option>
+                                <option value="audio-spread">Dispersion Spectrale Audio</option>
+                                <option value="video-frame">Frames Vidéo</option>
+                                <option value="document-hidden">Texte Invisible</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label data-i18n="encode.crypto.label">Niveau de Chiffrement</label>
+                            <select id="crypto-level" data-i18n-options>
+                                <option value="none" data-i18n="encode.crypto.none">Aucun chiffrement</option>
+                                <option value="aes">AES-256-GCM</option>
+                                <option value="ultra">UltraCrypte™</option>
+                            </select>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label data-i18n="encode.password.label">Mot de passe de chiffrement</label>
+                            <div class="password-input">
+                                <input type="password" id="encode-password" data-i18n="encode.password.placeholder" placeholder="Phrase de passe sécurisée">
+                                <button type="button" class="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
                         </div>
                         
                         <div class="option-group">
-                            <label>Options Avancées</label>
+                            <label data-i18n="encode.options.label">Options Avancées</label>
                             <div class="checkbox-group">
-                                <label><input type="checkbox" id="compress-data"> Compression des données</label>
-                                <label><input type="checkbox" id="add-noise"> Ajout de bruit cryptographique</label>
-                                <label><input type="checkbox" id="multi-layer"> Protection multi-couches</label>
+                                <label><input type="checkbox" id="compress-data"> <span data-i18n="encode.options.compress">Compression des données</span></label>
+                                <label><input type="checkbox" id="add-noise"> <span data-i18n="encode.options.noise">Ajout de bruit cryptographique</span></label>
+                                <label><input type="checkbox" id="multi-layer"> <span data-i18n="encode.options.multilayer">Protection multi-couches</span></label>
                             </div>
                         </div>
                     </div>
@@ -213,11 +237,11 @@
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="encode-btn">
                             <i class="fas fa-shield-alt"></i>
-                            Lancer l'encodage
+                            <span data-i18n="encode.button.start">Lancer l'encodage</span>
                         </button>
                         <button class="btn btn-secondary" id="reset-encode">
                             <i class="fas fa-undo"></i>
-                            Réinitialiser
+                            <span data-i18n="encode.button.reset">Réinitialiser</span>
                         </button>
                     </div>
                 </div>
@@ -226,28 +250,28 @@
                     <div class="progress-bar">
                         <div class="progress-fill"></div>
                     </div>
-                    <div class="progress-text">Encodage en cours...</div>
+                    <div class="progress-text" data-i18n="message.encoding">Encodage en cours...</div>
                 </div>
                 
                 <div class="result-area" id="encode-result" style="display: none;">
-                    <h3><i class="fas fa-check-circle"></i> Encodage Réussi</h3>
+                    <h3><i class="fas fa-check-circle"></i> <span data-i18n="encode.result.title">Encodage Réussi</span></h3>
                     <div class="file-info">
                         <div class="info-item">
-                            <span>Fichier généré :</span>
+                            <span data-i18n="encode.result.filename">Fichier généré :</span>
                             <span id="result-filename"></span>
                         </div>
                         <div class="info-item">
-                            <span>Taille finale :</span>
+                            <span data-i18n="encode.result.size">Taille finale :</span>
                             <span id="result-size"></span>
                         </div>
                         <div class="info-item">
-                            <span>Méthode utilisée :</span>
+                            <span data-i18n="encode.result.method">Méthode utilisée :</span>
                             <span id="result-method"></span>
                         </div>
                     </div>
                     <button class="btn btn-success" id="download-btn">
                         <i class="fas fa-download"></i>
-                        Télécharger le résultat
+                        <span data-i18n="encode.button.download">Télécharger le résultat</span>
                     </button>
                 </div>
             </div>
@@ -255,26 +279,26 @@
             <!-- Decode Panel -->
             <div class="panel" id="decode-panel">
                 <div class="panel-header">
-                    <h1 class="panel-title">Extraction & Analyse</h1>
-                    <p class="panel-subtitle">Détection et extraction intelligente de données cachées avec déchiffrement automatique</p>
+                    <h1 class="panel-title" data-i18n="decode.title">Extraction & Analyse</h1>
+                    <p class="panel-subtitle" data-i18n="decode.subtitle">Détection et extraction intelligente de données cachées avec déchiffrement automatique</p>
                 </div>
                 
                 <div class="form-section">
                     <div class="file-upload-area">
                         <div class="upload-zone" id="decode-upload">
                             <i class="fas fa-search"></i>
-                            <h3>Fichier à Analyser</h3>
-                            <p>Sélectionnez le fichier suspect ou encodé</p>
-                            <small>Tous formats supportés</small>
+                            <h3 data-i18n="decode.upload.title">Fichier à Analyser</h3>
+                            <p data-i18n="decode.upload.description">Sélectionnez le fichier suspect ou encodé</p>
+                            <small data-i18n="decode.upload.types">Tous formats supportés</small>
                             <input type="file" id="decode-file" hidden>
                         </div>
                     </div>
                     
                     <div class="options-grid">
                         <div class="option-group">
-                            <label>Mot de passe de déchiffrement</label>
+                            <label data-i18n="decode.password.label">Mot de passe de déchiffrement</label>
                             <div class="password-input">
-                                <input type="password" id="decode-password" placeholder="Phrase de passe (si chiffré)">
+                                <input type="password" id="decode-password" data-i18n="decode.password.placeholder" placeholder="Phrase de passe (si chiffré)">
                                 <button type="button" class="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -282,13 +306,13 @@
                         </div>
                         
                         <div class="option-group">
-                            <label>Mode de Détection</label>
-                            <select id="detection-mode">
-                                <option value="auto">Détection Automatique</option>
-                                <option value="lsb">Forcer LSB</option>
-                                <option value="metadata">Forcer Métadonnées</option>
-                                <option value="audio-spread">Forcer Audio</option>
-                                <option value="brute">Force Brute (exhaustif)</option>
+                            <label data-i18n="decode.detection.label">Mode de Détection</label>
+                            <select id="detection-mode" data-i18n-options>
+                                <option value="auto" data-i18n="decode.detection.auto">Détection Automatique</option>
+                                <option value="lsb" data-i18n="decode.detection.force.lsb">Forcer LSB</option>
+                                <option value="metadata" data-i18n="decode.detection.force.metadata">Forcer Métadonnées</option>
+                                <option value="audio-spread" data-i18n="decode.detection.force.audio">Forcer Audio</option>
+                                <option value="brute" data-i18n="decode.detection.brute">Force Brute (exhaustif)</option>
                             </select>
                         </div>
                     </div>
@@ -296,11 +320,11 @@
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="decode-btn">
                             <i class="fas fa-unlock"></i>
-                            Extraire les données
+                            <span data-i18n="decode.button.extract">Extraire les données</span>
                         </button>
                         <button class="btn btn-warning" id="analyze-btn">
                             <i class="fas fa-microscope"></i>
-                            Analyse forensique
+                            <span data-i18n="decode.button.analyze">Analyse forensique</span>
                         </button>
                     </div>
                 </div>
@@ -309,32 +333,32 @@
                     <div class="progress-bar">
                         <div class="progress-fill"></div>
                     </div>
-                    <div class="progress-text">Analyse en cours...</div>
+                    <div class="progress-text" data-i18n="message.decoding">Analyse en cours...</div>
                 </div>
                 
                 <div class="result-area" id="decode-result" style="display: none;">
-                    <h3><i class="fas fa-eye"></i> Données Extraites</h3>
+                    <h3><i class="fas fa-eye"></i> <span data-i18n="decode.result.title">Données Extraites</span></h3>
                     <div class="extracted-content">
                         <div class="content-preview" id="content-preview">
                             <!-- Contenu extrait affiché ici -->
                         </div>
                         <div class="extraction-info">
                             <div class="info-item">
-                                <span>Méthode détectée :</span>
+                                <span data-i18n="decode.result.method">Méthode détectée :</span>
                                 <span id="detected-type"></span>
                             </div>
                             <div class="info-item">
-                                <span>Taille extraite :</span>
+                                <span data-i18n="decode.result.size">Taille extraite :</span>
                                 <span id="extracted-size"></span>
                             </div>
                             <div class="info-item">
-                                <span>Type de chiffrement :</span>
+                                <span data-i18n="decode.result.crypto">Type de chiffrement :</span>
                                 <span id="detected-crypto"></span>
                             </div>
                         </div>
                         <button class="btn btn-success" id="save-extracted">
                             <i class="fas fa-save"></i>
-                            Sauvegarder l'extraction
+                            <span data-i18n="decode.button.save">Sauvegarder l'extraction</span>
                         </button>
                     </div>
                 </div>
@@ -343,39 +367,39 @@
             <!-- UltraCrypte Panel -->
             <div class="panel" id="ultracrypte-panel">
                 <div class="panel-header">
-                    <h1 class="panel-title">UltraCrypte™</h1>
+                    <h1 class="panel-title" data-i18n="ultra.title">UltraCrypte™</h1>
                     <p class="panel-subtitle ultra-warning">
                         <i class="fas fa-shield-virus"></i>
-                        Chiffrement de niveau militaire avec résistance post-quantique
+                        <span data-i18n="ultra.subtitle">Chiffrement de niveau militaire avec résistance post-quantique</span>
                     </p>
                 </div>
                 
                 <div class="ultra-container">
                     <div class="ultra-info">
-                        <h3>Technologies Avancées</h3>
+                        <h3 data-i18n="ultra.features.title">Technologies Avancées</h3>
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Chiffrement post-quantique certifié</li>
-                            <li><i class="fas fa-check"></i> Algorithmes chaotiques propriétaires</li>
-                            <li><i class="fas fa-check"></i> Protection contre l'analyse différentielle</li>
-                            <li><i class="fas fa-check"></i> Résistance aux attaques par canaux cachés</li>
-                            <li><i class="fas fa-check"></i> Masquage par bruit cryptographique</li>
-                            <li><i class="fas fa-check"></i> Déni plausible intégré</li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.postquantum">Chiffrement post-quantique certifié</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.chaos">Algorithmes chaotiques propriétaires</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.differential">Protection contre l'analyse différentielle</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.sidechannel">Résistance aux attaques par canaux cachés</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.noise">Masquage par bruit cryptographique</span></li>
+                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.deniable">Déni plausible intégré</span></li>
                         </ul>
                     </div>
                     
                     <div class="ultra-controls">
                         <div class="option-group">
-                            <label>Niveau de Complexité</label>
-                            <select id="ultra-complexity">
-                                <option value="standard">Standard (Rapide)</option>
-                                <option value="enhanced">Renforcé (Équilibré)</option>
-                                <option value="paranoid">Paranoïaque (Maximum)</option>
+                            <label data-i18n="ultra.complexity.label">Niveau de Complexité</label>
+                            <select id="ultra-complexity" data-i18n-options>
+                                <option value="standard" data-i18n="ultra.complexity.standard">Standard (Rapide)</option>
+                                <option value="enhanced" data-i18n="ultra.complexity.enhanced">Renforcé (Équilibré)</option>
+                                <option value="paranoid" data-i18n="ultra.complexity.paranoid">Paranoïaque (Maximum)</option>
                             </select>
                         </div>
                         
                         <div class="option-group">
-                            <label>Phrase de passe maîtresse</label>
-                            <input type="password" id="ultra-master-key" placeholder="Phrase longue et complexe requise...">
+                            <label data-i18n="ultra.masterkey.label">Phrase de passe maîtresse</label>
+                            <input type="password" id="ultra-master-key" data-i18n="ultra.masterkey.placeholder" placeholder="Phrase longue et complexe requise...">
                             <div class="key-strength">
                                 <div class="strength-bar">
                                     <div class="strength-fill"></div>
@@ -385,9 +409,9 @@
                         </div>
                         
                         <div class="ultra-options">
-                            <label><input type="checkbox" id="ultra-stealth"> Mode furtif maximum</label>
-                            <label><input type="checkbox" id="ultra-deniable"> Déni plausible activé</label>
-                            <label><input type="checkbox" id="ultra-volatile"> Protection anti-dump mémoire</label>
+                            <label><input type="checkbox" id="ultra-stealth"> <span data-i18n="ultra.options.stealth">Mode furtif maximum</span></label>
+                            <label><input type="checkbox" id="ultra-deniable"> <span data-i18n="ultra.options.deniable">Déni plausible activé</span></label>
+                            <label><input type="checkbox" id="ultra-volatile"> <span data-i18n="ultra.options.volatile">Protection anti-dump mémoire</span></label>
                         </div>
                     </div>
                 </div>
@@ -396,13 +420,13 @@
             <!-- Help Panel -->
             <div class="panel" id="help-panel">
                 <div class="panel-header">
-                    <h1 class="panel-title">Documentation</h1>
-                    <p class="panel-subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
+                    <h1 class="panel-title" data-i18n="help.title">Documentation</h1>
+                    <p class="panel-subtitle" data-i18n="help.subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
                 </div>
                 
                 <div class="help-content">
                     <div class="help-section">
-                        <h3><i class="fas fa-shield-alt"></i> Guide d'Encodage</h3>
+                        <h3><i class="fas fa-shield-alt"></i> <span data-i18n="help.encode.title">Guide d'Encodage</span></h3>
                         <p>La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.</p>
                         <ol>
                             <li>Sélectionnez un fichier porteur de haute qualité</li>
@@ -414,7 +438,7 @@
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-search"></i> Guide d'Extraction</h3>
+                        <h3><i class="fas fa-search"></i> <span data-i18n="help.decode.title">Guide d'Extraction</span></h3>
                         <p>L'extraction automatisée détecte et récupère les données cachées intelligemment.</p>
                         <ol>
                             <li>Importez le fichier suspect ou encodé</li>
@@ -426,7 +450,7 @@
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-lock"></i> UltraCrypte™ Advanced</h3>
+                        <h3><i class="fas fa-lock"></i> <span data-i18n="help.ultra.title">UltraCrypte™ Advanced</span></h3>
                         <p>Notre technologie propriétaire offre une protection inégalée contre toutes formes d'attaques.</p>
                         <ul>
                             <li><strong>Post-Quantique</strong> : Résistant aux futurs ordinateurs quantiques</li>
@@ -438,7 +462,7 @@
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Meilleures Pratiques</h3>
+                        <h3><i class="fas fa-exclamation-triangle"></i> <span data-i18n="help.practices.title">Meilleures Pratiques</span></h3>
                         <ul>
                             <li>Utilisez des phrases de passe longues et uniques</li>
                             <li>Activez le chiffrement pour les données sensibles</li>
@@ -456,14 +480,14 @@
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-info">
-                    <span>© 2024 Obscura</span>
+                    <span data-i18n="footer.copyright">© 2024 Obscura</span>
                     <span class="separator">•</span>
-                    <span>Stéganographie Professionnelle</span>
+                    <span data-i18n="footer.subtitle">Stéganographie Professionnelle</span>
                     <span class="separator">•</span>
-                    <span>Mode Hors-ligne</span>
+                    <span data-i18n="footer.mode">Mode Hors-ligne</span>
                 </div>
                 <div class="footer-stats">
-                    <span id="files-processed">0 fichiers traités</span>
+                    <span id="files-processed">0</span> <span data-i18n="footer.files">fichiers traités</span>
                 </div>
             </div>
         </footer>
@@ -473,11 +497,13 @@
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-spinner">
             <div class="spinner"></div>
-            <div class="loading-text">Traitement en cours...</div>
+            <div class="loading-text" data-i18n="message.loading">Traitement en cours...</div>
         </div>
     </div>
 
-    <!-- ...existing scripts... -->
+    <!-- Scripts -->
+    <script src="js/i18n.js"></script>
+    <script src="js/theme.js"></script>
     <script src="js/crypto.js"></script>
     <script src="js/steganography.js"></script>
     <script src="js/app.js"></script>
