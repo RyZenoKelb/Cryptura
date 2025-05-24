@@ -69,25 +69,25 @@ class ObscuraApp {
 
     // ========== INITIALISATION ==========
 
-        document.getElementById('decode-btn').addEventListener('click', () => {
-            this.handleDecode();
-        });
-
-        document.getElementById('analyze-btn').addEventListener('click', () => {
-            this.handleAnalyze();
-        });
-
-        document.getElementById('reset-encode').addEventListener('click', () => {
-            this.resetEncode();
-        });
-
-        // Boutons de téléchargement (ajoutés dynamiquement)
-        document.addEventListener('click', (e) => {
-            if (e.target.id === 'download-btn') {
-                // Géré dans showEncodeResult
-            } else if (e.target.id === 'save-extracted') {
-                // Géré dans showDecodeResult
-            }
+    init() {
+        this.setupEventListeners();
+        this.setupDragAndDrop();
+        this.setupKeyboardShortcuts();
+        this.updateStats();
+        );
+        // Affichage du panneau initial
+        this.showPanel('encode');
+        ener('click', () => {
+        // Message de bienvenue
+        this.showMessage('Bienvenue dans Obscura - Stéganographie Ultra-Sécurisée', 'success');
+        
+        console.log('✅ Application initialisée avec succès');t)
+    }) => {
+f (e.target.id === 'download-btn') {
+    setupEventListeners() {     // Géré dans showEncodeResult
+        console.log('🔧 Configuration des événements...');            } else if (e.target.id === 'save-extracted') {
+        
+        // Navigation entre panneaux
         });
 
         // Toggle visibilité des mots de passe
