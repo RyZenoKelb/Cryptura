@@ -526,31 +526,31 @@ class ObscuraApp {
         }
         
         if (cryptoLevel === 'ultra' && password.length < 8) {
-
-    mapCryptoComplexity(cryptoLevel) {cryptoType = 'Aucun';
-        const mapping = {
-            'aes': 'standard', 0) {
-            'ultra': 'enhanced'', 'Tentative de déchiffrement...');
-        };
-        return mapping[cryptoLevel] || 'standard';tedData, password);
-    }f (decryptResults.success) {
-       finalData = decryptResults.data;
-    // ========== DÉCODAGE ==========        cryptoType = decryptResults.type;
- réussi: ${cryptoType}`);
-    async handleDecode() {
-        console.log('🔓 Démarrage du décodage...');}
+            return { valid: false, message: 'UltraCrypte nécessite un mot de passe d\'au moins 8 caractères' };
+        }
         
-        const decodeFile = this.currentFiles.decode;this.hideProgress('decode-progress');
-        const password = document.getElementById('decode-password').value;deResult(finalData, detectedMethod, cryptoType, confidence);
+        return { valid: true };
+    }
+
+    mapCryptoComplexity(cryptoLevel) {
+        const mapping = {
+            'aes': 'standard',
+            'ultra': 'enhanced'
+        };
+        return mapping[cryptoLevel] || 'standard';
+    }
+
+    // ========== DÉCODAGE ==========
+
+    async handleDecode() {
+        console.log('🔓 Démarrage du décodage...');
+        
+        const decodeFile = this.currentFiles.decode;
+        const password = document.getElementById('decode-password').value;
         const detectionMode = document.getElementById('detection-mode').value;
         
         if (!decodeFile) {
-            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error'); catch (error) {
-            return;       this.hideProgress('decode-progress');
-        }            console.error('❌ Erreur de décodage:', error);
-age: ${error.message}`, 'error');
-        try {
-            this.showProgress('decode-progress', 'Analyse du fichier...');
+            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
             
             // Extraction des données cachéesattemptDecryption(data, password) {
             let result;const attempts = [
