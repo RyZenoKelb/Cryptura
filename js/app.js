@@ -792,34 +792,34 @@ class ObscuraApp {
         
         try {
             // Tentative de décodage en UTF-8
-            }0;
+            displayText = new TextDecoder('utf-8').decode(data);
+            
+            // Vérification si c'est du texte lisible
+            if (displayText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/)) {
+                isText = false;
+            }
         } catch (error) {
             isText = false;
-        }   clearInterval(interval);
-        se {
-        if (!isText) {        width += Math.random() * 15;
-            // Affichage hexadécimal pour les données binairesn(width, 90)}%`;
-            const maxBytes = 256; // Limite d'affichage       }
-            const bytesToShow = Math.min(data.length, maxBytes);        }, 150);
+        }
+        
+        if (!isText) {
+            // Affichage hexadécimal pour les données binaires
+            const maxBytes = 256; // Limite d'affichage
+            const bytesToShow = Math.min(data.length, maxBytes);
             const hexLines = [];
             
             for (let i = 0; i < bytesToShow; i += 16) {
                 const chunk = data.slice(i, i + 16);
                 const hex = Array.from(chunk).map(b => b.toString(16).padStart(2, '0')).join(' ');
-                const ascii = Array.from(chunk).map(b => b >= 32 && b <= 126 ? String.fromCharCode(b) : '.').join('');ementById(progressId);
-                hexLines.push(`${i.toString(16).padStart(4, '0')}: ${hex.padEnd(48)} | ${ascii}`);onst textElement = progressElement.querySelector('.progress-text');
-            }   
-                    if (progressElement.style.display === 'block') {
-            if (data.length > maxBytes) {ntent = message;
+                const ascii = Array.from(chunk).map(b => b >= 32 && b <= 126 ? String.fromCharCode(b) : '.').join('');
+                hexLines.push(`${i.toString(16).padStart(4, '0')}: ${hex.padEnd(48)} | ${ascii}`);
+            }
+            
+            if (data.length > maxBytes) {
                 hexLines.push(`... et ${data.length - maxBytes} octets supplémentaires`);
             }
             
-            displayText = hexLines.join('\n');ssId) {
-        }ment.getElementById(progressId);
-        onst interval = progressElement.dataset.interval;
-        // Limitation de la taille d'affichage
-        if (displayText.length > 5000) {
-            displayText = displayText.substring(0, 5000) + '\n... [contenu tronqué]';
+            displayText = hexLines.join('\n');
         }
         
         return {rre puis masquer
