@@ -65,11 +65,38 @@ class ObscuraApp {
             
             // Close dropdown on outside click
             document.addEventListener('click', () => {
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                this.themeManager.toggleTheme();
+                languageDropdown.classList.remove('active');
             });
         }
+        
+        // Theme toggle functionality - Correction du gestionnaire
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.themeManager.toggleTheme();
+                
+                // Feedback visuel
+                const icon = themeToggle.querySelector('i');
+                icon.style.transform = 'rotate(360deg) scale(1.2)';
+                setTimeout(() => {
+                    icon.style.transform = '';
+                }, 300);
+            });
+        }
+        
+        // Écouter les changements de thème pour les autres composants
+        window.addEventListener('themeChanged', (e) => {
+            const { theme } = e.detail;
+            console.log(`🎨 Thème appliqué: ${theme}`);
+            
+            // Mettre à jour les messages si nécessaire
+            if (theme === 'light') {
+                this.showMessage('Mode clair activé', 'info');
+            } else {
+                this.showMessage('Mode sombre activé', 'info');
+            }
+        });
     }
 
     // ========== INITIALISATION ==========
@@ -77,33 +104,6 @@ class ObscuraApp {
     init() {
         this.setupEventListeners();
         this.setupDragAndDrop();
-        this.setupKeyboardShortcuts();
-        this.updateStats();
-        
-        // Affichage du panneau initial
-        this.showPanel('encode');
-        
-        // Message de bienvenue
-        this.showMessage('Bienvenue dans Obscura - Stéganographie Ultra-Sécurisée', 'success');
-        
-        console.log('✅ Application initialisée avec succès');
-    }
-
-    setupEventListeners() {
-        console.log('🔧 Configuration des événements...');
-        
-        // Navigation entre panneaux
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabName = e.currentTarget.dataset.tab;
-                this.showPanel(tabName);
-                console.log(`📱 Basculement vers ${tabName}`);
-            });
-        });
-
-        // Boutons d'upload de fichiers
-        document.getElementById('carrier-upload').addEventListener('click', () => {
-            document.getElementById('carrier-file').click();
         });
 
         document.getElementById('secret-upload').addEventListener('click', () => {
