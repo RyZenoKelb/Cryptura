@@ -13,35 +13,35 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Modern Header -->
-        <header class="header">
-            <div class="header-content">
-                <div class="logo-container">
-                    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1">
-                                    <animate attributeName="stop-color" 
-                                             values="#2563eb;#1d4ed8;#10b981;#2563eb" 
-                                             dur="4s" 
-                                             repeatCount="indefinite"/>
-                                </stop>
-                                <stop offset="100%" style="stop-color:#f97316;stop-opacity:1">
-                                    <animate attributeName="stop-color" 
-                                             values="#f97316;#ef4444;#10b981;#f97316" 
-                                             dur="4s" 
-                                             repeatCount="indefinite"/>
-                                </stop>
-                            </linearGradient>
-                        </defs>
-                        
-                        <!-- Outer rotating ring -->
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="8s" 
-                                              repeatCount="indefinite"/>
+        <!-- Modern Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <svg class="sidebar-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1">
+                                <animate attributeName="stop-color" 
+                                         values="#2563eb;#1d4ed8;#10b981;#2563eb" 
+                                         dur="4s" 
+                                         repeatCount="indefinite"/>
+                            </stop>
+                            <stop offset="100%" style="stop-color:#f97316;stop-opacity:1">
+                                <animate attributeName="stop-color" 
+                                         values="#f97316;#ef4444;#10b981;#f97316" 
+                                         dur="4s" 
+                                         repeatCount="indefinite"/>
+                            </stop>
+                        </linearGradient>
+                    </defs>
+                    
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8">
+                        <animateTransform attributeName="transform" 
+                                          type="rotate" 
+                                          values="0 50 50;360 50 50" 
+                                          dur="8s" 
+                                          repeatCount="indefinite"/>
+                    </circle>
+                    
                         </circle>
                         
                         <!-- Middle hexagonal ring -->

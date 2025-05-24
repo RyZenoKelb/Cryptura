@@ -112,6 +112,8 @@
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
 
 /* Reset & Base */
 * {
@@ -154,19 +156,17 @@ body::before {
     transition: var(--transition-slow);
 }
 
-/* Container */
+/* Container Layout avec Sidebar */
 .app-container {
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     position: relative;
 }
 
-/* Modern Header - Fixed for theme consistency */
-.header {
-    background: rgba(var(--bg-white-rgb), 0.8);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-light);
+/* Modern Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-gray);
     padding: 1rem 0;
     position: sticky;
     top: 0;
