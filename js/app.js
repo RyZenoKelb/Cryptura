@@ -822,13 +822,18 @@ class ObscuraApp {
             displayText = hexLines.join('\n');
         }
         
-        return {rre puis masquer
-            html: `<pre>${this.escapeHtml(displayText)}</pre>`,lector('.progress-fill');
+        // Limitation de la taille d'affichage
+        if (displayText.length > 5000) {
+            displayText = displayText.substring(0, 5000) + '\n... [contenu tronqué]';
+        }
+        
+        return {
+            html: `<pre>${this.escapeHtml(displayText)}</pre>`,
             isText: isText
         };
-    }   setTimeout(() => {
-            progressElement.style.display = 'none';
-    // ========== UTILITAIRES D'INTERFACE ==========';
+    }
+
+    // ========== UTILITAIRES D'INTERFACE ==========
 
     showProgress(progressId, message) {
         const progressElement = document.getElementById(progressId);
@@ -836,282 +841,277 @@ class ObscuraApp {
         
         textElement.textContent = message;
         progressElement.style.display = 'block';
-        rror' ? 'exclamation-triangle' : 
-        // Animation de la barre de progressioncheck-circle' : 
-        const progressBar = progressElement.querySelector('.progress-fill');ng' ? 'exclamation-triangle' : 'info-circle';
+        
+        // Animation de la barre de progression
+        const progressBar = progressElement.querySelector('.progress-fill');
         let width = 0;
-        const interval = setInterval(() => {messageDiv.innerHTML = `
+        const interval = setInterval(() => {
             if (width >= 90) {
                 clearInterval(interval);
             } else {
                 width += Math.random() * 15;
-                progressBar.style.width = `${Math.min(width, 90)}%`;ontenu principal
-            }= document.querySelector('.main-content');
-        }, 150);Div, mainContent.firstChild);
+                progressBar.style.width = `${Math.min(width, 90)}%`;
+            }
+        }, 150);
         
-        progressElement.dataset.interval = interval;ppression automatique
+        progressElement.dataset.interval = interval;
     }
-    if (messageDiv.parentNode) {
-    updateProgress(progressId, message) {rentNode.removeChild(messageDiv);
+
+    updateProgress(progressId, message) {
         const progressElement = document.getElementById(progressId);
-        const textElement = progressElement.querySelector('.progress-text');}, type === 'error' ? 8000 : 5000);
+        const textElement = progressElement.querySelector('.progress-text');
         
-        if (progressElement.style.display === 'block') {   // Animation d'entrée
-            textElement.textContent = message;        messageDiv.classList.add('fade-in');
+        if (progressElement.style.display === 'block') {
+            textElement.textContent = message;
         }
     }
 
     hideProgress(progressId) {
         const progressElement = document.getElementById(progressId);
-        const interval = progressElement.dataset.interval; messages = document.querySelectorAll('.message');
-        sages.forEach(msg => {
-        if (interval) {       if (msg.parentNode) {
-            clearInterval(interval);                msg.parentNode.removeChild(msg);
+        const interval = progressElement.dataset.interval;
+        
+        if (interval) {
+            clearInterval(interval);
         }
         
         // Compléter la barre puis masquer
         const progressBar = progressElement.querySelector('.progress-fill');
         progressBar.style.width = '100%';
-        losest('.password-input').querySelector('input');
-        setTimeout(() => {assword').querySelector('i');
+        
+        setTimeout(() => {
             progressElement.style.display = 'none';
-            progressBar.style.width = '0%';') {
+            progressBar.style.width = '0%';
         }, 800);
-    }   icon.className = 'fas fa-eye-slash';
-   } else {
-    showMessage(message, type = 'info') {            input.type = 'password';
-        const messageDiv = document.createElement('div');eye';
+    }
+
+    showMessage(message, type = 'info') {
+        const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}`;
         
         const icon = type === 'error' ? 'exclamation-triangle' : 
                     type === 'success' ? 'check-circle' : 
-                    type === 'warning' ? 'exclamation-triangle' : 'info-circle';const strengthBar = document.querySelector('.strength-fill');
-        Text = document.querySelector('.strength-text');
+                    type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+        
         messageDiv.innerHTML = `
-            <i class="fas fa-${icon}"></i>if (!strengthBar || !strengthText) return;
+            <i class="fas fa-${icon}"></i>
             <span>${message}</span>
         `;
         
         // Insertion au début du contenu principal
         const mainContent = document.querySelector('.main-content');
-        mainContent.insertBefore(messageDiv, mainContent.firstChild);if (password.length >= 8) score += 20;
+        mainContent.insertBefore(messageDiv, mainContent.firstChild);
         
         // Suppression automatique
-        setTimeout(() => {else feedback.push('20+ caractères recommandés');
+        setTimeout(() => {
             if (messageDiv.parentNode) {
                 messageDiv.parentNode.removeChild(messageDiv);
-            }else feedback.push('Minuscules manquantes');
+            }
         }, type === 'error' ? 8000 : 5000);
         
-        // Animation d'entréeelse feedback.push('Majuscules manquantes');
+        // Animation d'entrée
         messageDiv.classList.add('fade-in');
         
-        console.log(`💬 Message ${type}: ${message}`);else feedback.push('Chiffres manquants');
+        console.log(`💬 Message ${type}: ${message}`);
     }
 
-    clearMessages() {else feedback.push('Caractères spéciaux manquants');
+    clearMessages() {
         const messages = document.querySelectorAll('.message');
-        messages.forEach(msg => {-= 10; // Répétitions
-            if (msg.parentNode) {if (password.toLowerCase().includes('password')) score -= 20;
+        messages.forEach(msg => {
+            if (msg.parentNode) {
                 msg.parentNode.removeChild(msg);
-            }suelle
-        });`${score}%`;
+            }
+        });
     }
 
     togglePasswordVisibility(e) {
         const input = e.target.closest('.password-input').querySelector('input');
-        const icon = e.target.closest('.toggle-password').querySelector('i');-color)';
-         {
+        const icon = e.target.closest('.toggle-password').querySelector('i');
+        
         if (input.type === 'password') {
-            input.type = 'text';r = 'var(--warning-color)';
+            input.type = 'text';
             icon.className = 'fas fa-eye-slash';
         } else {
-            input.type = 'password';   color = 'var(--accent-color)';
-            icon.className = 'fas fa-eye';} else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
         }
-    }';
+    }
 
-    checkPasswordStrength(password) {   
-        const strengthBar = document.querySelector('.strength-fill');        strengthBar.style.background = color;
+    checkPasswordStrength(password) {
+        const strengthBar = document.querySelector('.strength-fill');
         const strengthText = document.querySelector('.strength-text');
-                strengthText.title = feedback.join(', ');
+        
         if (!strengthBar || !strengthText) return;
         
-        let score = 0;========= GESTION DES RÉINITIALISATIONS ==========
+        let score = 0;
         const feedback = [];
         
-        // Critères de notation de l\'encodage');
+        // Critères de notation
         if (password.length >= 8) score += 20;
         if (password.length >= 12) score += 15;
         if (password.length >= 20) score += 15;
         else feedback.push('20+ caractères recommandés');
         
-        if (/[a-z]/.test(password)) score += 10;document.getElementById('carrier-file').value = '';
-        else feedback.push('Minuscules manquantes');.value = '';
+        if (/[a-z]/.test(password)) score += 10;
+        else feedback.push('Minuscules manquantes');
         
         if (/[A-Z]/.test(password)) score += 10;
         else feedback.push('Majuscules manquantes');
-        ones d'upload
-        if (/[0-9]/.test(password)) score += 10;ez-déposez ou cliquez pour sélectionner', 'fas fa-cloud-upload-alt');
-        else feedback.push('Chiffres manquants');exte ou fichier à cacher', 'fas fa-eye-slash');
+        
+        if (/[0-9]/.test(password)) score += 10;
+        else feedback.push('Chiffres manquants');
         
         if (/[^a-zA-Z0-9]/.test(password)) score += 15;
-        else feedback.push('Caractères spéciaux manquants');none';
-         'none';
+        else feedback.push('Caractères spéciaux manquants');
+        
         if (/(.)\1{2,}/.test(password)) score -= 10; // Répétitions
-        if (password.toLowerCase().includes('password')) score -= 20;// Réinitialisation des options
+        if (password.toLowerCase().includes('password')) score -= 20;
         
-        // Mise à jour visuelle   document.getElementById('crypto-level').selectedIndex = 0;
-        strengthBar.style.width = `${score}%`;        document.querySelectorAll('#encode-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+        // Mise à jour visuelle
+        strengthBar.style.width = `${score}%`;
         
-        let level, color;tialisée', 'info');
+        let level, color;
         if (score < 30) {
             level = 'Très faible';
-            color = 'var(--error-color)';Class) {
-        } else if (score < 50) {d);
-            level = 'Faible';const icon = zone.querySelector('i');
-            color = 'var(--warning-color)';uerySelector('h3');
-        } else if (score < 75) {);
-            level = 'Correct';'small');
+            color = 'var(--error-color)';
+        } else if (score < 50) {
+            level = 'Faible';
+            color = 'var(--warning-color)';
+        } else if (score < 75) {
+            level = 'Correct';
             color = 'var(--accent-color)';
-        } else {icon.className = iconClass;
-            level = 'Excellent';olor = 'var(--primary-color)';
+        } else {
+            level = 'Excellent';
             color = 'var(--success-color)';
-        }escElement.textContent = description;
+        }
         
         strengthBar.style.background = color;
-        strengthText.textContent = level;= 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
-        strengthText.title = feedback.join(', ');   }
-    }        
-set.file;
+        strengthText.textContent = level;
+        strengthText.title = feedback.join(', ');
+    }
+
     // ========== GESTION DES RÉINITIALISATIONS ==========
 
     resetEncode() {
         console.log('🔄 Réinitialisation de l\'encodage');
-        Annulation des opérations en cours
-        // Réinitialisation des fichiersconst progressElements = document.querySelectorAll('.progress-container[style*="block"]');
+        
+        // Réinitialisation des fichiers
         this.currentFiles.carrier = null;
-        this.currentFiles.secret = null;       this.hideProgress(progress.id);
-                });
+        this.currentFiles.secret = null;
+        
         document.getElementById('carrier-file').value = '';
-        document.getElementById('secret-file').value = '';        this.showMessage('Opérations annulées', 'warning');
+        document.getElementById('secret-file').value = '';
         document.getElementById('secret-text').value = '';
         document.getElementById('encode-password').value = '';
         
         // Réinitialisation des zones d'upload
         this.resetUploadZone('carrier-upload', 'Fichier Porteur', 'Glissez-déposez ou cliquez pour sélectionner', 'fas fa-cloud-upload-alt');
-        this.resetUploadZone('secret-upload', 'Contenu Secret', 'Message texte ou fichier à cacher', 'fas fa-eye-slash');der = new TextEncoder();
-        l = encoder.encode(password.padEnd(32, '0').slice(0, 32));
+        this.resetUploadZone('secret-upload', 'Contenu Secret', 'Message texte ou fichier à cacher', 'fas fa-eye-slash');
+        
         // Masquage des résultats
-        document.getElementById('encode-result').style.display = 'none';= await crypto.subtle.importKey(
+        document.getElementById('encode-result').style.display = 'none';
         document.getElementById('encode-progress').style.display = 'none';
-          keyMaterial,
-        // Réinitialisation des options    'AES-GCM',
+        
+        // Réinitialisation des options
         document.getElementById('stego-method').selectedIndex = 0;
         document.getElementById('crypto-level').selectedIndex = 0;
         document.querySelectorAll('#encode-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
         
-        this.showMessage('Interface d\'encodage réinitialisée', 'info'); = crypto.getRandomValues(new Uint8Array(12));
-    }nst encrypted = await crypto.subtle.encrypt(
-    { name: 'AES-GCM', iv: iv },
+        this.showMessage('Interface d\'encodage réinitialisée', 'info');
+    }
+
     resetUploadZone(zoneId, title, description, iconClass) {
         const zone = document.getElementById(zoneId);
         const icon = zone.querySelector('i');
         const titleElement = zone.querySelector('h3');
-        const descElement = zone.querySelector('p'); new Uint8Array(iv.length + encrypted.byteLength);
-        const small = zone.querySelector('small');   result.set(iv);
-                result.set(new Uint8Array(encrypted), iv.length);
+        const descElement = zone.querySelector('p');
+        const small = zone.querySelector('small');
+        
         icon.className = iconClass;
         icon.style.color = 'var(--primary-color)';
         titleElement.textContent = title;
         descElement.textContent = description;
-        c basicDecrypt(encryptedData, password) {
+        
         if (small) {
             small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
-        }}
+        }
         
-        delete zone.dataset.file;der = new TextEncoder();
-        zone.classList.remove('fade-in');l = encoder.encode(password.padEnd(32, '0').slice(0, 32));
+        delete zone.dataset.file;
+        zone.classList.remove('fade-in');
     }
-= await crypto.subtle.importKey(
+
     cancelOperations() {
-        // Annulation des opérations en cours  keyMaterial,
-        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');    'AES-GCM',
+        // Annulation des opérations en cours
+        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');
         progressElements.forEach(progress => {
             this.hideProgress(progress.id);
-        }););
+        });
         
-        this.showMessage('Opérations annulées', 'warning');, 12);
-    }crypted = encryptedData.slice(12);
+        this.showMessage('Opérations annulées', 'warning');
+    }
 
-    // ========== CHIFFREMENT DE BASE ==========nst decrypted = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: iv },
+    // ========== CHIFFREMENT DE BASE ==========
+
     async basicEncrypt(data, password) {
-        const encoder = new TextEncoder();       encrypted
-        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));        );
+        const encoder = new TextEncoder();
+        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
         
-        const key = await crypto.subtle.importKey(        return new Uint8Array(decrypted);
+        const key = await crypto.subtle.importKey(
             'raw',
             keyMaterial,
             'AES-GCM',
             false,
             ['encrypt']
         );
-        his.currentFiles.carrier) {
-        const iv = crypto.getRandomValues(new Uint8Array(12));   const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
-        const encrypted = await crypto.subtle.encrypt(       if (capacity > 0) {
-            { name: 'AES-GCM', iv: iv },                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
+        
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
             key,
             data
         );
         
         const result = new Uint8Array(iv.length + encrypted.byteLength);
-        result.set(iv);nst infoMessages = {
-        result.set(new Uint8Array(encrypted), iv.length);    'none': 'Aucun chiffrement - Données en clair',
-        S-256-GCM standard',
-        return result;ue'
-    };
-   
-    async basicDecrypt(encryptedData, password) {        if (infoMessages[level]) {
-        if (encryptedData.length < 12) {age(`🔐 ${infoMessages[level]}`, 'info');
+        result.set(iv);
+        result.set(new Uint8Array(encrypted), iv.length);
+        
+        return result;
+    }
+
+    async basicDecrypt(encryptedData, password) {
+        if (encryptedData.length < 12) {
             throw new Error('Données insuffisantes pour déchiffrement');
         }
         
         const encoder = new TextEncoder();
         const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
-        const options = [];
-        const key = await crypto.subtle.importKey(Id('compress-data')?.checked) options.push('Compression');
-            'raw',ruit');
-            keyMaterial,f (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
-            'AES-GCM',   
-            false,        if (options.length > 0) {
-            ['decrypt']ssage(`⚙️ Options: ${options.join(', ')}`, 'info');
+        
+        const key = await crypto.subtle.importKey(
+            'raw',
+            keyMaterial,
+            'AES-GCM',
+            false,
+            ['decrypt']
         );
         
         const iv = encryptedData.slice(0, 12);
         const encrypted = encryptedData.slice(12);
-        elp-panel .help-content');
-        const decrypted = await crypto.subtle.decrypt() {
+        
+        const decrypted = await crypto.subtle.decrypt(
             { name: 'AES-GCM', iv: iv },
             key,
             encrypted
         );
-          <li>Fichiers traités: ${this.filesProcessed}</li>
-        return new Uint8Array(decrypted);          <li>Session démarrée: ${new Date().toLocaleString()}</li>
-    }is.steganography.methods).length}</li>
+        
+        return new Uint8Array(decrypted);
+    }
 
     // ========== UTILITAIRES ==========
-;
-    updateMethodInfo(method) {   // Ajout après le contenu existant si pas déjà présent
-        // Mise à jour des informations contextuelles selon la méthode       if (!statsElement.querySelector('.stats-section')) {
-        if (this.currentFiles.carrier) {                statsElement.insertAdjacentHTML('beforeend', currentStats);
+
+    updateMethodInfo(method) {
+        // Mise à jour des informations contextuelles selon la méthode
+        if (this.currentFiles.carrier) {
             const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
             if (capacity > 0) {
-                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
-            }
-        }
-    }
-,
     updateCryptoInfo(level) {
         const infoMessages = {rsion Audio',
             'none': 'Aucun chiffrement - Données en clair',  'video-frame': 'Frames Vidéo',
