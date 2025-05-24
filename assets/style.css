@@ -1210,3 +1210,55 @@ body::before {
     }
     
     .theme-toggle,
+    .language-toggle {
+        padding: 0.5rem;
+        min-width: auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    .toggle-text {
+        display: inline;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-section {
+        padding: 1.5rem;
+    }
+    
+    .upload-zone {
+        padding: 1.5rem;
+        min-height: 160px;
+    }
+    
+    .upload-zone i {
+        font-size: 2rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .nav-tab {
+        padding: 0.875rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .nav-tab span {
+        display: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .header, .nav-container, .footer, .action-buttons {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 0;
+        max-width: none;
+    }
+    
+    .panel {
+        display: block !important;
+    }
+}
