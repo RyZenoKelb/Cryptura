@@ -70,12 +70,16 @@
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-:root[data-theme="light"] {x -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+}
+
+/* Light Theme */
+:root[data-theme="light"] {
     /* Neutral Grays - Light */
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;] {
-    --gray-300: #cbd5e1;ight */
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
     --gray-400: #94a3b8;
     --gray-500: #64748b;
     --gray-600: #475569;
@@ -83,31 +87,27 @@
     --gray-800: #1e293b;
     --gray-900: #0f172a;
     --gray-950: #020617;
-    --gray-700: #334155;
+    
     /* Background System */
     --bg-white: #ffffff;
-    --bg-gray: #f8fafc;;
+    --bg-gray: #f8fafc;
     --bg-dark: #f1f5f9;
-    --bg-darker: #e2e8f0;*/
-    --bg-white: #ffffff;
-    /* Text Colors */c;
+    --bg-darker: #e2e8f0;
+    
+    /* Background RGB values for backdrop-filter */
+    --bg-white-rgb: 255, 255, 255;
+    --bg-gray-rgb: 248, 250, 252;
+    
+    /* Text Colors */
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #64748b;
-    --text-white: #ffffff;es for backdrop-filter */
-    --bg-white-rgb: 255, 255, 255;
-    /* Border & Shadows */0, 252;
+    --text-white: #ffffff;
+    
+    /* Border & Shadows */
     --border-light: #e2e8f0;
     --border-medium: #cbd5e1;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-}   
-    /* Border & Shadows */
-/* Reset & Base */: #e2e8f0;
-* { --border-medium: #cbd5e1;
-    margin: 0;m: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     padding: 0;: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     box-sizing: border-box;x -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
