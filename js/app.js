@@ -1092,6 +1092,33 @@ class ObscuraApp {
         
         const iv = crypto.getRandomValues(new Uint8Array(12));
         const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            data
+        );
+        
+        const result = new Uint8Array(iv.length + encrypted.byteLength);
+        result.set(iv);
+        result.set(new Uint8Array(encrypted), iv.length);
+        
+        return result;
+    }
+
+    async basicDecrypt(encryptedData, password) {
+        if (encryptedData.length < 12) {
+            throw new Error('Données insuffisantes pour déchiffrement');
+        }
+        
+        const encoder = new TextEncoder();
+        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
+        
+        const key = await crypto.subtle.importKey(
+            'raw',
+            keyMaterial,
+            'AES-GCM',
+            false,
+            ['decrypt']
+        );
         
         const iv = encryptedData.slice(0, 12);
         const encrypted = encryptedData.slice(12);
@@ -1106,33 +1133,6 @@ class ObscuraApp {
     }
 
     // ========== UTILITAIRES ==========
-
-    updateMethodInfo(method) {
-        // Mise à jour des informations contextuelles selon la méthode
-        if (this.currentFiles.carrier) {
-            const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
-            if (capacity > 0) {
-                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
-            }
-        }
-    }
-
-    updateCryptoInfo(level) {
-        const infoMessages = {
-            'none': 'Aucun chiffrement - Données en clair',
-            'aes': 'Chiffrement AES-256-GCM standard',
-            'ultra': 'UltraCrypte - Sécurité maximale post-quantique'
-        };
-        
-        if (infoMessages[level]) {
-            this.showMessage(`🔐 ${infoMessages[level]}`, 'info');
-        }
-    }
-
-    updateOptionsInfo() {
-        // Informations sur les options avancées
-        const options = [];
-        if (document.getElementById('compress-data')?.checked) options.push('Compression');
         if (document.getElementById('add-noise')?.checked) options.push('Bruit');
         if (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
         
