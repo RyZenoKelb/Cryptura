@@ -574,6 +574,33 @@ class ObscuraApp {
         
         const decodeFile = this.currentFiles.decode;
         const password = document.getElementById('decode-password').value;
+        const detectionMode = document.getElementById('detection-mode').value;
+        
+        if (!decodeFile) {
+            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
+            return;
+        }
+
+        try {
+            this.showProgress('decode-progress', 'Analyse du fichier...');
+            
+            // Extraction des données cachées
+            let result;
+            if (detectionMode === 'auto') {
+                this.updateProgress('decode-progress', 'Détection automatique...');
+                result = await this.steganography.autoDetectAndExtract(decodeFile);
+            } else if (detectionMode === 'brute') {
+                this.updateProgress('decode-progress', 'Force brute en cours...');
+                result = await this.steganography.bruteForceExtract(decodeFile);
+            } else {
+                this.updateProgress('decode-progress', `Extraction via ${detectionMode}...`);
+                const extractedData = await this.steganography.extractData(decodeFile, detectionMode);
+                result = { data: extractedData, method: detectionMode, confidence: 75 };
+            }
+            
+            let extractedData = result.data;
+            let detectedMethod = result.method;
+            let confidence = result.confidence || 50;
             
             console.log(`📤 Données extraites: ${extractedData.length} octets via ${detectedMethod}`);
             
@@ -581,33 +608,6 @@ class ObscuraApp {
             let finalData = extractedData;
             let cryptoType = 'Aucun';
             
-            if (password && password.length > 0) {
-                this.updateProgress('decode-progress', 'Tentative de déchiffrement...');
-                
-                const decryptResults = await this.attemptDecryption(extractedData, password);
-                if (decryptResults.success) {
-                    finalData = decryptResults.data;
-                    cryptoType = decryptResults.type;
-                    console.log(`🔓 Déchiffrement réussi: ${cryptoType}`);
-                }
-            }
-            
-            this.hideProgress('decode-progress');
-            this.showDecodeResult(finalData, detectedMethod, cryptoType, confidence);
-            
-            console.log('✅ Décodage terminé avec succès');
-            
-        } catch (error) {
-            this.hideProgress('decode-progress');
-            console.error('❌ Erreur de décodage:', error);
-            this.showMessage(`Erreur de décodage: ${error.message}`, 'error');
-        }
-    }
-
-    async attemptDecryption(data, password) {
-        const attempts = [
-            { method: 'ultra', type: 'UltraCrypte' },
-            { method: 'basic', type: 'AES-256' }
         ];
         
         for (const attempt of attempts) {

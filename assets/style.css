@@ -819,57 +819,57 @@ ateY(0);
 
 .btn-secondary {
     background: var(--bg-white);   border-radius: var(--radius-lg);
-}
-
-.progress-text {
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-/* Result Areas */
-.result-area {
-    background: var(--bg-white);
-    border: 1px solid var(--success);
-    border-radius: var(--radius-xl);
-    padding: 2rem;
+    color: var(--text-primary);}
+    border-color: var(--border-medium);
     box-shadow: var(--shadow-sm);
-    animation: fadeInUp 0.4s ease-out;
-}
-
-.result-area h3 {
-    color: var(--success);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-.file-info,
-.extraction-info {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--border-light);
-}
-
-.info-item:last-child {
-    border-bottom: none;
-}
-
-.info-item span:first-child {
-    color: var (--text-secondary);
+}   color: var(--text-secondary);
     font-size: 0.875rem;
-    font-weight: 500;
+.btn-secondary:hover:not(:disabled) {
+    background: var(--bg-gray);
+    border-color: var(--border-medium);
+    box-shadow: var (--shadow-md);
+    transform: translateY(-1px);result-area {
+}    background: var(--bg-white);
+success);
+.btn-success {-xl);
+    background: var(--success);
+    color: var(--text-white);   box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm);    animation: fadeInUp 0.4s ease-out;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: var(--emerald-600);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-warning {m;
+    background: var(--warning);
+    color: var(--text-white);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-warning:hover:not(:disabled) {   display: grid;
+    background: #d97706;    gap: 1rem;
+    box-shadow: var(--shadow-md);em;
+    transform: translateY(-1px);
+}
+
+/* Progress System */lex;
+.progress-container {ce-between;
+    background: var(--bg-white);   align-items: center;
+    border: 1px solid var(--border-light);    padding: 0.75rem 0;
+    border-radius: var(--radius-xl);ttom: 1px solid var(--border-light);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm); none;
+}
+
+.progress-bar {.info-item span:first-child {
+    width: 100%;--text-secondary);
+    height: 8px;
+    background: var(--bg-gray);
 }
 
 .info-item span:last-child {
