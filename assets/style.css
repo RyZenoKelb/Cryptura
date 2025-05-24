@@ -742,83 +742,83 @@ type="password"],
 : var(--primary-500);
 .toggle-password:hover {
     color: var(--text-primary);sm);
+    background: var(--bg-gray);
 }
-
 .btn-primary:hover:not(:disabled) {
-    background: var(--primary-700);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+/* Checkbox Group */
+.checkbox-group {adow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}.btn-primary:active {
+ateY(0);
+.checkbox-group label {-shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;r(--bg-white);
+    color: var(--text-secondary);imary);
+    font-size: 0.875rem;-border-medium);
+    font-weight: 400;
 }
 
+.checkbox-group input[type="checkbox"] {hover:not(:disabled) {
+    width: 1.125rem;var(--bg-gray);
+    height: 1.125rem;: var(--border-medium);
+    accent-color: var(--primary-500);d);
+    border-radius: var(--radius-sm);
+}
+
+/* Modern Button System */btn-success {
+.action-buttons {    background: var(--success);
+    display: flex;-text-white);
+    gap: 1rem;ar(--shadow-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+}) {
+
+.btn {   box-shadow: var(--shadow-md);
+    display: inline-flex;    transform: translateY(-1px);
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;-warning);
+    border: 1px solid transparent;   color: var(--text-white);
+    border-radius: var(--radius-lg);    box-shadow: var(--shadow-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;) {
+    transition: var(--transition-base);
+    text-decoration: none;
+    min-width: 120px;nslateY(-1px);
+    position: relative;
+    overflow: hidden;
+}* Progress System */
+.progress-container {
+.btn:disabled {ar(--bg-white);
+    opacity: 0.5;--border-light);
+    cursor: not-allowed;adius-xl);
+}
+
+.btn-primary {center;
+    background: var(--primary-500);hadow-sm);
+    color: var(--text-white);
+    box-shadow: var(--shadow-sm);
+}.progress-bar {
+100%;
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-700);r(--bg-gray);
+    box-shadow: var(--shadow-md);ius: var (--radius-lg);
+    transform: translateY(-1px);
+}   margin-bottom: 1rem;
+}
 .btn-primary:active {
     transform: translateY(0);
     box-shadow: var(--shadow-sm);
-}
+}radient(90deg, var(--primary-500), var(--primary-600));
 
 .btn-secondary {
-    background: var(--bg-white);
-    color: var(--text-primary);
-    border-color: var(--border-medium);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-secondary:hover:not(:disabled) {
-    background: var(--bg-gray);
-    border-color: var(--border-medium);
-    box-shadow: var (--shadow-md);
-    transform: translateY(-1px);
-}
-
-.btn-success {
-    background: var(--success);
-    color: var(--text-white);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-success:hover:not(:disabled) {
-    background: var(--emerald-600);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-}
-
-.btn-warning {
-    background: var(--warning);
-    color: var(--text-white);
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-warning:hover:not(:disabled) {
-    background: #d97706;
-    box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
-}
-
-/* Progress System */
-.progress-container {
-    background: var(--bg-white);
-    border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    text-align: center;
-    box-shadow: var(--shadow-sm);
-}
-
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: var(--bg-gray);
-    border-radius: var (--radius-lg);
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
-    width: 0%;
-    transition: width 0.3s ease;
-    border-radius: var(--radius-lg);
+    background: var(--bg-white);   border-radius: var(--radius-lg);
 }
 
 .progress-text {

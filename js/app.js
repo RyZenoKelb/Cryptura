@@ -519,6 +519,33 @@ class ObscuraApp {
             // Stéganographie
             this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`);
             
+            const resultFile = await this.steganography.hideData(carrierFile, secretData, stegoMethod, {
+                quality: 'high',
+                method: stegoMethod
+            });
+            
+            // Finalisation
+            this.hideProgress('encode-progress');
+            this.showEncodeResult(resultFile, stegoMethod, cryptoLevel);
+            this.filesProcessed++;
+            this.updateStats();
+            
+            console.log('✅ Encodage terminé avec succès');
+            
+        } catch (error) {
+            this.hideProgress('encode-progress');
+            console.error('❌ Erreur d\'encodage:', error);
+            this.showMessage(`Erreur d'encodage: ${error.message}`, 'error');
+        }
+    }
+
+    validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
+        if (!carrierFile) {
+            return { valid: false, message: 'Veuillez sélectionner un fichier porteur' };
+        }
+        
+        if (!secretText && !secretFile) {
+            return { valid: false, message: 'Veuillez entrer un message ou sélectionner un fichier secret' };
         }
         
         if (cryptoLevel !== 'none' && !password) {
@@ -547,33 +574,6 @@ class ObscuraApp {
         
         const decodeFile = this.currentFiles.decode;
         const password = document.getElementById('decode-password').value;
-        const detectionMode = document.getElementById('detection-mode').value;
-        
-        if (!decodeFile) {
-            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
-            return;
-        }
-
-        try {
-            this.showProgress('decode-progress', 'Analyse du fichier...');
-            
-            // Extraction des données cachées
-            let result;
-            if (detectionMode === 'auto') {
-                this.updateProgress('decode-progress', 'Détection automatique...');
-                result = await this.steganography.autoDetectAndExtract(decodeFile);
-            } else if (detectionMode === 'brute') {
-                this.updateProgress('decode-progress', 'Force brute en cours...');
-                result = await this.steganography.bruteForceExtract(decodeFile);
-            } else {
-                this.updateProgress('decode-progress', `Extraction via ${detectionMode}...`);
-                const extractedData = await this.steganography.extractData(decodeFile, detectionMode);
-                result = { data: extractedData, method: detectionMode, confidence: 75 };
-            }
-            
-            let extractedData = result.data;
-            let detectedMethod = result.method;
-            let confidence = result.confidence || 50;
             
             console.log(`📤 Données extraites: ${extractedData.length} octets via ${detectedMethod}`);
             
