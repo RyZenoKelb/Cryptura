@@ -61,6 +61,10 @@
     /* Text Colors */
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-white: #f1f5f9;
+    
+    /* Border & Shadows */
     --border-light: #334155;
     --border-medium: #475569;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
@@ -89,18 +93,14 @@
     --bg-gray: #f8fafc;
     --bg-dark: #f1f5f9;
     --bg-darker: #e2e8f0;
+
+    /* Background RGB values for backdrop-filter */
+    --bg-white-rgb: 255, 255, 255;
+    --bg-gray-rgb: 248, 250, 252;
     
     /* Text Colors */
     --text-primary: #0f172a;
     --text-secondary: #475569;
-    --text-muted: #64748b;
-    --text-white: #ffffff;
-    
-    /* Border & Shadows */
-    --border-light: #e2e8f0;
-    --border-medium: #cbd5e1;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
