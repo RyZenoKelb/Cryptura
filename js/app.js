@@ -1167,134 +1167,135 @@ class ObscuraApp {
             'metadata': 'Métadonnées',
             'audio-spread': 'Dispersion Audio',
             'video-frame': 'Frames Vidéo',
-        return methods[method] || method.charAt(0).toUpperCase() + method.slice(1);document.body.appendChild(a);
+            'document-hidden': 'Document Caché',
+            'auto': 'Détection Automatique',
+            'brute': 'Force Brute'
+        };
+        
+        return methods[method] || method.charAt(0).toUpperCase() + method.slice(1);
     }
-   document.body.removeChild(a);
-    generateOutputFilename(originalFile, method) {        URL.revokeObjectURL(url);
+
+    generateOutputFilename(originalFile, method) {
         const baseName = originalFile.name.replace(/\.[^.]+$/, '');
-        const extension = originalFile.name.split('.').pop();filename} (${this.formatFileSize(blob.size)})`);
+        const extension = originalFile.name.split('.').pop();
         return `${baseName}_obscura_${method}.${extension}`;
     }
 
     generateExtractedFilename(data) {
         // Tentative de détection du type de fichier extrait
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-           const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        // Headers de fichiers courants        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        // Headers de fichiers courants
         const fileHeaders = {
-            '\x89PNG': 'png',).toFixed(2)) + ' ' + sizes[i];
+            '\x89PNG': 'png',
             'GIF8': 'gif',
             '\xFF\xD8\xFF': 'jpg',
             'PK\x03\x04': 'zip',
-            '%PDF': 'pdf') => {
-        }; const reader = new FileReader();
-               reader.onload = (e) => resolve(e.target.result);
-        const dataStr = String.fromCharCode(...data.slice(0, 10));            reader.onerror = reject;
-        for (const [header, ext] of Object.entries(fileHeaders)) {readAsArrayBuffer(file);
+            '%PDF': 'pdf'
+        };
+        
+        const dataStr = String.fromCharCode(...data.slice(0, 10));
+        for (const [header, ext] of Object.entries(fileHeaders)) {
             if (dataStr.startsWith(header)) {
                 return `extracted_${timestamp}.${ext}`;
             }
-        }eStats() {
-           const statsElement = document.getElementById('files-processed');
-        // Tentative de détection texte        if (statsElement) {
-        try {nt.textContent = `${this.filesProcessed} fichiers traités`;
+        }
+        
+        // Tentative de détection texte
+        try {
             const text = new TextDecoder('utf-8').decode(data.slice(0, 100));
             if (!/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/.test(text)) {
                 return `extracted_${timestamp}.txt`;
-            }scapeHtml(text) {
-        } catch (e) {       const div = document.createElement('div');
-            // Pas du texte        div.textContent = text;
-        }
             }
+        } catch (e) {
+            // Pas du texte
+        }
+        
         return `extracted_${timestamp}.bin`;
     }
-==== INITIALISATION ==========
+
     downloadFile(blob, filename) {
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');ener('DOMContentLoaded', () => {
+        const a = document.createElement('a');
         a.href = url;
-        a.download = filename;();
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        tyle="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; color: #ef4444;">
-        console.log(`💾 Téléchargement: ${filename} (${this.formatFileSize(blob.size)})`);      <h1>❌ Erreur d'initialisation</h1>
-    }           <p>Impossible de démarrer Obscura: ${error.message}</p>
-             <p><small>Vérifiez la console pour plus de détails</small></p>
-    formatFileSize(bytes) {            </div>
+        
+        console.log(`💾 Téléchargement: ${filename} (${this.formatFileSize(blob.size)})`);
+    }
+
+    formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        w.addEventListener('error', (e) => {
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]; console.error('💥 Erreur globale:', e.error);
-    }    if (window.app) {
-.message}`, 'error');
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
     async fileToArrayBuffer(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);w.addEventListener('unhandledrejection', (e) => {
-            reader.onerror = reject; console.error('💥 Promise rejetée:', e.reason);
-            reader.readAsArrayBuffer(file);    if (window.app) {
-        });`Erreur asynchrone: ${e.reason}`, 'error');
-    }    }
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
 
     updateStats() {
-        const statsElement = document.getElementById('files-processed');/ ========== EXPORT ==========
+        const statsElement = document.getElementById('files-processed');
+        if (statsElement) {
+            statsElement.textContent = `${this.filesProcessed} fichiers traités`;
+        }
+    }
 
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+}
 
+// ========== INITIALISATION ==========
 
+// Initialisation de l'application au chargement du DOM
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        window.app = new ObscuraApp();
+        console.log('🎉 Obscura initialisé avec succès');
+    } catch (error) {
+        console.error('💥 Erreur d\'initialisation:', error);
+        document.body.innerHTML = `
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; color: #ef4444;">
+                <h1>❌ Erreur d'initialisation</h1>
+                <p>Impossible de démarrer Obscura: ${error.message}</p>
+                <p><small>Vérifiez la console pour plus de détails</small></p>
+            </div>
+        `;
+    }
+});
 
+// Gestion des erreurs globales
+window.addEventListener('error', (e) => {
+    console.error('💥 Erreur globale:', e.error);
+    if (window.app) {
+        window.app.showMessage(`Erreur inattendue: ${e.message}`, 'error');
+    }
+});
 
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('💥 Promise rejetée:', e.reason);
+    if (window.app) {
+        window.app.showMessage(`Erreur asynchrone: ${e.reason}`, 'error');
+    }
+});
 
+// ========== EXPORT ==========
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}    module.exports = ObscuraApp;if (typeof module !== 'undefined' && module.exports) {// ========== EXPORT ==========});    }        window.app.showMessage(`Erreur asynchrone: ${e.reason}`, 'error');    if (window.app) {    console.error('💥 Promise rejetée:', e.reason);window.addEventListener('unhandledrejection', (e) => {});    }        window.app.showMessage(`Erreur inattendue: ${e.message}`, 'error');    if (window.app) {    console.error('💥 Erreur globale:', e.error);window.addEventListener('error', (e) => {// Gestion des erreurs globales});    }        `;            </div>                <p><small>Vérifiez la console pour plus de détails</small></p>                <p>Impossible de démarrer Obscura: ${error.message}</p>                <h1>❌ Erreur d'initialisation</h1>            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; color: #ef4444;">        document.body.innerHTML = `        console.error('💥 Erreur d\'initialisation:', error);    } catch (error) {        console.log('🎉 Obscura initialisé avec succès');        window.app = new ObscuraApp();    try {document.addEventListener('DOMContentLoaded', () => {// Initialisation de l'application au chargement du DOM// ========== INITIALISATION ==========}    }        return div.innerHTML;        div.textContent = text;        const div = document.createElement('div');    escapeHtml(text) {    }        }            statsElement.textContent = `${this.filesProcessed} fichiers traités`;        if (statsElement) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ObscuraApp;
 }
