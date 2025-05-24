@@ -50,7 +50,11 @@ class ObscuraApp {
             document.getElementById('carrier-file').click();
         });
 
-        document.getElementById('secret-upload').addEventListener('click', () => {
+        document.getElementById('secret-upload').addEventListener('click', (e) => {
+            // Ne pas ouvrir le sélecteur si on clique sur la textarea
+            if (e.target.tagName === 'TEXTAREA') {
+                return;
+            }
             if (!document.getElementById('secret-text').value) {
                 document.getElementById('secret-file').click();
             }
