@@ -42,85 +42,85 @@
                                           repeatCount="indefinite"/>
                     </circle>
                     
-                        </circle>
-                        
-                        <!-- Middle hexagonal ring -->
-                        <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="360 50 50;0 50 50" 
-                                              dur="12s" 
-                                              repeatCount="indefinite"/>
-                        </polygon>
-                        
-                        <!-- Inner diamond -->
-                        <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="url(#logoGradient)" opacity="0.9">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;-360 50 50" 
-                                              dur="6s" 
-                                              repeatCount="indefinite"/>
-                        </path>
-                        
-                        <!-- Central core -->
-                        <circle cx="50" cy="50" r="8" fill="url(#logoGradient)">
-                            <animate attributeName="r" 
-                                     values="8;12;8" 
-                                     dur="2s" 
-                                     repeatCount="indefinite"/>
-                            <animate attributeName="opacity" 
-                                     values="1;0.7;1" 
-                                     dur="2s" 
-                                     repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <!-- Orbiting particles -->
-                        <circle cx="50" cy="20" r="2" fill="#2563eb" opacity="0.8">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="3s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <circle cx="80" cy="50" r="1.5" fill="#f97316" opacity="0.6">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="5s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <circle cx="50" cy="80" r="2" fill="#10b981" opacity="0.7">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="4s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                    </svg>
-                    <div class="brand-text">
-                        <div class="brand-name">OBSCURA</div>
-                        <div class="brand-tagline" data-i18n="header.tagline">Advanced Steganography</div>
+                    <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6">
+                        <animateTransform attributeName="transform" 
+                                          type="rotate" 
+                                          values="360 50 50;0 50 50" 
+                                          dur="12s" 
+                                          repeatCount="indefinite"/>
+                    </polygon>
+                    
+                    <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="url(#logoGradient)" opacity="0.9">
+                        <animateTransform attributeName="transform" 
+                                          type="rotate" 
+                                          values="0 50 50;-360 50 50" 
+                                          dur="6s" 
+                                          repeatCount="indefinite"/>
+                    </path>
+                    
+                    <circle cx="50" cy="50" r="8" fill="url(#logoGradient)">
+                        <animate attributeName="r" 
+                                 values="8;12;8" 
+                                 dur="2s" 
+                                 repeatCount="indefinite"/>
+                        <animate attributeName="opacity" 
+                                 values="1;0.7;1" 
+                                 dur="2s" 
+                                 repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+                
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-name">OBSCURA</div>
+                    <div class="sidebar-brand-tagline" data-i18n="header.tagline">Advanced Steganography</div>
+                </div>
+                
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-angle-left"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title" data-i18n="nav.sections.main">Principal</div>
+                    <div class="nav-item">
+                        <button class="nav-link active" data-tab="encode">
+                            <i class="fas fa-shield-alt"></i>
+                            <span class="nav-text" data-i18n="nav.encode">Encoder</span>
+                        </button>
+                    </div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-tab="decode">
+                            <i class="fas fa-search"></i>
+                            <span class="nav-text" data-i18n="nav.decode">Décoder</span>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="header-actions">
-                    <div class="status-badge">
-                        <div class="status-dot"></div>
-                        <span data-i18n="header.status">Système actif</span>
-                    </div>
-                    
-                    <!-- Language Selector -->
-                    <div class="language-selector">
-                        <button class="language-toggle" id="language-toggle">
-                            <i class="fas fa-globe"></i>
-                            <span class="toggle-text" data-i18n="settings.language">Langue</span>
+                <div class="nav-section">
+                    <div class="nav-section-title" data-i18n="nav.sections.advanced">Avancé</div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-tab="ultracrypte">
+                            <i class="fas fa-lock"></i>
+                            <span class="nav-text" data-i18n="nav.ultracrypte">UltraCrypte</span>
                         </button>
-                        <div class="language-dropdown" id="language-dropdown">
-                            <div class="language-option" data-lang="fr">
-                                <div class="language-flag fr"></div>
-                                <span data-i18n="settings.language.fr">Français</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title" data-i18n="nav.sections.support">Support</div>
+                    <div class="nav-item">
+                        <button class="nav-link" data-tab="help">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="nav-text" data-i18n="nav.help">Documentation</span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="sidebar-actions">
+                    <!-- Theme Toggle -->
                             </div>
                             <div class="language-option" data-lang="en">
                                 <div class="language-flag us"></div>
