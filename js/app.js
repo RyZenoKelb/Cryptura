@@ -551,54 +551,54 @@ class ObscuraApp {
         
         if (!decodeFile) {
             this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
+            return;
+        }
+
+        try {
+            this.showProgress('decode-progress', 'Analyse du fichier...');
             
-            // Extraction des données cachéesattemptDecryption(data, password) {
-            let result;const attempts = [
-            if (detectionMode === 'auto') {raCrypte' },
-                this.updateProgress('decode-progress', 'Détection automatique...');hod: 'basic', type: 'AES-256' }
+            // Extraction des données cachées
+            let result;
+            if (detectionMode === 'auto') {
+                this.updateProgress('decode-progress', 'Détection automatique...');
                 result = await this.steganography.autoDetectAndExtract(decodeFile);
             } else if (detectionMode === 'brute') {
                 this.updateProgress('decode-progress', 'Force brute en cours...');
                 result = await this.steganography.bruteForceExtract(decodeFile);
             } else {
                 this.updateProgress('decode-progress', `Extraction via ${detectionMode}...`);
-                const extractedData = await this.steganography.extractData(decodeFile, detectionMode);ethod === 'ultra') {
+                const extractedData = await this.steganography.extractData(decodeFile, detectionMode);
                 result = { data: extractedData, method: detectionMode, confidence: 75 };
             }
-            xity of complexities) {
+            
             let extractedData = result.data;
-            let detectedMethod = result.method;   decryptedData = await this.ultraCrypte.decrypt(data, password, { complexity });
-            let confidence = result.confidence || 50;       return { success: true, data: decryptedData, type: `${attempt.type} (${complexity})` };
-            } catch (e) {
+            let detectedMethod = result.method;
+            let confidence = result.confidence || 50;
+            
             console.log(`📤 Données extraites: ${extractedData.length} octets via ${detectedMethod}`);
             
-            // Tentative de déchiffrement si mot de passe fourni   }
-            let finalData = extractedData;} else {
-            let cryptoType = 'Aucun';Data = await this.basicDecrypt(data, password);
-            tedData, type: attempt.type };
-            if (password && password.length > 0) {   }
-                this.updateProgress('decode-progress', 'Tentative de déchiffrement...');       
-                    } catch (error) {
-                const decryptResults = await this.attemptDecryption(extractedData, password);er la méthode suivante
-                if (decryptResults.success) {       }
-                    finalData = decryptResults.data;        }
+            // Tentative de déchiffrement si mot de passe fourni
+            let finalData = extractedData;
+            let cryptoType = 'Aucun';
+            
+            if (password && password.length > 0) {
+                this.updateProgress('decode-progress', 'Tentative de déchiffrement...');
+                
+                const decryptResults = await this.attemptDecryption(extractedData, password);
+                if (decryptResults.success) {
+                    finalData = decryptResults.data;
                     cryptoType = decryptResults.type;
-                    console.log(`🔓 Déchiffrement réussi: ${cryptoType}`);        return { success: false };
+                    console.log(`🔓 Déchiffrement réussi: ${cryptoType}`);
                 }
             }
-            ========= ANALYSE ==========
+            
             this.hideProgress('decode-progress');
-            this.showDecodeResult(finalData, detectedMethod, cryptoType, confidence);c handleAnalyze() {
-            marrage de l\'analyse...');
+            this.showDecodeResult(finalData, detectedMethod, cryptoType, confidence);
+            
             console.log('✅ Décodage terminé avec succès');
-            eFile = this.currentFiles.decode;
+            
         } catch (error) {
-            this.hideProgress('decode-progress');        if (!decodeFile) {
-            console.error('❌ Erreur de décodage:', error);his.showMessage('Veuillez sélectionner un fichier à analyser', 'error');
-            this.showMessage(`Erreur de décodage: ${error.message}`, 'error');
-        }
-    }
-
+            this.hideProgress('decode-progress');
     async attemptDecryption(data, password) {this.showProgress('decode-progress', 'Analyse forensique en cours...');
         const attempts = [
             { method: 'ultra', type: 'UltraCrypte' },fichier
