@@ -104,26 +104,26 @@ class ObscuraApp {
     init() {
         this.setupEventListeners();
         this.setupDragAndDrop();
-        });
+        this.setupKeyboardShortcuts();
+        this.updateStats();
+        
+        // Affichage du panneau initial
+        this.showPanel('encode');
+        
+        // Message de bienvenue
+        this.showMessage('Bienvenue dans Obscura - Stéganographie Ultra-Sécurisée', 'success');
+        
+        console.log('✅ Application initialisée avec succès');
+    }
 
-        document.getElementById('secret-upload').addEventListener('click', () => {
-            if (!document.getElementById('secret-text').value) {
-                document.getElementById('secret-file').click();
-            }
-        });
-
-        document.getElementById('decode-upload').addEventListener('click', () => {
-            document.getElementById('decode-file').click();
-        });
-
-        // Boutons d'action principaux
-        document.getElementById('encode-btn').addEventListener('click', () => {
-            this.handleEncode();
-        });
-
-        document.getElementById('decode-btn').addEventListener('click', () => {
-            this.handleDecode();
-        });
+    setupEventListeners() {
+        console.log('🔧 Configuration des événements...');
+        
+        // Navigation entre panneaux
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const tabName = e.currentTarget.dataset.tab;
+                this.showPanel(tabName);
 
         document.getElementById('analyze-btn').addEventListener('click', () => {
             this.handleAnalyze();
