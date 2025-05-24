@@ -88,13 +88,13 @@ f (e.target.id === 'download-btn') {
         console.log('🔧 Configuration des événements...');            } else if (e.target.id === 'save-extracted') {
         
         // Navigation entre panneaux
-        });
-
-        // Toggle visibilité des mots de passe
-        document.querySelectorAll('.toggle-password').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.togglePasswordVisibility(e);
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const tabName = e.currentTarget.dataset.tab;le visibilité des mots de passe
+                this.showPanel(tabName);ument.querySelectorAll('.toggle-password').forEach(btn => {
+                console.log(`📱 Basculement vers ${tabName}`);            btn.addEventListener('click', (e) => {
             });
+        });
         });
 
         // Vérification force mot de passe UltraCrypte

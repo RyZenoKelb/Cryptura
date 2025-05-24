@@ -1192,3 +1192,21 @@ body::before {
     }
     
     .footer-content {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+    
+    .brand-tagline {
+        display: none;
+    }
+    
+    .header-actions {
+        gap: 0.5rem;
+    }
+    
+    .toggle-text {
+        display: none;
+    }
+    
+    .theme-toggle,
