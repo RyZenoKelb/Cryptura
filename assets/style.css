@@ -1,12 +1,77 @@
-/* Modern Tech Startup Design System */
+/* Modern Tech Startup Design System with Dark/Light Theme Support */
+
 :root {
     /* Core Brand Colors */
-    --primary-500: #2563eb;
-    --primary-600: #1d4ed8;
-    --primary-700: #1e40af;
+    --primary-500: #3b82f6;
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
     --primary-900: #1e3a8a;
     
-    /* Neutral Grays */
+    /* Semantic Colors (consistent across themes) */
+    --emerald-500: #10b981;
+    --emerald-600: #059669;
+    --orange-500: #f97316;
+    --red-500: #ef4444;
+    --amber-500: #f59e0b;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    
+    /* Layout */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+}
+
+/* Dark Theme (Default) */
+:root,
+:root[data-theme="dark"] {
+    /* Neutral Grays - Dark */
+    --gray-50: #1e293b;
+    --gray-100: #334155;
+    --gray-200: #475569;
+    --gray-300: #64748b;
+    --gray-400: #94a3b8;
+    --gray-500: #cbd5e1;
+    --gray-600: #e2e8f0;
+    --gray-700: #f1f5f9;
+    --gray-800: #f8fafc;
+    --gray-900: #ffffff;
+    --gray-950: #ffffff;
+    
+    /* Semantic Colors */
+    --success: var(--emerald-500);
+    --warning: var(--amber-500);
+    --error: var(--red-500);
+    --info: var(--primary-500);
+    
+    /* Background System */
+    --bg-white: #0f172a;
+    --bg-gray: #1e293b;
+    --bg-dark: #334155;
+    --bg-darker: #020617;
+    
+    /* Text Colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-white: #f1f5f9;
+    
+    /* Border & Shadows */
+    --border-light: #334155;
+    --border-medium: #475569;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+}
+
+/* Light Theme */
+:root[data-theme="light"] {
+    /* Neutral Grays - Light */
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;
     --gray-200: #e2e8f0;
@@ -19,88 +84,23 @@
     --gray-900: #0f172a;
     --gray-950: #020617;
     
-    /* Accent Colors */
-    --emerald-500: #10b981;
-    --emerald-600: #059669;
-    --orange-500: #f97316;
-    --red-500: #ef4444;
-    --amber-500: #f59e0b;
-    
-    /* Semantic Colors */
-    --success: var(--emerald-500);
-    --warning: var(--amber-500);
-    --error: var(--red-500);
-    --info: var(--primary-500);
-    
     /* Background System */
     --bg-white: #ffffff;
-    --bg-gray: var(--gray-50);
-    --bg-dark: var(--gray-900);
-    --bg-darker: var(--gray-950);
+    --bg-gray: #f8fafc;
+    --bg-dark: #f1f5f9;
+    --bg-darker: #e2e8f0;
     
     /* Text Colors */
-    --text-primary: var(--gray-900);
-    --text-secondary: var(--gray-600);
-    --text-muted: var(--gray-500);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
     --text-white: #ffffff;
     
     /* Border & Shadows */
-    --border-light: var(--gray-200);
-    --border-medium: var(--gray-300);
+    --border-light: #e2e8f0;
+    --border-medium: #cbd5e1;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    
-    /* Layout */
-    --radius-sm: 0.375rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
-    --radius-xl: 1rem;
-    
-    /* Transitions */
-    --transition-fast: 150ms ease;
-    --transition-base: 200ms ease;
-    --transition-slow: 300ms ease;
-}
-
-/* Reset & Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    line-height: 1.6;
-    color: var(--text-primary);
-    background: var(--bg-white);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Modern Background */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-        linear-gradient(135deg, var(--gray-50) 0%, var(--bg-white) 50%, var(--gray-50) 100%);
-    z-index: -1;
-    pointer-events: none;
-}
-
-/* Container */
 .app-container {
     min-height: 100vh;
     display: flex;
