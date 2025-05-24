@@ -736,62 +736,62 @@ class ObscuraApp {
         detectedCrypto.textContent = cryptoType;
         
         // Configuration de la sauvegarde
+        saveBtn.onclick = () => {
+            const filename = this.generateExtractedFilename(data);
+            const blob = new Blob([data], { type: 'application/octet-stream' });
+            this.downloadFile(blob, filename);
+            this.showMessage('Données extraites sauvegardées!', 'success');
         };
         
         resultArea.style.display = 'block';
         resultArea.classList.add('fade-in');
-        extDecoder('utf-8').decode(data);
+        
         // Scroll vers le résultat
-        setTimeout(() => {on si c'est du texte lisible
-            resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/)) {
-        }, 300);       isText = false;
-    }    }
-) {
+        setTimeout(() => {
+            resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 300);
+    }
+
     showAnalysisResult(analysis, extractions = []) {
         const resultArea = document.getElementById('decode-result');
         const preview = document.getElementById('content-preview');
         
-        // Génération du rapport d'analyse// Affichage hexadécimal pour les données binaires
+        // Génération du rapport d'analyse
         const report = this.steganography.generateReport(analysis);
-        , maxBytes);
+        
         let analysisHtml = `<div class="analysis-report">`;
         analysisHtml += `<pre>${report}</pre>`;
         
-        if (extractions.length > 0) {   const chunk = data.slice(i, i + 16);
-            analysisHtml += `<div class="extractions-found">`;    const hex = Array.from(chunk).map(b => b.toString(16).padStart(2, '0')).join(' ');
-            analysisHtml += `<h4>🎯 EXTRACTIONS RÉUSSIES:</h4>`;chunk).map(b => b >= 32 && b <= 126 ? String.fromCharCode(b) : '.').join('');
-            extractions.forEach((ext, index) => {ascii}`);
+        if (extractions.length > 0) {
+            analysisHtml += `<div class="extractions-found">`;
+            analysisHtml += `<h4>🎯 EXTRACTIONS RÉUSSIES:</h4>`;
+            extractions.forEach((ext, index) => {
                 analysisHtml += `<div class="extraction-item">`;
                 analysisHtml += `${index + 1}. ${this.getMethodName(ext.method)}: `;
                 analysisHtml += `${this.formatFileSize(ext.size)} `;
-                analysisHtml += `(entropie: ${ext.entropy.toFixed(3)})`;       hexLines.push(`... et ${data.length - maxBytes} octets supplémentaires`);
-                analysisHtml += `</div>`;    }
+                analysisHtml += `(entropie: ${ext.entropy.toFixed(3)})`;
+                analysisHtml += `</div>`;
             });
-            analysisHtml += `</div>`;'\n');
+            analysisHtml += `</div>`;
         }
         
-        analysisHtml += `</div>`;// Limitation de la taille d'affichage
-        layText.length > 5000) {
-        preview.innerHTML = analysisHtml;.. [contenu tronqué]';
+        analysisHtml += `</div>`;
+        
+        preview.innerHTML = analysisHtml;
         
         // Masquer le bouton de sauvegarde pour l'analyse
-        document.getElementById('save-extracted').style.display = 'none';   return {
-                    html: `<pre>${this.escapeHtml(displayText)}</pre>`,
+        document.getElementById('save-extracted').style.display = 'none';
+        
         resultArea.style.display = 'block';
-        resultArea.classList.add('fade-in');        };
+        resultArea.classList.add('fade-in');
     }
 
     prepareContentPreview(data) {
         let displayText = '';
         let isText = true;
-        entById(progressId);
-        try {const textElement = progressElement.querySelector('.progress-text');
+        
+        try {
             // Tentative de décodage en UTF-8
-            displayText = new TextDecoder('utf-8').decode(data);
-            t.style.display = 'block';
-            // Vérification si c'est du texte lisible
-            if (displayText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/)) {re de progression
-                isText = false;ent.querySelector('.progress-fill');
             }0;
         } catch (error) {
             isText = false;
