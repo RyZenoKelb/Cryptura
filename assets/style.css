@@ -53,33 +53,29 @@
     --bg-gray: #1e293b;
     --bg-dark: #334155;
     --bg-darker: #020617;
-
-    /* Background RGB values for backdrop-filter */
-    --bg-white-rgb: 15, 23, 42;
-    --bg-gray-rgb: 30, 41, 59;
     
-    /* Text Colors */
-    --text-primary: #f1f5f9;
+    /* Text Colors */ values for backdrop-filter */
+    --text-primary: #f1f5f9;42;
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
     --text-white: #f1f5f9;
-    
-    /* Border & Shadows */
+    --text-primary: #f1f5f9;
+    /* Border & Shadows */5e1;
     --border-light: #334155;
     --border-medium: #475569;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
-}
-
-/* Light Theme */
-:root[data-theme="light"] {
+}   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+/* Light Theme */0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+:root[data-theme="light"] {x -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
     /* Neutral Grays - Light */
     --gray-50: #f8fafc;
     --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-300: #cbd5e1;
+    --gray-200: #e2e8f0;] {
+    --gray-300: #cbd5e1;ight */
     --gray-400: #94a3b8;
     --gray-500: #64748b;
     --gray-600: #475569;
@@ -87,49 +83,53 @@
     --gray-800: #1e293b;
     --gray-900: #0f172a;
     --gray-950: #020617;
-    
+    --gray-700: #334155;
     /* Background System */
     --bg-white: #ffffff;
-    --bg-gray: #f8fafc;
+    --bg-gray: #f8fafc;;
     --bg-dark: #f1f5f9;
-    --bg-darker: #e2e8f0;
-
-    /* Background RGB values for backdrop-filter */
-    --bg-white-rgb: 255, 255, 255;
-    --bg-gray-rgb: 248, 250, 252;
-    
-    /* Text Colors */
+    --bg-darker: #e2e8f0;*/
+    --bg-white: #ffffff;
+    /* Text Colors */c;
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #64748b;
-    --text-white: #ffffff;
-    
-    /* Border & Shadows */
+    --text-white: #ffffff;es for backdrop-filter */
+    --bg-white-rgb: 255, 255, 255;
+    /* Border & Shadows */0, 252;
     --border-light: #e2e8f0;
     --border-medium: #cbd5e1;
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}   
+    /* Border & Shadows */
+/* Reset & Base */: #e2e8f0;
+* { --border-medium: #cbd5e1;
+    margin: 0;m: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    padding: 0;: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    box-sizing: border-box;x -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
-
-/* Reset & Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    transition: background-color var(--transition-base), 
-                border-color var(--transition-base), 
-                color var(--transition-base),
-                box-shadow var(--transition-base);
-}
-
 html {
     scroll-behavior: smooth;
+} {
+    margin: 0;
+body {dding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;round-color var(--transition-base), 
+    color: var(--text-primary);r(--transition-base), 
+    background: var(--bg-white);sition-base),
+    -webkit-font-smoothing: antialiased;ion-base);
+    -moz-osx-font-smoothing: grayscale;
 }
-
-body {
-    top: 0;
+html {
+/* Modern Background with theme support */
+body::before {
+    content: '';
+    position: fixed;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     left: 0;
     width: 100%;
     height: 100%;
@@ -307,12 +307,12 @@ body {
     background-image: linear-gradient(to right, #002395 33%, #ffffff 33% 67%, #ed2939 67%);
 }
 
-.language-flag.en {
-    background: linear-gradient(to bottom, #012169 0%, #012169 33%, #ffffff 33%, #ffffff 67%, #c8102e 67%);
-    position: relative;
-}
-
-.status-badge {
+.language-flag.us {
+    background: 
+        /* Red stripes */
+        linear-gradient(to bottom, 
+            #b22234 0%, #b22234 7.69%, 
+            #ffffff 7.69%, #ffffff 15.38%, 
     display: flex;
     align-items: center;
     gap: 0.5rem;
