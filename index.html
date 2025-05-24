@@ -4,46 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Obscura - Stéganographie Ultra-Sécurisée</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
+        <!-- Modern Header -->
         <header class="header">
-            <div class="logo-container">
-                <svg class="logo" viewBox="0 0 50 50" width="40" height="40">
-                    <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
-                    <path d="M15 25 L25 15 L35 25 L25 35 Z" fill="currentColor" opacity="0.7"/>
-                    <circle cx="25" cy="25" r="5" fill="currentColor"/>
-                </svg>
-                <h1>OBSCURA</h1>
-            </div>
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>Prêt</span>
+            <div class="header-content">
+                <div class="logo-container">
+                    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1">
+                                    <animate attributeName="stop-color" 
+                                             values="#2563eb;#1d4ed8;#10b981;#2563eb" 
+                                             dur="4s" 
+                                             repeatCount="indefinite"/>
+                                </stop>
+                                <stop offset="100%" style="stop-color:#f97316;stop-opacity:1">
+                                    <animate attributeName="stop-color" 
+                                             values="#f97316;#ef4444;#10b981;#f97316" 
+                                             dur="4s" 
+                                             repeatCount="indefinite"/>
+                                </stop>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Outer rotating ring -->
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="0 50 50;360 50 50" 
+                                              dur="8s" 
+                                              repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <!-- Middle hexagonal ring -->
+                        <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="360 50 50;0 50 50" 
+                                              dur="12s" 
+                                              repeatCount="indefinite"/>
+                        </polygon>
+                        
+                        <!-- Inner diamond -->
+                        <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="url(#logoGradient)" opacity="0.9">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="0 50 50;-360 50 50" 
+                                              dur="6s" 
+                                              repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Central core -->
+                        <circle cx="50" cy="50" r="8" fill="url(#logoGradient)">
+                            <animate attributeName="r" 
+                                     values="8;12;8" 
+                                     dur="2s" 
+                                     repeatCount="indefinite"/>
+                            <animate attributeName="opacity" 
+                                     values="1;0.7;1" 
+                                     dur="2s" 
+                                     repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <!-- Orbiting particles -->
+                        <circle cx="50" cy="20" r="2" fill="#2563eb" opacity="0.8">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="0 50 50;360 50 50" 
+                                              dur="3s" 
+                                              repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <circle cx="80" cy="50" r="1.5" fill="#f97316" opacity="0.6">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="0 50 50;360 50 50" 
+                                              dur="5s" 
+                                              repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <circle cx="50" cy="80" r="2" fill="#10b981" opacity="0.7">
+                            <animateTransform attributeName="transform" 
+                                              type="rotate" 
+                                              values="0 50 50;360 50 50" 
+                                              dur="4s" 
+                                              repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                    <div class="brand-text">
+                        <div class="brand-name">OBSCURA</div>
+                        <div class="brand-tagline">Advanced Steganography</div>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <div class="status-badge">
+                        <div class="status-dot"></div>
+                        <span>Système actif</span>
+                    </div>
+                </div>
             </div>
         </header>
 
-        <!-- Navigation -->
+        <!-- Modern Navigation -->
         <nav class="nav-container">
-            <div class="nav-tabs">
-                <button class="nav-tab active" data-tab="encode">
-                    <i class="fas fa-lock"></i>
-                    <span>Encoder</span>
-                </button>
-                <button class="nav-tab" data-tab="decode">
-                    <i class="fas fa-unlock"></i>
-                    <span>Décoder</span>
-                </button>
-                <button class="nav-tab" data-tab="ultracrypte">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>UltraCrypte</span>
-                </button>
-                <button class="nav-tab" data-tab="help">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Aide</span>
-                </button>
+            <div class="nav-content">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="encode">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Encoder</span>
+                    </button>
+                    <button class="nav-tab" data-tab="decode">
+                        <i class="fas fa-search"></i>
+                        <span>Décoder</span>
+                    </button>
+                    <button class="nav-tab" data-tab="ultracrypte">
+                        <i class="fas fa-lock"></i>
+                        <span>UltraCrypte</span>
+                    </button>
+                    <button class="nav-tab" data-tab="help">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Documentation</span>
+                    </button>
+                </div>
             </div>
         </nav>
 
@@ -52,8 +143,8 @@
             <!-- Encode Panel -->
             <div class="panel active" id="encode-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-lock"></i> Encodage & Dissimulation</h2>
-                    <p>Cachez vos messages ou fichiers dans un support multimédia</p>
+                    <h1 class="panel-title">Encodage Sécurisé</h1>
+                    <p class="panel-subtitle">Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire</p>
                 </div>
                 
                 <div class="form-section">
@@ -61,18 +152,18 @@
                         <div class="upload-zone" id="carrier-upload">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <h3>Fichier Porteur</h3>
-                            <p>Glissez-déposez ou cliquez pour sélectionner</p>
-                            <small>Images, Audio, Vidéo, Documents</small>
+                            <p>Glissez votre média ou cliquez pour sélectionner</p>
+                            <small>Images • Audio • Vidéo • Documents</small>
                             <input type="file" id="carrier-file" accept=".jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.avi,.pdf,.docx" hidden>
                         </div>
                         
                         <div class="upload-zone" id="secret-upload">
-                            <i class="fas fa-eye-slash"></i>
+                            <i class="fas fa-user-secret"></i>
                             <h3>Contenu Secret</h3>
-                            <p>Message texte ou fichier à cacher</p>
-                            <textarea id="secret-text" placeholder="Votre message secret..."></textarea>
+                            <p>Message ou fichier à dissimuler</p>
+                            <textarea id="secret-text" placeholder="Votre message confidentiel..."></textarea>
                             <div class="file-option">
-                                <label>Ou fichier : </label>
+                                <label>Ou sélectionner un fichier : </label>
                                 <input type="file" id="secret-file">
                             </div>
                         </div>
@@ -80,29 +171,29 @@
                     
                     <div class="options-grid">
                         <div class="option-group">
-                            <label>Type de Stéganographie</label>
+                            <label>Méthode de Stéganographie</label>
                             <select id="stego-method">
                                 <option value="lsb">LSB - Least Significant Bit</option>
-                                <option value="metadata">Métadonnées</option>
-                                <option value="audio-spread">Dispersion Audio</option>
+                                <option value="metadata">Métadonnées EXIF</option>
+                                <option value="audio-spread">Dispersion Spectrale Audio</option>
                                 <option value="video-frame">Frames Vidéo</option>
-                                <option value="document-hidden">Document Caché</option>
+                                <option value="document-hidden">Texte Invisible</option>
                             </select>
                         </div>
                         
                         <div class="option-group">
                             <label>Niveau de Chiffrement</label>
                             <select id="crypto-level">
-                                <option value="none">Aucun</option>
-                                <option value="aes">AES-256</option>
-                                <option value="ultra">UltraCrypte</option>
+                                <option value="none">Aucun chiffrement</option>
+                                <option value="aes">AES-256-GCM</option>
+                                <option value="ultra">UltraCrypte™</option>
                             </select>
                         </div>
                         
                         <div class="option-group">
-                            <label>Mot de passe</label>
+                            <label>Mot de passe de chiffrement</label>
                             <div class="password-input">
-                                <input type="password" id="encode-password" placeholder="Clé de chiffrement">
+                                <input type="password" id="encode-password" placeholder="Phrase de passe sécurisée">
                                 <button type="button" class="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -112,17 +203,17 @@
                         <div class="option-group">
                             <label>Options Avancées</label>
                             <div class="checkbox-group">
-                                <label><input type="checkbox" id="compress-data"> Compression</label>
-                                <label><input type="checkbox" id="add-noise"> Bruit aléatoire</label>
-                                <label><input type="checkbox" id="multi-layer"> Multi-couches</label>
+                                <label><input type="checkbox" id="compress-data"> Compression des données</label>
+                                <label><input type="checkbox" id="add-noise"> Ajout de bruit cryptographique</label>
+                                <label><input type="checkbox" id="multi-layer"> Protection multi-couches</label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="encode-btn">
-                            <i class="fas fa-cogs"></i>
-                            Encoder
+                            <i class="fas fa-shield-alt"></i>
+                            Lancer l'encodage
                         </button>
                         <button class="btn btn-secondary" id="reset-encode">
                             <i class="fas fa-undo"></i>
@@ -139,24 +230,24 @@
                 </div>
                 
                 <div class="result-area" id="encode-result" style="display: none;">
-                    <h3><i class="fas fa-check-circle"></i> Encodage Terminé</h3>
+                    <h3><i class="fas fa-check-circle"></i> Encodage Réussi</h3>
                     <div class="file-info">
                         <div class="info-item">
                             <span>Fichier généré :</span>
                             <span id="result-filename"></span>
                         </div>
                         <div class="info-item">
-                            <span>Taille :</span>
+                            <span>Taille finale :</span>
                             <span id="result-size"></span>
                         </div>
                         <div class="info-item">
-                            <span>Méthode :</span>
+                            <span>Méthode utilisée :</span>
                             <span id="result-method"></span>
                         </div>
                     </div>
                     <button class="btn btn-success" id="download-btn">
                         <i class="fas fa-download"></i>
-                        Télécharger
+                        Télécharger le résultat
                     </button>
                 </div>
             </div>
@@ -164,8 +255,8 @@
             <!-- Decode Panel -->
             <div class="panel" id="decode-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-unlock"></i> Extraction & Déchiffrement</h2>
-                    <p>Extrayez les messages cachés d'un fichier porteur</p>
+                    <h1 class="panel-title">Extraction & Analyse</h1>
+                    <p class="panel-subtitle">Détection et extraction intelligente de données cachées avec déchiffrement automatique</p>
                 </div>
                 
                 <div class="form-section">
@@ -173,16 +264,17 @@
                         <div class="upload-zone" id="decode-upload">
                             <i class="fas fa-search"></i>
                             <h3>Fichier à Analyser</h3>
-                            <p>Sélectionnez le fichier contenant des données cachées</p>
+                            <p>Sélectionnez le fichier suspect ou encodé</p>
+                            <small>Tous formats supportés</small>
                             <input type="file" id="decode-file" hidden>
                         </div>
                     </div>
                     
                     <div class="options-grid">
                         <div class="option-group">
-                            <label>Mot de passe</label>
+                            <label>Mot de passe de déchiffrement</label>
                             <div class="password-input">
-                                <input type="password" id="decode-password" placeholder="Clé de déchiffrement">
+                                <input type="password" id="decode-password" placeholder="Phrase de passe (si chiffré)">
                                 <button type="button" class="toggle-password">
                                     <i class="fas fa-eye"></i>
                                 </button>
@@ -195,20 +287,20 @@
                                 <option value="auto">Détection Automatique</option>
                                 <option value="lsb">Forcer LSB</option>
                                 <option value="metadata">Forcer Métadonnées</option>
-                                <option value="audio">Forcer Audio</option>
-                                <option value="brute">Force brute (lent)</option>
+                                <option value="audio-spread">Forcer Audio</option>
+                                <option value="brute">Force Brute (exhaustif)</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="action-buttons">
                         <button class="btn btn-primary" id="decode-btn">
-                            <i class="fas fa-key"></i>
-                            Décoder
+                            <i class="fas fa-unlock"></i>
+                            Extraire les données
                         </button>
                         <button class="btn btn-warning" id="analyze-btn">
-                            <i class="fas fa-chart-line"></i>
-                            Analyser
+                            <i class="fas fa-microscope"></i>
+                            Analyse forensique
                         </button>
                     </div>
                 </div>
@@ -217,18 +309,18 @@
                     <div class="progress-bar">
                         <div class="progress-fill"></div>
                     </div>
-                    <div class="progress-text">Décodage en cours...</div>
+                    <div class="progress-text">Analyse en cours...</div>
                 </div>
                 
                 <div class="result-area" id="decode-result" style="display: none;">
-                    <h3><i class="fas fa-eye"></i> Contenu Extrait</h3>
+                    <h3><i class="fas fa-eye"></i> Données Extraites</h3>
                     <div class="extracted-content">
                         <div class="content-preview" id="content-preview">
                             <!-- Contenu extrait affiché ici -->
                         </div>
                         <div class="extraction-info">
                             <div class="info-item">
-                                <span>Type détecté :</span>
+                                <span>Méthode détectée :</span>
                                 <span id="detected-type"></span>
                             </div>
                             <div class="info-item">
@@ -236,13 +328,13 @@
                                 <span id="extracted-size"></span>
                             </div>
                             <div class="info-item">
-                                <span>Chiffrement :</span>
+                                <span>Type de chiffrement :</span>
                                 <span id="detected-crypto"></span>
                             </div>
                         </div>
                         <button class="btn btn-success" id="save-extracted">
                             <i class="fas fa-save"></i>
-                            Sauvegarder
+                            Sauvegarder l'extraction
                         </button>
                     </div>
                 </div>
@@ -251,28 +343,29 @@
             <!-- UltraCrypte Panel -->
             <div class="panel" id="ultracrypte-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-shield-alt"></i> UltraCrypte</h2>
-                    <p class="ultra-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Mode ultra-sécurisé : Chiffrement post-quantique indéchiffrable
+                    <h1 class="panel-title">UltraCrypte™</h1>
+                    <p class="panel-subtitle ultra-warning">
+                        <i class="fas fa-shield-virus"></i>
+                        Chiffrement de niveau militaire avec résistance post-quantique
                     </p>
                 </div>
                 
                 <div class="ultra-container">
                     <div class="ultra-info">
-                        <h3>Caractéristiques UltraCrypte</h3>
+                        <h3>Technologies Avancées</h3>
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> Chiffrement post-quantique</li>
-                            <li><i class="fas fa-check"></i> Couches multiples avec chaos algorithmique</li>
-                            <li><i class="fas fa-check"></i> Masquage par bruit cryptographique</li>
+                            <li><i class="fas fa-check"></i> Chiffrement post-quantique certifié</li>
+                            <li><i class="fas fa-check"></i> Algorithmes chaotiques propriétaires</li>
                             <li><i class="fas fa-check"></i> Protection contre l'analyse différentielle</li>
-                            <li><i class="fas fa-check"></i> Résistance aux attaques par canal auxiliaire</li>
+                            <li><i class="fas fa-check"></i> Résistance aux attaques par canaux cachés</li>
+                            <li><i class="fas fa-check"></i> Masquage par bruit cryptographique</li>
+                            <li><i class="fas fa-check"></i> Déni plausible intégré</li>
                         </ul>
                     </div>
                     
                     <div class="ultra-controls">
                         <div class="option-group">
-                            <label>Complexité UltraCrypte</label>
+                            <label>Niveau de Complexité</label>
                             <select id="ultra-complexity">
                                 <option value="standard">Standard (Rapide)</option>
                                 <option value="enhanced">Renforcé (Équilibré)</option>
@@ -282,7 +375,7 @@
                         
                         <div class="option-group">
                             <label>Phrase de passe maîtresse</label>
-                            <input type="password" id="ultra-master-key" placeholder="Phrase longue et complexe...">
+                            <input type="password" id="ultra-master-key" placeholder="Phrase longue et complexe requise...">
                             <div class="key-strength">
                                 <div class="strength-bar">
                                     <div class="strength-fill"></div>
@@ -293,8 +386,8 @@
                         
                         <div class="ultra-options">
                             <label><input type="checkbox" id="ultra-stealth"> Mode furtif maximum</label>
-                            <label><input type="checkbox" id="ultra-deniable"> Déni plausible</label>
-                            <label><input type="checkbox" id="ultra-volatile"> Volatilité mémoire</label>
+                            <label><input type="checkbox" id="ultra-deniable"> Déni plausible activé</label>
+                            <label><input type="checkbox" id="ultra-volatile"> Protection anti-dump mémoire</label>
                         </div>
                     </div>
                 </div>
@@ -303,64 +396,71 @@
             <!-- Help Panel -->
             <div class="panel" id="help-panel">
                 <div class="panel-header">
-                    <h2><i class="fas fa-question-circle"></i> Guide d'Utilisation</h2>
-                    <p>Apprenez à utiliser Obscura efficacement</p>
+                    <h1 class="panel-title">Documentation</h1>
+                    <p class="panel-subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
                 </div>
                 
                 <div class="help-content">
                     <div class="help-section">
-                        <h3><i class="fas fa-lock"></i> Encodage</h3>
+                        <h3><i class="fas fa-shield-alt"></i> Guide d'Encodage</h3>
+                        <p>La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.</p>
                         <ol>
-                            <li>Sélectionnez un fichier porteur (image, audio, vidéo, document)</li>
-                            <li>Entrez votre message secret ou sélectionnez un fichier à cacher</li>
-                            <li>Choisissez la méthode de stéganographie appropriée</li>
-                            <li>Définissez un niveau de chiffrement et un mot de passe</li>
-                            <li>Cliquez sur "Encoder" et téléchargez le résultat</li>
+                            <li>Sélectionnez un fichier porteur de haute qualité</li>
+                            <li>Préparez votre contenu secret (texte ou fichier)</li>
+                            <li>Choisissez la méthode adaptée à votre fichier</li>
+                            <li>Configurez le chiffrement selon vos besoins</li>
+                            <li>Lancez l'encodage et sauvegardez le résultat</li>
                         </ol>
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-unlock"></i> Décodage</h3>
+                        <h3><i class="fas fa-search"></i> Guide d'Extraction</h3>
+                        <p>L'extraction automatisée détecte et récupère les données cachées intelligemment.</p>
                         <ol>
-                            <li>Sélectionnez le fichier contenant des données cachées</li>
-                            <li>Entrez le mot de passe de déchiffrement</li>
-                            <li>Choisissez le mode de détection (automatique recommandé)</li>
-                            <li>Cliquez sur "Décoder" pour extraire le contenu</li>
+                            <li>Importez le fichier suspect ou encodé</li>
+                            <li>Activez la détection automatique</li>
+                            <li>Fournissez le mot de passe si nécessaire</li>
+                            <li>Analysez les résultats obtenus</li>
+                            <li>Exportez les données récupérées</li>
                         </ol>
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-shield-alt"></i> UltraCrypte</h3>
-                        <p>Le mode UltraCrypte offre une sécurité maximale grâce à :</p>
+                        <h3><i class="fas fa-lock"></i> UltraCrypte™ Advanced</h3>
+                        <p>Notre technologie propriétaire offre une protection inégalée contre toutes formes d'attaques.</p>
                         <ul>
-                            <li><strong>Chiffrement post-quantique</strong> : Résistant aux ordinateurs quantiques</li>
-                            <li><strong>Couches multiples</strong> : Plusieurs algorithmes en cascade</li>
-                            <li><strong>Chaos algorithmique</strong> : Transformations imprévisibles</li>
-                            <li><strong>Bruit cryptographique</strong> : Masquage des patterns</li>
+                            <li><strong>Post-Quantique</strong> : Résistant aux futurs ordinateurs quantiques</li>
+                            <li><strong>Multi-Couches</strong> : Combinaison d'algorithmes en cascade</li>
+                            <li><strong>Chaos Algorithmique</strong> : Transformations imprévisibles</li>
+                            <li><strong>Bruit Cryptographique</strong> : Masquage des signatures</li>
+                            <li><strong>Déni Plausible</strong> : Protection contre la coercition</li>
                         </ul>
                     </div>
                     
                     <div class="help-section">
-                        <h3><i class="fas fa-lightbulb"></i> Conseils de Sécurité</h3>
+                        <h3><i class="fas fa-exclamation-triangle"></i> Meilleures Pratiques</h3>
                         <ul>
-                            <li>Utilisez des mots de passe longs et complexes</li>
-                            <li>Activez les options de bruit et multi-couches</li>
-                            <li>Conservez vos mots de passe en sécurité</li>
-                            <li>Testez toujours le décodage après encodage</li>
-                            <li>Le mode UltraCrypte est recommandé pour les données sensibles</li>
+                            <li>Utilisez des phrases de passe longues et uniques</li>
+                            <li>Activez le chiffrement pour les données sensibles</li>
+                            <li>Testez systématiquement l'extraction après encodage</li>
+                            <li>Conservez vos mots de passe en lieu sûr</li>
+                            <li>Privilégiez UltraCrypte™ pour la sécurité maximale</li>
+                            <li>Évitez les fichiers compressés comme porteurs</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Footer -->
+        <!-- Modern Footer -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-info">
-                    <span>Obscura v1.0 - Stéganographie Ultra-Sécurisée</span>
-                    <span class="separator">|</span>
-                    <span>Mode Hors-ligne Disponible</span>
+                    <span>© 2024 Obscura</span>
+                    <span class="separator">•</span>
+                    <span>Stéganographie Professionnelle</span>
+                    <span class="separator">•</span>
+                    <span>Mode Hors-ligne</span>
                 </div>
                 <div class="footer-stats">
                     <span id="files-processed">0 fichiers traités</span>
@@ -377,14 +477,13 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- ...existing scripts... -->
     <script src="js/crypto.js"></script>
     <script src="js/steganography.js"></script>
     <script src="js/app.js"></script>
     
-    <!-- Admin Mode (loaded conditionally) -->
     <script>
-        // Sequence secrète pour le mode admin : Ctrl+Shift+A trois fois
+        // Admin mode activation sequence
         let adminSequence = 0;
         let adminTimer = null;
         
