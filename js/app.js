@@ -316,165 +316,165 @@ class ObscuraApp {
         
         if (usage === 'carrier' && fileType === 'unknown') {
             this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
-    }ject.keys(capacities).length > 0) {
-timées: `;
-    updateUploadZone(zoneId, file) {const capList = Object.entries(capacities).map(([method, cap]) => 
-        const zone = document.getElementById(zoneId);}`
-        const icon = zone.querySelector('i');   );
-        const title = zone.querySelector('h3');       infoText += capList.join(', ');
-        const description = zone.querySelector('p');           
-        const small = zone.querySelector('small');                this.showMessage(infoText, 'info');
+            this.showMessage('Types supportés: Images (jpg, png, gif), Audio (mp3, wav), Vidéo (mp4, avi), Documents (pdf, txt)', 'info');
+            return false;
+        }
         
-        // Mise à jour visuelle        }
+        return true;
+    }
+
+    updateUploadZone(zoneId, file) {
+        const zone = document.getElementById(zoneId);
+        const icon = zone.querySelector('i');
+        const title = zone.querySelector('h3');
+        const description = zone.querySelector('p');
+        const small = zone.querySelector('small');
+        
+        // Mise à jour visuelle
         icon.className = 'fas fa-check-circle';
         icon.style.color = 'var(--success-color)';
         title.textContent = file.name;
         description.textContent = `${this.formatFileSize(file.size)}`;
-        el(panelName) {
-        if (small) {// Mise à jour des onglets
+        
+        if (small) {
             const fileType = this.steganography.detectFileType(file);
-            small.textContent = `Type: ${fileType} - ${file.type || 'Type MIME inconnu'}`;t.remove('active');
+            small.textContent = `Type: ${fileType} - ${file.type || 'Type MIME inconnu'}`;
         }
         
-        // Stockage des métadonnées        const activeTab = document.querySelector(`[data-tab="${panelName}"]`);
+        // Stockage des métadonnées
         zone.dataset.file = JSON.stringify({
             name: file.name,
             size: file.size,
             type: file.type,
-            lastModified: file.lastModified// Mise à jour des panneaux
+            lastModified: file.lastModified
         });
-        t.remove('active');
+        
         // Animation de succès
         zone.classList.add('fade-in');
-    }const activePanel = document.getElementById(`${panelName}-panel`);
+    }
 
-    updateFileInfo(type, file) {'active');
-        const fileType = this.steganography.detectFileType(file);   }
-                
-        if (type === 'carrier') { selon le panneau
+    updateFileInfo(type, file) {
+        const fileType = this.steganography.detectFileType(file);
+        
+        if (type === 'carrier') {
             // Calcul des capacités pour chaque méthode
             const methods = ['lsb', 'metadata', 'audio-spread', 'video-frame', 'document-hidden'];
             const capacities = {};
-             {
-            methods.forEach(method => {messages précédents
+            
+            methods.forEach(method => {
                 const capacity = this.steganography.getCapacity(file, method);
                 if (capacity > 0) {
-                    capacities[method] = this.formatFileSize(capacity); {
+                    capacities[method] = this.formatFileSize(capacity);
                 }
-            });pdateMethodInfo(document.getElementById('stego-method').value);
+            });
             
             if (Object.keys(capacities).length > 0) {
                 let infoText = `💾 Capacités estimées: `;
                 const capList = Object.entries(capacities).map(([method, cap]) => 
                     `${method.toUpperCase()}: ${cap}`
-                );/ Vérification mot de passe s'il y en a un
-                infoText += capList.join(', ');ultraKey = document.getElementById('ultra-master-key').value;
-                aKey) {
-                this.showMessage(infoText, 'info');h(ultraKey);
+                );
+                infoText += capList.join(', ');
+                
+                this.showMessage(infoText, 'info');
             }
         }
-    }   case 'help':
-           // Statistiques d'utilisation
-    // ========== NAVIGATION ET INTERFACE ==========                this.updateHelpStats();
+    }
 
-    showPanel(panelName) {        }
+    // ========== NAVIGATION ET INTERFACE ==========
+
+    showPanel(panelName) {
         // Mise à jour des onglets
         document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.classList.remove('active');========= ENCODAGE ==========
+            tab.classList.remove('active');
         });
         
         const activeTab = document.querySelector(`[data-tab="${panelName}"]`);
         if (activeTab) {
             activeTab.classList.add('active');
         }
-im();
-        // Mise à jour des panneauxconst secretFile = this.currentFiles.secret;
-        document.querySelectorAll('.panel').forEach(panel => {ent.getElementById('stego-method').value;
+
+        // Mise à jour des panneaux
+        document.querySelectorAll('.panel').forEach(panel => {
             panel.classList.remove('active');
-        });t.getElementById('encode-password').value;
+        });
         
-        const activePanel = document.getElementById(`${panelName}-panel`);on des entrées
-        if (activePanel) {onst validation = this.validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password);
-            activePanel.classList.add('active');        if (!validation.valid) {
-        }his.showMessage(validation.message, 'error');
+        const activePanel = document.getElementById(`${panelName}-panel`);
+        if (activePanel) {
+            activePanel.classList.add('active');
+        }
         
         // Actions spécifiques selon le panneau
         this.onPanelChange(panelName);
     }
-('encode-progress', 'Préparation de l\'encodage...');
+
     onPanelChange(panelName) {
         // Effacement des messages précédents
-        this.clearMessages();etData;
+        this.clearMessages();
         
-        switch (panelName) {tFile.name}`);
-            case 'encode':   secretData = await this.fileToArrayBuffer(secretFile);
-                this.updateMethodInfo(document.getElementById('stego-method').value);} else {
-                break;gth} caractères`);
-            case 'decode':    secretData = new TextEncoder().encode(secretText);
+        switch (panelName) {
+            case 'encode':
+                this.updateMethodInfo(document.getElementById('stego-method').value);
+                break;
+            case 'decode':
                 // Préparation interface décodage
                 break;
             case 'ultracrypte':
                 // Vérification mot de passe s'il y en a un
-                const ultraKey = document.getElementById('ultra-master-key').value;essaire
+                const ultraKey = document.getElementById('ultra-master-key').value;
                 if (ultraKey) {
-                    this.checkPasswordStrength(ultraKey);...');
+                    this.checkPasswordStrength(ultraKey);
                 }
                 break;
-            case 'help':  complexity: this.mapCryptoComplexity(cryptoLevel),
-                // Statistiques d'utilisation    compress: document.getElementById('compress-data').checked,
+            case 'help':
+                // Statistiques d'utilisation
                 this.updateHelpStats();
-                break;    deniable: document.getElementById('multi-layer').checked
+                break;
         }
     }
-log(`🔒 Chiffrement ${cryptoLevel} avec options:`, options);
+
     // ========== ENCODAGE ==========
-f (cryptoLevel === 'ultra') {
-    async handleEncode() {    secretData = await this.ultraCrypte.encrypt(secretData, password, options);
+
+    async handleEncode() {
         console.log('🔐 Démarrage de l\'encodage...');
-               secretData = await this.basicEncrypt(secretData, password);
-        // Récupération des paramètres    }
+        
+        // Récupération des paramètres
         const carrierFile = this.currentFiles.carrier;
         const secretText = document.getElementById('secret-text').value.trim();
-        const secretFile = this.currentFiles.secret;}
+        const secretFile = this.currentFiles.secret;
         const stegoMethod = document.getElementById('stego-method').value;
         const cryptoLevel = document.getElementById('crypto-level').value;
-        const password = document.getElementById('encode-password').value;code-progress', `Dissimulation via ${stegoMethod}...`);
+        const password = document.getElementById('encode-password').value;
         
-        // Validation des entréesconst resultFile = await this.steganography.hideData(carrierFile, secretData, stegoMethod, {
-        const validation = this.validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password);igh',
+        // Validation des entrées
+        const validation = this.validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password);
         if (!validation.valid) {
             this.showMessage(validation.message, 'error');
             return;
         }
-this.hideProgress('encode-progress');
-        try { cryptoLevel);
-            this.showProgress('encode-progress', 'Préparation de l\'encodage...');this.filesProcessed++;
-            ats();
+
+        try {
+            this.showProgress('encode-progress', 'Préparation de l\'encodage...');
+            
             // Préparation des données secrètes
             let secretData;
             if (secretFile) {
-                console.log(`📄 Lecture du fichier secret: ${secretFile.name}`); catch (error) {
-                secretData = await this.fileToArrayBuffer(secretFile);       this.hideProgress('encode-progress');
-            } else {            console.error('❌ Erreur d\'encodage:', error);
+                console.log(`📄 Lecture du fichier secret: ${secretFile.name}`);
+                secretData = await this.fileToArrayBuffer(secretFile);
+            } else {
                 console.log(`✏️ Utilisation du texte secret: ${secretText.length} caractères`);
                 secretData = new TextEncoder().encode(secretText);
             }
             
-            console.log(`📊 Données à encoder: ${secretData.length} octets`);dateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
+            console.log(`📊 Données à encoder: ${secretData.length} octets`);
             
             // Chiffrement si nécessaire
             if (cryptoLevel !== 'none') {
                 this.updateProgress('encode-progress', 'Chiffrement des données...');
                 
-                const options = {ier secret' };
+                const options = {
                     complexity: this.mapCryptoComplexity(cryptoLevel),
                     compress: document.getElementById('compress-data').checked,
                     stealth: document.getElementById('add-noise').checked,
-                    deniable: document.getElementById('multi-layer').checked
-                };
-                
-                console.log(`🔒 Chiffrement ${cryptoLevel} avec options:`, options);tra' && password.length < 8) {
-                       return { valid: false, message: 'UltraCrypte nécessite un mot de passe d\'au moins 8 caractères' };
                 if (cryptoLevel === 'ultra') {        }
                     secretData = await this.ultraCrypte.encrypt(secretData, password, options);
                 } else {rue };
