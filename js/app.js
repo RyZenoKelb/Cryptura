@@ -475,37 +475,37 @@ class ObscuraApp {
                     complexity: this.mapCryptoComplexity(cryptoLevel),
                     compress: document.getElementById('compress-data').checked,
                     stealth: document.getElementById('add-noise').checked,
-                if (cryptoLevel === 'ultra') {        }
+                    deniable: document.getElementById('multi-layer').checked
+                };
+                
+                console.log(`🔒 Chiffrement ${cryptoLevel} avec options:`, options);
+                
+                if (cryptoLevel === 'ultra') {
                     secretData = await this.ultraCrypte.encrypt(secretData, password, options);
-                } else {rue };
+                } else {
                     secretData = await this.basicEncrypt(secretData, password);
                 }
-                ptoComplexity(cryptoLevel) {
+                
                 console.log(`🔐 Données chiffrées: ${secretData.length} octets`);
-            }       'aes': 'standard',
-                        'ultra': 'enhanced'
+            }
+            
             // Stéganographie
-            this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`);        return mapping[cryptoLevel] || 'standard';
+            this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`);
             
             const resultFile = await this.steganography.hideData(carrierFile, secretData, stegoMethod, {
-                quality: 'high',========= DÉCODAGE ==========
+                quality: 'high',
                 method: stegoMethod
             });
             
             // Finalisation
-            this.hideProgress('encode-progress'); this.currentFiles.decode;
+            this.hideProgress('encode-progress');
             this.showEncodeResult(resultFile, stegoMethod, cryptoLevel);
-            this.filesProcessed++;tionMode = document.getElementById('detection-mode').value;
+            this.filesProcessed++;
             this.updateStats();
-                    if (!decodeFile) {
-            console.log('✅ Encodage terminé avec succès');his.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
+            
+            console.log('✅ Encodage terminé avec succès');
             
         } catch (error) {
-            this.hideProgress('encode-progress');
-            console.error('❌ Erreur d\'encodage:', error);
-            this.showMessage(`Erreur d'encodage: ${error.message}`, 'error');ess', 'Analyse du fichier...');
-        }
-    }
 
     validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
         if (!carrierFile) {');
