@@ -599,113 +599,118 @@ class ObscuraApp {
             
         } catch (error) {
             this.hideProgress('decode-progress');
-    async attemptDecryption(data, password) {this.showProgress('decode-progress', 'Analyse forensique en cours...');
+            console.error('❌ Erreur de décodage:', error);
+            this.showMessage(`Erreur de décodage: ${error.message}`, 'error');
+        }
+    }
+
+    async attemptDecryption(data, password) {
         const attempts = [
-            { method: 'ultra', type: 'UltraCrypte' },fichier
-            { method: 'basic', type: 'AES-256' }analyzeFile(decodeFile);
+            { method: 'ultra', type: 'UltraCrypte' },
+            { method: 'basic', type: 'AES-256' }
         ];
-        entative d'extraction pour chaque méthode détectée
+        
         for (const attempt of attempts) {
-            try {detectedMethods.length > 0) {
+            try {
                 let decryptedData;
                 
-                if (attempt.method === 'ultra') {detectedMethods) {
+                if (attempt.method === 'ultra') {
                     // Test avec différentes complexités UltraCrypte
-                    const complexities = ['standard', 'enhanced', 'paranoid'];eganography.extractData(decodeFile, method);
+                    const complexities = ['standard', 'enhanced', 'paranoid'];
                     for (const complexity of complexities) {
-                        try {ractions.push({
-                            decryptedData = await this.ultraCrypte.decrypt(data, password, { complexity });       method: method,
-                            return { success: true, data: decryptedData, type: `${attempt.type} (${complexity})` };ize: result.length,
-                        } catch (e) {graphy.calculateEntropy(result)
-                            continue;       });
-                        }       }
-                    }       } catch (e) {
-                } else {            // Méthode échouée, continuer
+                        try {
+                            decryptedData = await this.ultraCrypte.decrypt(data, password, { complexity });
+                            return { success: true, data: decryptedData, type: `${attempt.type} (${complexity})` };
+                        } catch (e) {
+                            continue;
+                        }
+                    }
+                } else {
                     decryptedData = await this.basicDecrypt(data, password);
                     return { success: true, data: decryptedData, type: attempt.type };
-                }}
+                }
                 
-            } catch (error) {this.hideProgress('decode-progress');
-                continue; // Essayer la méthode suivanteysisResult(analysis, extractions);
+            } catch (error) {
+                continue; // Essayer la méthode suivante
             }
         }
         
-        return { success: false }; catch (error) {
-    }       this.hideProgress('decode-progress');
-            console.error('❌ Erreur d\'analyse:', error);
-    // ========== ANALYSE ==========ror.message}`, 'error');
-        }
+        return { success: false };
+    }
+
+    // ========== ANALYSE ==========
+
     async handleAnalyze() {
         console.log('🔍 Démarrage de l\'analyse...');
         
         const decodeFile = this.currentFiles.decode;
         
         if (!decodeFile) {
-            this.showMessage('Veuillez sélectionner un fichier à analyser', 'error');const filename = document.getElementById('result-filename');
+            this.showMessage('Veuillez sélectionner un fichier à analyser', 'error');
             return;
-        }const methodSpan = document.getElementById('result-method');
-lementById('download-btn');
+        }
+
         try {
             this.showProgress('decode-progress', 'Analyse forensique en cours...');
             
             // Analyse complète du fichier
-            const analysis = await this.steganography.analyzeFile(decodeFile);tFileSize(resultFile.size);
-            e(method)} + ${cryptoLevel === 'none' ? 'Non chiffré' : cryptoLevel.toUpperCase()}`;
+            const analysis = await this.steganography.analyzeFile(decodeFile);
+            
             // Tentative d'extraction pour chaque méthode détectée
-            const extractions = []; Configuration du téléchargement
-            if (analysis.detectedMethods.length > 0) {downloadBtn.onclick = () => {
-                this.updateProgress('decode-progress', 'Test des méthodes détectées...');inalName);
-                argé avec succès!', 'success');
-                for (const method of analysis.detectedMethods) {};
+            const extractions = [];
+            if (analysis.detectedMethods.length > 0) {
+                this.updateProgress('decode-progress', 'Test des méthodes détectées...');
+                
+                for (const method of analysis.detectedMethods) {
                     try {
-                        const result = await this.steganography.extractData(decodeFile, method);isplay = 'block';
+                        const result = await this.steganography.extractData(decodeFile, method);
                         if (result && result.length > 0) {
                             extractions.push({
-                                method: method,   // Scroll vers le résultat
-                                size: result.length,        setTimeout(() => {
-                                entropy: this.steganography.calculateEntropy(result): 'center' });
+                                method: method,
+                                size: result.length,
+                                entropy: this.steganography.calculateEntropy(result)
                             });
                         }
                     } catch (e) {
                         // Méthode échouée, continuer
                     }
-                };
-            }const detectedType = document.getElementById('detected-type');
-            tById('extracted-size');
-            this.hideProgress('decode-progress');-crypto');
-            this.showAnalysisResult(analysis, extractions);const saveBtn = document.getElementById('save-extracted');
+                }
+            }
+            
+            this.hideProgress('decode-progress');
+            this.showAnalysisResult(analysis, extractions);
             
             console.log('✅ Analyse terminée');
             
         } catch (error) {
-            this.hideProgress('decode-progress');preview.innerHTML = displayContent.html;
-            console.error('❌ Erreur d\'analyse:', error);s.getMethodName(method)} (Confiance: ${confidence}%)`;
-            this.showMessage(`Erreur d'analyse: ${error.message}`, 'error'); = this.formatFileSize(data.length);
+            this.hideProgress('decode-progress');
+            console.error('❌ Erreur d\'analyse:', error);
+            this.showMessage(`Erreur d'analyse: ${error.message}`, 'error');
         }
     }
 
     // ========== AFFICHAGE DES RÉSULTATS ==========
-  const filename = this.generateExtractedFilename(data);
-    showEncodeResult(resultFile, method, cryptoLevel) {    const blob = new Blob([data], { type: 'application/octet-stream' });
-        const resultArea = document.getElementById('encode-result');e);
-        const filename = document.getElementById('result-filename');tes sauvegardées!', 'success');
-        const size = document.getElementById('result-size');};
+
+    showEncodeResult(resultFile, method, cryptoLevel) {
+        const resultArea = document.getElementById('encode-result');
+        const filename = document.getElementById('result-filename');
+        const size = document.getElementById('result-size');
         const methodSpan = document.getElementById('result-method');
-        const downloadBtn = document.getElementById('download-btn');isplay = 'block';
+        const downloadBtn = document.getElementById('download-btn');
         
         const finalName = this.generateOutputFilename(resultFile, method);
-           // Scroll vers le résultat
-        filename.textContent = finalName;        setTimeout(() => {
-        size.textContent = this.formatFileSize(resultFile.size);mooth', block: 'center' });
+        
+        filename.textContent = finalName;
+        size.textContent = this.formatFileSize(resultFile.size);
         methodSpan.textContent = `${this.getMethodName(method)} + ${cryptoLevel === 'none' ? 'Non chiffré' : cryptoLevel.toUpperCase()}`;
         
         // Configuration du téléchargement
-        downloadBtn.onclick = () => {ns = []) {
-            this.downloadFile(resultFile, finalName);;
-            this.showMessage('Fichier téléchargé avec succès!', 'success');const preview = document.getElementById('content-preview');
+        downloadBtn.onclick = () => {
+            this.downloadFile(resultFile, finalName);
+            this.showMessage('Fichier téléchargé avec succès!', 'success');
         };
         
-        resultArea.style.display = 'block';const report = this.steganography.generateReport(analysis);
+        resultArea.style.display = 'block';
         resultArea.classList.add('fade-in');
         
         // Scroll vers le résultat
@@ -714,28 +719,23 @@ lementById('download-btn');
         }, 300);
     }
 
-    showDecodeResult(data, method, cryptoType, confidence = 50) {ss="extraction-item">`;
-        const resultArea = document.getElementById('decode-result'); analysisHtml += `${index + 1}. ${this.getMethodName(ext.method)}: `;
-        const preview = document.getElementById('content-preview');is.formatFileSize(ext.size)} `;
-        const detectedType = document.getElementById('detected-type');       analysisHtml += `(entropie: ${ext.entropy.toFixed(3)})`;
-        const extractedSize = document.getElementById('extracted-size');        analysisHtml += `</div>`;
+    showDecodeResult(data, method, cryptoType, confidence = 50) {
+        const resultArea = document.getElementById('decode-result');
+        const preview = document.getElementById('content-preview');
+        const detectedType = document.getElementById('detected-type');
+        const extractedSize = document.getElementById('extracted-size');
         const detectedCrypto = document.getElementById('detected-crypto');
-        const saveBtn = document.getElementById('save-extracted');    analysisHtml += `</div>`;
+        const saveBtn = document.getElementById('save-extracted');
         
         // Préparation du contenu pour affichage
         const displayContent = this.prepareContentPreview(data);
         
-        preview.innerHTML = displayContent.html;preview.innerHTML = analysisHtml;
+        preview.innerHTML = displayContent.html;
         detectedType.textContent = `${this.getMethodName(method)} (Confiance: ${confidence}%)`;
-        extractedSize.textContent = this.formatFileSize(data.length);our l'analyse
-        detectedCrypto.textContent = cryptoType;   document.getElementById('save-extracted').style.display = 'none';
-                
-        // Configuration de la sauvegarde= 'block';
-        saveBtn.onclick = () => {add('fade-in');
-            const filename = this.generateExtractedFilename(data);
-            const blob = new Blob([data], { type: 'application/octet-stream' });
-            this.downloadFile(blob, filename);ntentPreview(data) {
-            this.showMessage('Données extraites sauvegardées!', 'success');
+        extractedSize.textContent = this.formatFileSize(data.length);
+        detectedCrypto.textContent = cryptoType;
+        
+        // Configuration de la sauvegarde
         };
         
         resultArea.style.display = 'block';
