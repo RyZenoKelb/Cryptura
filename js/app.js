@@ -1133,6 +1133,33 @@ class ObscuraApp {
     }
 
     // ========== UTILITAIRES ==========
+
+    updateMethodInfo(method) {
+        // Mise à jour des informations contextuelles selon la méthode
+        if (this.currentFiles.carrier) {
+            const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
+            if (capacity > 0) {
+                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
+            }
+        }
+    }
+
+    updateCryptoInfo(level) {
+        const infoMessages = {
+            'none': 'Aucun chiffrement - Données en clair',
+            'aes': 'Chiffrement AES-256-GCM standard',
+            'ultra': 'UltraCrypte - Sécurité maximale post-quantique'
+        };
+        
+        if (infoMessages[level]) {
+            this.showMessage(`🔐 ${infoMessages[level]}`, 'info');
+        }
+    }
+
+    updateOptionsInfo() {
+        // Informations sur les options avancées
+        const options = [];
+        if (document.getElementById('compress-data')?.checked) options.push('Compression');
         if (document.getElementById('add-noise')?.checked) options.push('Bruit');
         if (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
         
@@ -1174,33 +1201,6 @@ class ObscuraApp {
         
         return methods[method] || method.charAt(0).toUpperCase() + method.slice(1);
     }
-
-    generateOutputFilename(originalFile, method) {
-        const baseName = originalFile.name.replace(/\.[^.]+$/, '');
-        const extension = originalFile.name.split('.').pop();
-        return `${baseName}_obscura_${method}.${extension}`;
-    }
-
-    generateExtractedFilename(data) {
-        // Tentative de détection du type de fichier extrait
-        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-        
-        // Headers de fichiers courants
-        const fileHeaders = {
-            '\x89PNG': 'png',
-            'GIF8': 'gif',
-            '\xFF\xD8\xFF': 'jpg',
-            'PK\x03\x04': 'zip',
-            '%PDF': 'pdf'
-        };
-        
-        const dataStr = String.fromCharCode(...data.slice(0, 10));
-        for (const [header, ext] of Object.entries(fileHeaders)) {
-            if (dataStr.startsWith(header)) {
-                return `extracted_${timestamp}.${ext}`;
-            }
-        }
-        
         // Tentative de détection texte
         try {
             const text = new TextDecoder('utf-8').decode(data.slice(0, 100));
