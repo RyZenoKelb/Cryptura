@@ -181,6 +181,24 @@ body::before {
 
 .header-content {
     max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    color: var(--primary-500);
+    transition: var(--transition-base);
 }
 
 .logo:hover {
@@ -189,24 +207,6 @@ body::before {
 }
 
 .brand-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
-
-.brand-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.025em;
-}
-
-.brand-tagline {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* Header Actions with theme toggle */
@@ -345,18 +345,18 @@ body::before {
     left: 2px;
     color: #ffffff;
     font-size: 6px;
-.nav-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    line-height: 1;
+    text-shadow: 0 0 1px rgba(0,0,0,0.5);
 }
 
-.nav-tabs {
+.language-flag.en {
+    /* Remove old styles - this class is no longer used */
+    display: none;
+}
+
+.status-badge {
     display: flex;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    align-items: center;
 }
 
 .nav-tabs::-webkit-scrollbar {
