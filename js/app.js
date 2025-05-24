@@ -1048,6 +1048,33 @@ class ObscuraApp {
 
     resetUploadZone(zoneId, title, description, iconClass) {
         const zone = document.getElementById(zoneId);
+        const icon = zone.querySelector('i');
+        const titleElement = zone.querySelector('h3');
+        const descElement = zone.querySelector('p');
+        const small = zone.querySelector('small');
+        
+        icon.className = iconClass;
+        icon.style.color = 'var(--primary-color)';
+        titleElement.textContent = title;
+        descElement.textContent = description;
+        
+        if (small) {
+            small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
+        }
+        
+        delete zone.dataset.file;
+        zone.classList.remove('fade-in');
+    }
+
+    cancelOperations() {
+        // Annulation des opérations en cours
+        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');
+        progressElements.forEach(progress => {
+            this.hideProgress(progress.id);
+        });
+        
+        this.showMessage('Opérations annulées', 'warning');
+    }
 
     // ========== CHIFFREMENT DE BASE ==========
 
@@ -1065,33 +1092,6 @@ class ObscuraApp {
         
         const iv = crypto.getRandomValues(new Uint8Array(12));
         const encrypted = await crypto.subtle.encrypt(
-            { name: 'AES-GCM', iv: iv },
-            key,
-            data
-        );
-        
-        const result = new Uint8Array(iv.length + encrypted.byteLength);
-        result.set(iv);
-        result.set(new Uint8Array(encrypted), iv.length);
-        
-        return result;
-    }
-
-    async basicDecrypt(encryptedData, password) {
-        if (encryptedData.length < 12) {
-            throw new Error('Données insuffisantes pour déchiffrement');
-        }
-        
-        const encoder = new TextEncoder();
-        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
-        
-        const key = await crypto.subtle.importKey(
-            'raw',
-            keyMaterial,
-            'AES-GCM',
-            false,
-            ['decrypt']
-        );
         
         const iv = encryptedData.slice(0, 12);
         const encrypted = encryptedData.slice(12);
