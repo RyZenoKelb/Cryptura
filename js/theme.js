@@ -1,92 +1,105 @@
-// ============= THEME.JS - Système de gestion des thèmes =============
+// ============= THEME MANAGER =============
+// Gestion des thèmes clair/sombre avec persistance
 
 class ThemeManager {
     constructor() {
-        this.currentTheme = localStorage.getItem('obscura-theme') || 'dark';
+        this.currentTheme = this.getStoredTheme() || 'dark';
         this.init();
-        
-        console.log('🎨 Gestionnaire de thème initialisé:', this.currentTheme);
     }
 
     init() {
+        // Appliquer le thème initial
         this.applyTheme(this.currentTheme);
-        this.setupThemeToggle();
+        
+        // Mettre à jour l'interface du bouton
+        this.updateThemeButton();
+        
+        console.log(`🎨 Thème initialisé: ${this.currentTheme}`);
+    }
+
+    getStoredTheme() {
+        try {
+            return localStorage.getItem('obscura-theme');
+        } catch (e) {
+            console.warn('localStorage non disponible pour les thèmes');
+            return null;
+        }
+    }
+
+    storeTheme(theme) {
+        try {
+            localStorage.setItem('obscura-theme', theme);
+        } catch (e) {
+            console.warn('Impossible de sauvegarder le thème');
+        }
     }
 
     applyTheme(theme) {
+        // Appliquer le thème au document
         document.documentElement.setAttribute('data-theme', theme);
+        
+        // Mise à jour de la classe body pour compatibilité
+        document.body.className = document.body.className.replace(/theme-\w+/g, '');
+        document.body.classList.add(`theme-${theme}`);
+        
         this.currentTheme = theme;
-        localStorage.setItem('obscura-theme', theme);
-        
-        // Update theme toggle icon
-        this.updateThemeToggleIcon();
-        
-        // Trigger theme change event
-        document.dispatchEvent(new CustomEvent('themeChanged', {
-            detail: { theme: theme }
-        }));
-        
-        console.log('🎨 Thème appliqué:', theme);
     }
 
     toggleTheme() {
         const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Animation de transition
+        document.documentElement.style.transition = 'color-scheme 0.3s ease, background-color 0.3s ease';
+        
         this.applyTheme(newTheme);
+        this.updateThemeButton();
+        this.storeTheme(newTheme);
+        
+        // Nettoyer la transition après l'animation
+        setTimeout(() => {
+            document.documentElement.style.transition = '';
+        }, 300);
+        
+        console.log(`🎨 Thème basculé vers: ${newTheme}`);
+        
+        // Événement pour les autres composants
+        window.dispatchEvent(new CustomEvent('themeChanged', { 
+            detail: { theme: newTheme } 
+        }));
+    }
+
+    updateThemeButton() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (!themeToggle) return;
+
+        const icon = themeToggle.querySelector('i');
+        const text = themeToggle.querySelector('.toggle-text');
+        
+        if (this.currentTheme === 'dark') {
+            icon.className = 'fas fa-sun';
+            if (text) text.textContent = window.i18n?.t('settings.theme.light') || 'Mode clair';
+            themeToggle.title = 'Basculer vers le mode clair';
+        } else {
+            icon.className = 'fas fa-moon';
+            if (text) text.textContent = window.i18n?.t('settings.theme.dark') || 'Mode sombre';
+            themeToggle.title = 'Basculer vers le mode sombre';
+        }
     }
 
     getCurrentTheme() {
         return this.currentTheme;
     }
 
-    isDark() {
-        return this.currentTheme === 'dark';
-    }
-
-    setupThemeToggle() {
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                this.toggleTheme();
-            });
+    setTheme(theme) {
+        if (theme === 'light' || theme === 'dark') {
+            this.applyTheme(theme);
+            this.updateThemeButton();
+            this.storeTheme(theme);
         }
-    }
-
-    updateThemeToggleIcon() {
-        const themeToggle = document.getElementById('theme-toggle');
-        if (themeToggle) {
-            const icon = themeToggle.querySelector('i');
-            const text = themeToggle.querySelector('.toggle-text');
-            
-            if (this.currentTheme === 'dark') {
-                icon.className = 'fas fa-sun';
-                if (text) text.textContent = window.i18n ? window.i18n.t('settings.theme.light') : 'Mode clair';
-            } else {
-                icon.className = 'fas fa-moon';
-                if (text) text.textContent = window.i18n ? window.i18n.t('settings.theme.dark') : 'Mode sombre';
-            }
-        }
-    }
-
-    // Get appropriate colors for current theme
-    getThemeColors() {
-        const isDark = this.isDark();
-        
-        return {
-            primary: isDark ? '#3b82f6' : '#2563eb',
-            secondary: isDark ? '#64748b' : '#475569',
-            background: isDark ? '#0f172a' : '#ffffff',
-            surface: isDark ? '#1e293b' : '#f8fafc',
-            text: isDark ? '#f1f5f9' : '#0f172a',
-            textSecondary: isDark ? '#94a3b8' : '#64748b',
-            border: isDark ? '#334155' : '#e2e8f0',
-            success: '#10b981',
-            warning: '#f59e0b',
-            error: '#ef4444'
-        };
     }
 }
 
-// Export for global use
+// Export pour utilisation dans d'autres modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ThemeManager;
 }
