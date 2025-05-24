@@ -121,6 +121,21 @@
             <div class="sidebar-footer">
                 <div class="sidebar-actions">
                     <!-- Theme Toggle -->
+                    <button class="theme-toggle" id="theme-toggle" title="Basculer le thème">
+                        <i class="fas fa-sun"></i>
+                        <span class="toggle-text" data-i18n="settings.theme.light">Mode clair</span>
+                    </button>
+                    
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button class="language-toggle" id="language-toggle">
+                            <i class="fas fa-globe"></i>
+                            <span class="toggle-text" data-i18n="settings.language">Langue</span>
+                        </button>
+                        <div class="language-dropdown" id="language-dropdown">
+                            <div class="language-option active" data-lang="fr">
+                                <div class="language-flag fr"></div>
+                                <span data-i18n="settings.language.fr">Français</span>
                             </div>
                             <div class="language-option" data-lang="en">
                                 <div class="language-flag us"></div>
@@ -128,263 +143,248 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Theme Toggle -->
-                    <button class="theme-toggle" id="theme-toggle" title="Basculer le thème">
-                        <i class="fas fa-sun"></i>
-                        <span class="toggle-text" data-i18n="settings.theme.light">Mode clair</span>
-                    </button>
                 </div>
             </div>
-        </header>
+        </aside>
 
-        <!-- Modern Navigation -->
-        <nav class="nav-container">
-            <div class="nav-content">
-                <div class="nav-tabs">
-                    <button class="nav-tab active" data-tab="encode">
-                        <i class="fas fa-shield-alt"></i>
-                        <span data-i18n="nav.encode">Encoder</span>
-                    </button>
-                    <button class="nav-tab" data-tab="decode">
-                        <i class="fas fa-search"></i>
-                        <span data-i18n="nav.decode">Décoder</span>
-                    </button>
-                    <button class="nav-tab" data-tab="ultracrypte">
-                        <i class="fas fa-lock"></i>
-                        <span data-i18n="nav.ultracrypte">UltraCrypte</span>
-                    </button>
-                    <button class="nav-tab" data-tab="help">
-                        <i class="fas fa-info-circle"></i>
-                        <span data-i18n="nav.help">Documentation</span>
-                    </button>
-                </div>
-            </div>
-        </nav>
+        <!-- Sidebar Overlay pour mobile -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" style="display: none;">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Encode Panel -->
-            <div class="panel active" id="encode-panel">
-                <div class="panel-header">
-                    <h1 class="panel-title" data-i18n="encode.title">Encodage Sécurisé</h1>
-                    <p class="panel-subtitle" data-i18n="encode.subtitle">Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire</p>
-                </div>
-                
-                <div class="form-section">
-                    <div class="file-upload-area">
-                        <div class="upload-zone" id="carrier-upload">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <h3 data-i18n="encode.carrier.title">Fichier Porteur</h3>
-                            <p data-i18n="encode.carrier.description">Glissez votre média ou cliquez pour sélectionner</p>
-                            <small data-i18n="encode.carrier.types">Images • Audio • Vidéo • Documents</small>
-                            <input type="file" id="carrier-file" accept=".jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.avi,.pdf,.docx" hidden>
-                        </div>
-                        
-                        <div class="upload-zone" id="secret-upload">
-                            <i class="fas fa-user-secret"></i>
-                            <h3 data-i18n="encode.secret.title">Contenu Secret</h3>
-                            <p data-i18n="encode.secret.description">Message ou fichier à dissimuler</p>
-                            <textarea id="secret-text" data-i18n="encode.secret.placeholder" placeholder="Votre message confidentiel..."></textarea>
-                            <div class="file-option">
-                                <label data-i18n="encode.secret.file">Ou sélectionner un fichier : </label>
-                                <input type="file" id="secret-file">
-                            </div>
-                        </div>
-                    </div>
+        <!-- Main Container -->
+        <div class="main-container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <h1 class="page-title" id="page-title" data-i18n="encode.title">Encodage Sécurisé</h1>
                     
-                    <div class="options-grid">
-                        <div class="option-group">
-                            <label data-i18n="encode.method.label">Méthode de Stéganographie</label>
-                            <select id="stego-method" data-i18n-options>
-                                <option value="lsb">LSB - Least Significant Bit</option>
-                                <option value="metadata">Métadonnées EXIF</option>
-                                <option value="audio-spread">Dispersion Spectrale Audio</option>
-                                <option value="video-frame">Frames Vidéo</option>
-                                <option value="document-hidden">Texte Invisible</option>
-                            </select>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label data-i18n="encode.crypto.label">Niveau de Chiffrement</label>
-                            <select id="crypto-level" data-i18n-options>
-                                <option value="none" data-i18n="encode.crypto.none">Aucun chiffrement</option>
-                                <option value="aes">AES-256-GCM</option>
-                                <option value="ultra">UltraCrypte™</option>
-                            </select>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label data-i18n="encode.password.label">Mot de passe de chiffrement</label>
-                            <div class="password-input">
-                                <input type="password" id="encode-password" data-i18n="encode.password.placeholder" placeholder="Phrase de passe sécurisée">
-                                <button type="button" class="toggle-password">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label data-i18n="encode.options.label">Options Avancées</label>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" id="compress-data"> <span data-i18n="encode.options.compress">Compression des données</span></label>
-                                <label><input type="checkbox" id="add-noise"> <span data-i18n="encode.options.noise">Ajout de bruit cryptographique</span></label>
-                                <label><input type="checkbox" id="multi-layer"> <span data-i18n="encode.options.multilayer">Protection multi-couches</span></label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="encode-btn">
-                            <i class="fas fa-shield-alt"></i>
-                            <span data-i18n="encode.button.start">Lancer l'encodage</span>
-                        </button>
-                        <button class="btn btn-secondary" id="reset-encode">
-                            <i class="fas fa-undo"></i>
-                            <span data-i18n="encode.button.reset">Réinitialiser</span>
-                        </button>
+                    <div class="status-badge">
+                        <div class="status-dot"></div>
+                        <span data-i18n="header.status">Système actif</span>
                     </div>
                 </div>
-                
-                <div class="progress-container" id="encode-progress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <div class="progress-text" data-i18n="message.encoding">Encodage en cours...</div>
-                </div>
-                
-                <div class="result-area" id="encode-result" style="display: none;">
-                    <h3><i class="fas fa-check-circle"></i> <span data-i18n="encode.result.title">Encodage Réussi</span></h3>
-                    <div class="file-info">
-                        <div class="info-item">
-                            <span data-i18n="encode.result.filename">Fichier généré :</span>
-                            <span id="result-filename"></span>
-                        </div>
-                        <div class="info-item">
-                            <span data-i18n="encode.result.size">Taille finale :</span>
-                            <span id="result-size"></span>
-                        </div>
-                        <div class="info-item">
-                            <span data-i18n="encode.result.method">Méthode utilisée :</span>
-                            <span id="result-method"></span>
-                        </div>
-                    </div>
-                    <button class="btn btn-success" id="download-btn">
-                        <i class="fas fa-download"></i>
-                        <span data-i18n="encode.button.download">Télécharger le résultat</span>
-                    </button>
-                </div>
-            </div>
+            </header>
 
-            <!-- Decode Panel -->
-            <div class="panel" id="decode-panel">
-                <div class="panel-header">
-                    <h1 class="panel-title" data-i18n="decode.title">Extraction & Analyse</h1>
-                    <p class="panel-subtitle" data-i18n="decode.subtitle">Détection et extraction intelligente de données cachées avec déchiffrement automatique</p>
-                </div>
-                
-                <div class="form-section">
-                    <div class="file-upload-area">
-                        <div class="upload-zone" id="decode-upload">
-                            <i class="fas fa-search"></i>
-                            <h3 data-i18n="decode.upload.title">Fichier à Analyser</h3>
-                            <p data-i18n="decode.upload.description">Sélectionnez le fichier suspect ou encodé</p>
-                            <small data-i18n="decode.upload.types">Tous formats supportés</small>
-                            <input type="file" id="decode-file" hidden>
-                        </div>
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Encode Panel -->
+                <div class="panel active" id="encode-panel">
+                    <div class="panel-header">
+                        <h1 class="panel-title" data-i18n="encode.title">Encodage Sécurisé</h1>
+                        <p class="panel-subtitle" data-i18n="encode.subtitle">Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire</p>
                     </div>
                     
-                    <div class="options-grid">
-                        <div class="option-group">
-                            <label data-i18n="decode.password.label">Mot de passe de déchiffrement</label>
-                            <div class="password-input">
-                                <input type="password" id="decode-password" data-i18n="decode.password.placeholder" placeholder="Phrase de passe (si chiffré)">
-                                <button type="button" class="toggle-password">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                    <div class="form-section">
+                        <div class="file-upload-area">
+                            <div class="upload-zone" id="carrier-upload">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h3 data-i18n="encode.carrier.title">Fichier Porteur</h3>
+                                <p data-i18n="encode.carrier.description">Glissez votre média ou cliquez pour sélectionner</p>
+                                <small data-i18n="encode.carrier.types">Images • Audio • Vidéo • Documents</small>
+                                <input type="file" id="carrier-file" accept=".jpg,.jpeg,.png,.gif,.mp3,.wav,.mp4,.avi,.pdf,.docx" hidden>
+                            </div>
+                            
+                            <div class="upload-zone" id="secret-upload">
+                                <i class="fas fa-user-secret"></i>
+                                <h3 data-i18n="encode.secret.title">Contenu Secret</h3>
+                                <p data-i18n="encode.secret.description">Message ou fichier à dissimuler</p>
+                                <textarea id="secret-text" data-i18n="encode.secret.placeholder" placeholder="Votre message confidentiel..."></textarea>
+                                <div class="file-option">
+                                    <label data-i18n="encode.secret.file">Ou sélectionner un fichier : </label>
+                                    <input type="file" id="secret-file">
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="option-group">
-                            <label data-i18n="decode.detection.label">Mode de Détection</label>
-                            <select id="detection-mode" data-i18n-options>
-                                <option value="auto" data-i18n="decode.detection.auto">Détection Automatique</option>
-                                <option value="lsb" data-i18n="decode.detection.force.lsb">Forcer LSB</option>
-                                <option value="metadata" data-i18n="decode.detection.force.metadata">Forcer Métadonnées</option>
-                                <option value="audio-spread" data-i18n="decode.detection.force.audio">Forcer Audio</option>
-                                <option value="brute" data-i18n="decode.detection.brute">Force Brute (exhaustif)</option>
-                            </select>
+                        <div class="options-grid">
+                            <div class="option-group">
+                                <label data-i18n="encode.method.label">Méthode de Stéganographie</label>
+                                <select id="stego-method" data-i18n-options>
+                                    <option value="lsb">LSB - Least Significant Bit</option>
+                                    <option value="metadata">Métadonnées EXIF</option>
+                                    <option value="audio-spread">Dispersion Spectrale Audio</option>
+                                    <option value="video-frame">Frames Vidéo</option>
+                                    <option value="document-hidden">Texte Invisible</option>
+                                </select>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label data-i18n="encode.crypto.label">Niveau de Chiffrement</label>
+                                <select id="crypto-level" data-i18n-options>
+                                    <option value="none" data-i18n="encode.crypto.none">Aucun chiffrement</option>
+                                    <option value="aes">AES-256-GCM</option>
+                                    <option value="ultra">UltraCrypte™</option>
+                                </select>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label data-i18n="encode.password.label">Mot de passe de chiffrement</label>
+                                <div class="password-input">
+                                    <input type="password" id="encode-password" data-i18n="encode.password.placeholder" placeholder="Phrase de passe sécurisée">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label data-i18n="encode.options.label">Options Avancées</label>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" id="compress-data"> <span data-i18n="encode.options.compress">Compression des données</span></label>
+                                    <label><input type="checkbox" id="add-noise"> <span data-i18n="encode.options.noise">Ajout de bruit cryptographique</span></label>
+                                    <label><input type="checkbox" id="multi-layer"> <span data-i18n="encode.options.multilayer">Protection multi-couches</span></label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="encode-btn">
+                                <i class="fas fa-shield-alt"></i>
+                                <span data-i18n="encode.button.start">Lancer l'encodage</span>
+                            </button>
+                            <button class="btn btn-secondary" id="reset-encode">
+                                <i class="fas fa-undo"></i>
+                                <span data-i18n="encode.button.reset">Réinitialiser</span>
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" id="decode-btn">
-                            <i class="fas fa-unlock"></i>
-                            <span data-i18n="decode.button.extract">Extraire les données</span>
-                        </button>
-                        <button class="btn btn-warning" id="analyze-btn">
-                            <i class="fas fa-microscope"></i>
-                            <span data-i18n="decode.button.analyze">Analyse forensique</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="progress-container" id="decode-progress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                    </div>
-                    <div class="progress-text" data-i18n="message.decoding">Analyse en cours...</div>
-                </div>
-                
-                <div class="result-area" id="decode-result" style="display: none;">
-                    <h3><i class="fas fa-eye"></i> <span data-i18n="decode.result.title">Données Extraites</span></h3>
-                    <div class="extracted-content">
-                        <div class="content-preview" id="content-preview">
-                            <!-- Contenu extrait affiché ici -->
+                    <div class="progress-container" id="encode-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
                         </div>
-                        <div class="extraction-info">
+                        <div class="progress-text" data-i18n="message.encoding">Encodage en cours...</div>
+                    </div>
+                    
+                    <div class="result-area" id="encode-result" style="display: none;">
+                        <h3><i class="fas fa-check-circle"></i> <span data-i18n="encode.result.title">Encodage Réussi</span></h3>
+                        <div class="file-info">
                             <div class="info-item">
-                                <span data-i18n="decode.result.method">Méthode détectée :</span>
-                                <span id="detected-type"></span>
+                                <span data-i18n="encode.result.filename">Fichier généré :</span>
+                                <span id="result-filename"></span>
                             </div>
                             <div class="info-item">
-                                <span data-i18n="decode.result.size">Taille extraite :</span>
-                                <span id="extracted-size"></span>
+                                <span data-i18n="encode.result.size">Taille finale :</span>
+                                <span id="result-size"></span>
                             </div>
                             <div class="info-item">
-                                <span data-i18n="decode.result.crypto">Type de chiffrement :</span>
-                                <span id="detected-crypto"></span>
+                                <span data-i18n="encode.result.method">Méthode utilisée :</span>
+                                <span id="result-method"></span>
                             </div>
                         </div>
-                        <button class="btn btn-success" id="save-extracted">
-                            <i class="fas fa-save"></i>
-                            <span data-i18n="decode.button.save">Sauvegarder l'extraction</span>
+                        <button class="btn btn-success" id="download-btn">
+                            <i class="fas fa-download"></i>
+                            <span data-i18n="encode.button.download">Télécharger le résultat</span>
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- UltraCrypte Panel -->
-            <div class="panel" id="ultracrypte-panel">
-                <div class="panel-header">
-                    <h1 class="panel-title" data-i18n="ultra.title">UltraCrypte™</h1>
-                    <p class="panel-subtitle ultra-warning">
-                        <i class="fas fa-shield-virus"></i>
-                        <span data-i18n="ultra.subtitle">Chiffrement de niveau militaire avec résistance post-quantique</span>
-                    </p>
+                <!-- Decode Panel -->
+                <div class="panel" id="decode-panel">
+                    <div class="panel-header">
+                        <h1 class="panel-title" data-i18n="decode.title">Extraction & Analyse</h1>
+                        <p class="panel-subtitle" data-i18n="decode.subtitle">Détection et extraction intelligente de données cachées avec déchiffrement automatique</p>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="file-upload-area">
+                            <div class="upload-zone" id="decode-upload">
+                                <i class="fas fa-search"></i>
+                                <h3 data-i18n="decode.upload.title">Fichier à Analyser</h3>
+                                <p data-i18n="decode.upload.description">Sélectionnez le fichier suspect ou encodé</p>
+                                <small data-i18n="decode.upload.types">Tous formats supportés</small>
+                                <input type="file" id="decode-file" hidden>
+                            </div>
+                        </div>
+                        
+                        <div class="options-grid">
+                            <div class="option-group">
+                                <label data-i18n="decode.password.label">Mot de passe de déchiffrement</label>
+                                <div class="password-input">
+                                    <input type="password" id="decode-password" data-i18n="decode.password.placeholder" placeholder="Phrase de passe (si chiffré)">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="option-group">
+                                <label data-i18n="decode.detection.label">Mode de Détection</label>
+                                <select id="detection-mode" data-i18n-options>
+                                    <option value="auto" data-i18n="decode.detection.auto">Détection Automatique</option>
+                                    <option value="lsb" data-i18n="decode.detection.force.lsb">Forcer LSB</option>
+                                    <option value="metadata" data-i18n="decode.detection.force.metadata">Forcer Métadonnées</option>
+                                    <option value="audio-spread" data-i18n="decode.detection.force.audio">Forcer Audio</option>
+                                    <option value="brute" data-i18n="decode.detection.brute">Force Brute (exhaustif)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="decode-btn">
+                                <i class="fas fa-unlock"></i>
+                                <span data-i18n="decode.button.extract">Extraire les données</span>
+                            </button>
+                            <button class="btn btn-warning" id="analyze-btn">
+                                <i class="fas fa-microscope"></i>
+                                <span data-i18n="decode.button.analyze">Analyse forensique</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container" id="decode-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text" data-i18n="message.decoding">Analyse en cours...</div>
+                    </div>
+                    
+                    <div class="result-area" id="decode-result" style="display: none;">
+                        <h3><i class="fas fa-eye"></i> <span data-i18n="decode.result.title">Données Extraites</span></h3>
+                        <div class="extracted-content">
+                            <div class="content-preview" id="content-preview">
+                                <!-- Contenu extrait affiché ici -->
+                            </div>
+                            <div class="extraction-info">
+                                <div class="info-item">
+                                    <span data-i18n="decode.result.method">Méthode détectée :</span>
+                                    <span id="detected-type"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span data-i18n="decode.result.size">Taille extraite :</span>
+                                    <span id="extracted-size"></span>
+                                </div>
+                                <div class="info-item">
+                                    <span data-i18n="decode.result.crypto">Type de chiffrement :</span>
+                                    <span id="detected-crypto"></span>
+                                </div>
+                            </div>
+                            <button class="btn btn-success" id="save-extracted">
+                                <i class="fas fa-save"></i>
+                                <span data-i18n="decode.button.save">Sauvegarder l'extraction</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="ultra-container">
-                    <div class="ultra-info">
-                        <h3 data-i18n="ultra.features.title">Technologies Avancées</h3>
-                        <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.postquantum">Chiffrement post-quantique certifié</span></li>
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.chaos">Algorithmes chaotiques propriétaires</span></li>
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.differential">Protection contre l'analyse différentielle</span></li>
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.sidechannel">Résistance aux attaques par canaux cachés</span></li>
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.noise">Masquage par bruit cryptographique</span></li>
-                            <li><i class="fas fa-check"></i> <span data-i18n="ultra.features.deniable">Déni plausible intégré</span></li>
-                        </ul>
+
+                <!-- UltraCrypte Panel -->
+                <div class="panel" id="ultracrypte-panel">
+                    <div class="panel-header">
+                        <h1 class="panel-title" data-i18n="ultra.title">UltraCrypte™</h1>
+                        <p class="panel-subtitle ultra-warning">
+                            <i class="fas fa-shield-virus"></i>
+                            <span data-i18n="ultra.subtitle">Chiffrement de niveau militaire avec résistance post-quantique</span>
+                        </p>
+                    </div>
+                    
+                    <div class="ultra-container">
+                        <div class="ultra-info">
+                            <h3 data-i18n="ultra.features.title">Technologies Avancées</h3>
+                            <ul class="feature-list">
                     </div>
                     
                     <div class="ultra-controls">
