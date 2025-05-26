@@ -554,48 +554,48 @@ class ObscuraApp {
             // Ctrl+D : Décodage  
             else if (e.ctrlKey && e.key === 'd') {
                 e.preventDefault();
-        if (carrierFileInput) {
-            carrierFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'carrier');
-            });
-        }
-
-        // Suppression de l'événement pour secret-file car il n'existe plus
-
-        if (decodeFileInput) {
-            decodeFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'decode');
-            });
-        }
-
-        if (ultraFileInput) {
-            ultraFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'ultra');
-            });
-        }
-
-        // Surveillance des changements de méthode de stéganographie
-        document.getElementById('stego-method').addEventListener('change', (e) => {
-            this.updateMethodInfo(e.target.value);
-        });
-
-        // Surveillance du niveau de chiffrement
-        document.getElementById('crypto-level').addEventListener('change', (e) => {
-            this.updateCryptoInfo(e.target.value);
-        });
-
-        // Surveillance des options avancées
-        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-                this.updateOptionsInfo();
-            });
+                this.showPanel('decode');
+            }
+            // Ctrl+U : UltraCrypte
+            else if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                this.showPanel('ultracrypte');
+            }
+            // Ctrl+H : Aide
+            else if (e.ctrlKey && e.key === 'h') {
+                e.preventDefault();
+                this.showPanel('help');
+            }
+            // Escape : Reset/Annulation
+            else if (e.key === 'Escape') {
+                this.cancelOperations();
+            }
         });
     }
 
-    setupDragAndDrop() {
-        const dropZones = document.querySelectorAll('.upload-zone');
+    // ========== GESTION DES ONGLETS ==========
 
-        dropZones.forEach(zone => {
+    switchTab(tabName) {
+        // Masquer tous les panels
+        document.querySelectorAll('.panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+        
+        // Masquer toutes les barres de progression actives
+        document.querySelectorAll('.progress-container.active').forEach(progress => {
+            progress.classList.remove('active');
+            progress.style.display = 'none';
+        });
+        
+        // Désactiver tous les onglets
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Activer l'onglet et le panel correspondants
+        const targetPanel = document.getElementById(`${tabName}-panel`);
+        const targetTab = document.querySelector(`[data-tab="${tabName}"]`);
+        
             // Prévention du comportement par défaut
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 zone.addEventListener(eventName, this.preventDefaults, false);
