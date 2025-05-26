@@ -292,20 +292,20 @@ class I18nSystem {
         // Fallback vers la langue par défaut
         if (!translation) {
             const fallbackTranslations = this.translations.get(this.fallbackLanguage);
-                // Detection Modes
-                'detection.auto': 'Automatic detection',
-                'detection.lsb.only': 'LSB only',
-                'detection.metadata.only': 'Metadata only',
-                'detection.brute': 'Brute force',
-                
-                // Advanced Options
-                'advanced.compress': 'Data compression',
-                'advanced.noise': 'Add noise',
-                'advanced.multilayer': 'Multi-layer',
-                'advanced.stealth': 'Stealth mode',
-                'advanced.deniable': 'Plausible deniability',
-                
-                // UltraCrypte
+            translation = fallbackTranslations[key];
+        }
+
+        // Si toujours pas trouvé, retourner la clé
+        if (!translation) {
+            console.warn(`Translation missing for key: ${key}`);
+            return key;
+        }
+
+        // Remplacer les paramètres
+        return this.interpolate(translation, params);
+    }
+
+    interpolate(text, params) {
                 'ultra.title': 'UltraCrypte™',
                 'ultra.subtitle': 'Military-grade post-quantum encryption for your ultra-sensitive data',
                 'ultra.file.title': 'Select file to encrypt',
