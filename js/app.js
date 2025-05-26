@@ -2200,87 +2200,87 @@ class ObscuraApp {
     generateExtractedFilename(data) {
         // Tentative de détection du type de fichier extrait
         const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-        const encoder = new TextEncoder();
-        const decoder = new TextDecoder();
-        
-        let dataToDecrypt = encryptedData;
-        if (typeof encryptedData === 'string') {
-            // Si c'est une string, on essaie de la décoder
-            try {
-                dataToDecrypt = new Uint8Array(encryptedData.split(',').map(x => parseInt(x)));
-            } catch (e) {
-                dataToDecrypt = encoder.encode(encryptedData);
-            }
-        } else if (!(encryptedData instanceof Uint8Array)) {
-            dataToDecrypt = new Uint8Array(encryptedData);
-        }
-        
-        if (dataToDecrypt.length < 28) {
-            throw new Error('Données chiffrées trop courtes');
-        }
-        
-        const salt = dataToDecrypt.slice(0, 16);
-        const iv = dataToDecrypt.slice(16, 28);
-        const encrypted = dataToDecrypt.slice(28);
-        
-        const keyMaterial = await crypto.subtle.importKey(
-            'raw',
-            encoder.encode(password),
-            { name: 'PBKDF2' },
-            false,
-            ['deriveBits', 'deriveKey']
-        );
-        
-        const key = await crypto.subtle.deriveKey(
-            {
-                name: 'PBKDF2',
-                salt: salt,
-                iterations: 100000,
-                hash: 'SHA-256'
-            },
-            keyMaterial,
-            { name: 'AES-GCM', length: 256 },
-            false,
-            ['encrypt', 'decrypt']
-        );
-        
-        const decrypted = await crypto.subtle.decrypt(
-            { name: 'AES-GCM', iv: iv },
-            key,
-            encrypted
-        );
-        
-        return decoder.decode(decrypted);
-    }
 
-    // ========== UTILITAIRES ==========
-
-    updateMethodInfo(method) {
-        // Mise à jour des informations contextuelles selon la méthode
-        if (this.currentFiles.carrier) {
-            const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
-            if (capacity > 0) {
-                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
-            }
-        }
-    }
-
-    updateCryptoInfo(level) {
-        const infoMessages = {
-            'none': 'Aucun chiffrement - Données en clair',
-            'aes': 'Chiffrement AES-256-GCM standard',
-            'ultra': 'UltraCrypte - Sécurité maximale post-quantique'
+        // Headers de fichiers courants
+        const fileHeaders = {
+            '\x89PNG': 'png',
+            'GIF8': 'gif',
+            '\xFF\xD8\xFF': 'jpg',
+            'PK\x03\x04': 'zip',
+            '%PDF': 'pdf'
         };
 
-        if (infoMessages[level]) {
-            this.showMessage(`🔐 ${infoMessages[level]}`, 'info');
+        try {
+            const dataStr = String.fromCharCode(...data.slice(0, 10));
+            for (const [header, ext] of Object.entries(fileHeaders)) {
+                if (dataStr.startsWith(header)) {
+                    return `extracted_${timestamp}.${ext}`;
+                }
+            }
+
+            // Tentative de détection texte
+            const text = new TextDecoder('utf-8').decode(data.slice(0, 100));
+            if (!/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/.test(text)) {
+                return `extracted_message_${timestamp}.txt`;
+            }
+        } catch (e) {
+            // Pas du texte ou erreur de décodage
+        }
+
+        return `extracted_${timestamp}.bin`;
+    }
+
+    downloadFile(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    async fileToArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    updateStats() {
+        const statsElement = document.getElementById('files-processed');
+        if (statsElement) {
+            statsElement.textContent = `${this.filesProcessed} fichiers traités`;
         }
     }
 
-    updateOptionsInfo() {
-        // Informations sur les options avancées
-        const options = [];
-        if (document.getElementById('compress-data')?.checked) options.push('Compression');
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+}
+
+// ========== INITIALISATION ==========
+
+// Initialisation de l'application au chargement du DOM
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        window.app = new ObscuraApp();
+    } catch (error) {
         if (document.getElementById('add-noise')?.checked) options.push('Bruit');
         if (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
 
