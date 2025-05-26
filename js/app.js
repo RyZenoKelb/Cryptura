@@ -239,43 +239,43 @@ class ObscuraApp {
             font-size: 1.2rem;
             z-index: 9999;
             animation: pulse 1s ease-in-out 3;
-        if (themeToggle) {
-            themeToggle.addEventListener('click', () => {
-                this.toggleTheme();
-            });
-        }
-    }
-
-    setTheme(theme) {
-        if (theme === 'dark' || theme === 'light') {
-            this.currentTheme = theme;
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('obscura_theme', theme);
-            this.updateThemeToggle();
-        }
-    }
-
-    toggleTheme() {
-        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-        this.setTheme(newTheme);
-    }
-
-    updateThemeToggle() {
-        const toggle = document.getElementById('theme-toggle');
-        const icon = toggle?.querySelector('i');
-        const text = toggle?.querySelector('.toggle-text');
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        `;
+        hint.textContent = 'ACCESS REQUESTED...';
+        document.body.appendChild(hint);
         
-        if (icon && text) {
-            if (this.currentTheme === 'dark') {
-                icon.className = 'fas fa-sun';
-                text.textContent = this.i18n ? this.i18n.translate('theme.light') : 'Light';
-            } else {
-                icon.className = 'fas fa-moon';
-                text.textContent = this.i18n ? this.i18n.translate('theme.dark') : 'Dark';
-            }
-        }
+        setTimeout(() => {
+            if (hint.parentNode) hint.parentNode.removeChild(hint);
+        }, 2000);
     }
 
+    activateAdminMode() {
+        // Effet visuel
+        this.showAdminActivationEffect();
+        
+        // Message de confirmation
+        this.showMessage('🔓 Mode administrateur activé!', 'success');
+        
+        // Charger le script admin si pas déjà fait
+        setTimeout(() => {
+            if (!window.adminMode) {
+                const script = document.createElement('script');
+                script.src = 'js/admin.js';
+                script.onload = () => {
+                    // Attendre que l'AdminPanel soit complètement initialisé
+                    let attempts = 0;
+                    const checkAdmin = () => {
+                        attempts++;
+                        if (window.adminMode && typeof window.adminMode.toggleVisibility === 'function') {
+                            window.adminMode.toggleVisibility();
+                        } else if (attempts < 10) {
+                            setTimeout(checkAdmin, 200);
+                        } else {
+                            this.showMessage('Erreur d\'initialisation du mode admin', 'error');
+                        }
+                    };
+                    
     setupAdminAccess() {
         this.logoClicks = 0;
 
