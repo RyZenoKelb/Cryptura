@@ -611,24 +611,6 @@ class ObscuraApp {
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
             // Ctrl+E : Encodage
-                    const zoneId = zone.id;
-                    let type = '';
-
-                    if (zoneId === 'carrier-upload') type = 'carrier';
-                    else if (zoneId === 'secret-upload') type = 'secret';
-                    else if (zoneId === 'decode-upload') type = 'decode';
-
-                    if (type) {
-                        this.handleFileDrop(files[0], type);
-                    }
-                }
-            });
-        });
-    }
-
-    setupKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            // Ctrl+E : Encodage
             if (e.ctrlKey && e.key === 'e') {
                 e.preventDefault();
                 this.showPanel('encode');
@@ -710,6 +692,24 @@ class ObscuraApp {
         // Validation du type selon l'usage
         if (!this.validateFileType(file, type)) {
             return;
+        }
+
+        // Stockage et mise à jour de l'interface
+        this.currentFiles[type] = file;
+        this.updateUploadZone(type + '-upload', file);
+
+        // Actions spécifiques selon le type
+        if (type === 'secret') {
+            // Effacer le texte secret si un fichier est sélectionné
+            const secretTextarea = document.getElementById('secret-text');
+            if (secretTextarea) {
+                secretTextarea.value = '';
+            }
+        }
+
+        // Mise à jour des informations contextuelles
+        this.updateFileInfo(type, file);
+    }
         }
 
         // Stockage et mise à jour de l'interface
