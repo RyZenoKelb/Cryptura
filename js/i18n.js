@@ -306,61 +306,61 @@ class I18nSystem {
     }
 
     interpolate(text, params) {
-                'ultra.title': 'UltraCrypte™',
-                'ultra.subtitle': 'Military-grade post-quantum encryption for your ultra-sensitive data',
-                'ultra.file.title': 'Select file to encrypt',
-                'ultra.file.desc': 'Drag and drop or click to select',
-                'ultra.file.types': 'All file types • Max 500MB',
-                'ultra.text.label': 'Text message to encrypt',
-                'ultra.text.placeholder': 'Your ultra-confidential message...',
-                'ultra.key.label': 'UltraCrypte Master Key',
-                'ultra.key.placeholder': 'Ultra-secure master key...',
-                'ultra.key.tooltip': 'Main cryptographic derivation key. Minimum 12 characters recommended for optimal security.',
-                'ultra.security.label': 'Security Level',
-                'ultra.security.tooltip': 'Standard: Fast, secure for general use. Military: Enhanced encryption. Post-Quantum: Resistant to quantum computers.',
-                'ultra.security.standard': 'Standard',
-                'ultra.security.standard.desc': 'AES-256 + ChaCha20',
-                'ultra.security.military': 'Military',
-                'ultra.security.military.desc': 'Triple cascade + OTP',
-                'ultra.security.quantum': 'Post-Quantum',
-                'ultra.security.quantum.desc': 'Lattice + Hash chains',
-                'ultra.options.label': 'Advanced Options',
-                'ultra.compress.title': 'LZMA Compression',
-                'ultra.compress.desc': 'Reduces data size',
-                'ultra.compress.tooltip': 'Advanced LZMA compression to reduce file size before encryption.',
-                'ultra.stealth.title': 'Stealth Mode',
-                'ultra.stealth.desc': 'Masks signatures',
-                'ultra.stealth.tooltip': 'Adds random noise to mask cryptographic signatures and make detection more difficult.',
-                'ultra.deniable.title': 'Plausible Deniability',
-                'ultra.deniable.desc': 'Double encryption',
-                'ultra.deniable.tooltip': 'Creates two encryption levels with different keys to allow plausible deniability of real content.',
-                'ultra.btn.encrypt': 'Encrypt with UltraCrypte™',
-                'ultra.btn.decrypt': 'Decrypt',
-                
-                // Key Strength
-                'key.strength.weak': 'Weak',
-                'key.strength.fair': 'Fair',
-                'key.strength.good': 'Good',
-                'key.strength.strong': 'Strong',
-                'key.strength.excellent': 'Excellent',
-                'key.entropy': '{bits} bits of entropy',
-                
-                // Messages
-                'message.file.required': 'Please select a carrier file',
-                'message.secret.required': 'Please enter a secret message',
-                'message.password.required': 'A password is required for this encryption level',
-                'message.file.too.large': 'File is too large (max {max})',
-                'message.unsupported.format': 'Unsupported file format',
-                'message.invalid.password': 'Incorrect password',
-                'message.extraction.failed': 'No hidden data detected',
-                'message.processing.error': 'Processing error',
-                'message.success.copy': 'Text copied to clipboard',
-                'message.success.save': 'File saved successfully',
-                
-                // Footer
-                'footer.copyright': '© 2025 Obscura',
-                'footer.tagline': 'Professional Steganography',
-                'footer.mode': 'Offline Mode',
+        return text.replace(/\{(\w+)\}/g, (match, key) => {
+            return params[key] !== undefined ? params[key] : match;
+        });
+    }
+
+    // ========== APPLICATION DES TRADUCTIONS ==========
+
+    applyLanguage() {
+        // Traduire tous les éléments avec data-i18n
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            element.textContent = this.t(key);
+        });
+
+        // Traduire les placeholders
+        const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+        placeholderElements.forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            element.placeholder = this.t(key);
+        });
+
+        // Traduire les titres
+        const titleElements = document.querySelectorAll('[data-i18n-title]');
+        titleElements.forEach(element => {
+            const key = element.getAttribute('data-i18n-title');
+            element.title = this.t(key);
+        });
+
+        // Mettre à jour le sélecteur de langue
+        this.updateLanguageSelector();
+
+        // Mettre à jour l'attribut lang du document
+        document.documentElement.lang = this.currentLanguage;
+    }
+
+    updateLanguageSelector() {
+        const currentLangElement = document.getElementById('current-language');
+        if (currentLangElement) {
+            currentLangElement.textContent = this.currentLanguage.toUpperCase();
+        }
+
+        // Mettre à jour les options actives
+        const languageOptions = document.querySelectorAll('.language-option');
+        languageOptions.forEach(option => {
+            const lang = option.getAttribute('data-lang');
+            option.classList.toggle('active', lang === this.currentLanguage);
+        });
+    }
+
+    // ========== OBSERVATEURS ==========
+
+    addObserver(callback) {
+        this.observers.push(callback);
+    }
                 'footer.processed': 'files processed',
                 
                 // Help Content
