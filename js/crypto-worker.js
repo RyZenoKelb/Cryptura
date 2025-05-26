@@ -62,41 +62,41 @@ class CryptoWorker {
             }
         };
     }
-            default:
-                throw new Error(`Algorithme de chiffrement non supporté: ${algorithm}`);
+
+    // ========== TIMING ATTACK PROTECTION ==========
+
+    async addRandomDelay() {
+        const delay = Math.floor(Math.random() * this.maxRandomDelay);
+        if (delay > 0) {
+            await new Promise(resolve => setTimeout(resolve, delay));
         }
     }
 
-    async performDecryption({ data, password, algorithm, options = {} }) {
-        console.log(`🔓 Worker: Déchiffrement ${algorithm}...`);
-        
-        switch (algorithm) {
-            case 'aes-gcm':
-                return await this.decryptAESGCM(data, password, options);
-            case 'ultra':
-                return await this.decryptUltra(data, password, options);
-            default:
-                throw new Error(`Algorithme de déchiffrement non supporté: ${algorithm}`);
+    // Add noise to execution patterns
+    addExecutionNoise() {
+        // Perform dummy operations to mask real computation patterns
+        const dummyOps = Math.floor(Math.random() * 100);
+        let dummy = 0;
+        for (let i = 0; i < dummyOps; i++) {
+            dummy += Math.sin(i) * Math.cos(i);
         }
+        return dummy; // Return to prevent optimization
     }
 
-    async encryptAESGCM(data, password, options) {
-        // Conversion du mot de passe en clé
-        const encoder = new TextEncoder();
-        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
+    // ========== CHUNKED ENCRYPTION ==========
+
+    async encryptChunked(data) {
+        const { buffer, password, algorithm = 'AES-GCM', options = {} } = data;
+        const chunks = this.splitIntoChunks(buffer);
+        const encryptedChunks = [];
+        const salt = crypto.getRandomValues(new Uint8Array(16));
         
-        const key = await crypto.subtle.importKey(
-            'raw',
-            keyMaterial,
-            'AES-GCM',
-            false,
-            ['encrypt']
-        );
+        // Derive key from password
+        const key = await this.deriveKey(password, salt, algorithm);
         
-        // Génération IV
-        const iv = crypto.getRandomValues(new Uint8Array(12));
+        let progress = 0;
+        const totalChunks = chunks.length;
         
-        // Chiffrement
         const encrypted = await crypto.subtle.encrypt(
             { name: 'AES-GCM', iv: iv },
             key,
