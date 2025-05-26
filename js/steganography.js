@@ -502,23 +502,23 @@ class SteganographyEngine {
         const header = new ArrayBuffer(4);
         new DataView(header).setUint32(0, length, true);
         return new Uint8Array(header);
-                        byte |= (carrier[carrierIndex] & 1) << bit;
-                    }
-                }
-                sizeBytes.push(byte);
+    }
+
+    bytesToBits(bytes) {
+        const bits = [];
+        for (const byte of bytes) {
+            for (let i = 0; i < 8; i++) {
+                bits.push((byte >> i) & 1);
             }
-            
-            const dataSize = new DataView(new Uint8Array(sizeBytes).buffer).getUint32(0, true);
-            
-            if (dataSize <= 0 || dataSize > carrier.length) {
-                throw new Error(`Taille de données invalide: ${dataSize}`);
-            }
-            
-            // Extraction des données réelles
-            let extractedData = [];
-            const actualDataStartBit = dataStartBit + 32; // 4 octets * 8 bits
-            
-            for (let i = 0; i < dataSize; i++) {
+        }
+        return bits;
+    }
+
+    bitsToBytes(bits) {
+        const bytes = [];
+        for (let i = 0; i < bits.length; i += 8) {
+            let byte = 0;
+            for (let j = 0; j < 8; j++) {
                 let byte = 0;
                 for (let bit = 0; bit < 8; bit++) {
                     const carrierIndex = actualDataStartBit + i * 8 + bit;
