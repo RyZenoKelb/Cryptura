@@ -237,6 +237,42 @@ class I18nManager {
         const lang = language || this.currentLanguage;
         const translations = this.translations[lang] || this.translations[this.fallbackLanguage];
         
+        return translations[key] || key;
+    }
+
+    getCurrentLanguage() {
+        return this.currentLanguage;
+    }
+
+    getAvailableLanguages() {
+        return Object.keys(this.translations);
+    }
+
+    updateLanguageSelector() {
+        const currentLangEl = document.getElementById('current-language');
+        const dropdown = document.getElementById('language-dropdown');
+        
+        if (currentLangEl) {
+            currentLangEl.textContent = this.currentLanguage.toUpperCase();
+        }
+        
+        if (dropdown) {
+            const options = dropdown.querySelectorAll('.language-option');
+            options.forEach(option => {
+                const lang = option.getAttribute('data-lang');
+                option.classList.toggle('active', lang === this.currentLanguage);
+            });
+        }
+    }
+
+    // Formatage de nombres avec localisation
+    formatNumber(number) {
+        try {
+            return new Intl.NumberFormat(this.currentLanguage).format(number);
+        } catch {
+            return number.toString();
+        }
+    }
 
     // Formatage de dates avec localisation
     formatDate(date) {
