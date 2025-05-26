@@ -1885,67 +1885,67 @@ class ObscuraApp {
         
         if (!masterKey) {
             this.showMessage('Veuillez saisir la clé maître', 'error');
-                msg.parentNode.removeChild(msg);
-            }
-        });
-    }
+            return;
+        }
 
-    togglePasswordVisibility(e) {
-        const input = e.target.closest('.password-input').querySelector('input');
-        const icon = e.target.closest('.toggle-password').querySelector('i');
+        if (!ultraFile) {
+            this.showMessage('Veuillez sélectionner un fichier chiffré', 'error');
+            return;
+        }
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            input.type = 'password';
-            icon.className = 'fas fa-eye';
+        this.showMessage('Déchiffrement UltraCrypte en cours...', 'info');
+        
+        try {
+            const encryptedData = await this.fileToArrayBuffer(ultraFile);
+            const decrypted = await this.ultraCrypte.decrypt(encryptedData, masterKey);
+            
+            const filename = ultraFile.name.replace('.ucrypt', '_decrypted');
+            this.downloadFile(new Blob([decrypted]), filename);
+            this.showMessage('Déchiffrement UltraCrypte terminé avec succès!', 'success');
+            
+        } catch (error) {
+            this.showMessage(`Erreur de déchiffrement: ${error.message}`, 'error');
         }
     }
 
-    checkPasswordStrength(password) {
-        const strengthBar = document.querySelector('.strength-fill');
-        const strengthText = document.querySelector('.strength-text');
-        const entropyElement = document.getElementById('key-entropy');
-
-        if (!strengthBar || !strengthText) return;
-
-        let score = 0;
-        const feedback = [];
-
-        // Critères de notation
-        if (password.length >= 8) score += 20;
-        if (password.length >= 12) score += 15;
-        if (password.length >= 20) score += 15;
-        else feedback.push('20+ caractères recommandés');
-
-        if (/[a-z]/.test(password)) score += 10;
-        else feedback.push('Minuscules manquantes');
-
-        if (/[A-Z]/.test(password)) score += 10;
-        else feedback.push('Majuscules manquantes');
-
-        if (/[0-9]/.test(password)) score += 10;
-        else feedback.push('Chiffres manquants');
-
-        if (/[^a-zA-Z0-9]/.test(password)) score += 15;
-        else feedback.push('Caractères spéciaux manquants');
-
-        if (/(.)\1{2,}/.test(password)) score -= 10; // Répétitions
-        if (password.toLowerCase().includes('password')) score -= 20;
-
-        // Calcul de l'entropie approximative
-        const entropy = Math.floor(password.length * Math.log2(this.getCharsetSize(password)));
-
-        // Mise à jour visuelle
-        strengthBar.style.width = `${score}%`;
-
-        let level, color;
-        if (score < 30) {
-            level = 'Très faible';
-            color = '#ef4444';
-        } else if (score < 50) {
-            level = 'Faible';
+    // Méthode handleError améliorée
+    handleError(error, context = 'application') {
+        console.error(`❌ Erreur dans ${context}:`, error);
+        
+        let message = 'Une erreur inattendue s\'est produite';
+        
+        // Gestion des erreurs null/undefined - CORRECTION
+        if (!error) {
+            message = 'Erreur inconnue - objet d\'erreur null';
+            console.warn('handleError appelé avec error null/undefined');
+        } else if (error && error.message) {
+            if (error.message.includes('network') || error.message.includes('fetch')) {
+                message = 'Erreur de connexion réseau';
+            } else if (error.message.includes('permission') || error.message.includes('denied')) {
+                message = 'Erreur de permissions';
+            } else if (error.message.includes('memory') || error.message.includes('size')) {
+                message = 'Erreur de mémoire - fichier trop volumineux';
+            } else if (error.message.includes('Cannot read properties')) {
+                message = 'Erreur de données - fichier corrompu ou manquant';
+            } else if (error.message.includes('undefined')) {
+                message = 'Erreur de données - propriété manquante';
+            } else {
+                message = error.message;
+            }
+        } else if (typeof error === 'string') {
+            message = error;
+        } else {
+            // Erreur d'un type inattendu
+            message = 'Erreur de type inattendu';
+            console.warn('Erreur non-standard:', typeof error, error);
+        }
+        
+        this.showMessage(`${message} (${context})`, 'error');
+        
+        // Log détaillé pour le debug
+        if (localStorage.getItem('obscura_debug') === 'true') {
+            console.group('🔍 Debug Error Details');
+            console.log('Context:', context);
             color = '#f59e0b';
         } else if (score < 75) {
             level = 'Correct';
