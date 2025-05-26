@@ -2192,14 +2192,14 @@ class ObscuraApp {
             return `${baseName}_obscura_${method}.${extension}`;
         } catch (error) {
             console.warn('Erreur génération nom de fichier:', error);
-        result.set(salt, 0);
-        result.set(iv, salt.length);
-        result.set(new Uint8Array(encrypted), salt.length + iv.length);
-        
-        return result;
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            return `obscura_encoded_${method}_${timestamp}.bin`;
+        }
     }
 
-    async basicDecrypt(encryptedData, password) {
+    generateExtractedFilename(data) {
+        // Tentative de détection du type de fichier extrait
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
         const encoder = new TextEncoder();
         const decoder = new TextDecoder();
         
