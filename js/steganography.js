@@ -178,303 +178,303 @@ class SteganographyEngine {
     randomizeEmbeddingPositions(data) {
         // Create pseudo-random but reproducible position sequence
         const positions = [];
-    // Méthode LSB (Least Significant Bit) - CORRECTION MAJEURE
-    async lsbMethod(carrierFile, secretData, operation, options = {}) {
-        if (operation === 'hide') {
-            return await this.lsbHide(carrierFile, secretData, options);
-        } else {
-            return await this.lsbExtract(carrierFile, options);
-        }
-    }
-
-    async lsbHide(carrierFile, secretData, options = {}) {
-        try {
-            // Validation des entrées
-            if (!carrierFile) {
-                throw new Error('Fichier porteur manquant');
-            }
-            if (!secretData) {
-                throw new Error('Données secrètes manquantes');
-            }
-
-            // Lecture du fichier porteur
-            const carrierBuffer = await this.fileToArrayBuffer(carrierFile);
-            
-            // Encodage avec la méthode LSB
-            const result = await this.encodeLSB(carrierBuffer, secretData, options);
-            
-            // Validation du résultat
-            if (!result || !result.data) {
-                throw new Error('Échec de l\'encodage LSB');
-            }
-
-            // Création du blob résultat avec le même type MIME que le fichier original
-            const resultBlob = new Blob([result.data], { 
-                type: carrierFile.type || 'application/octet-stream'
-            });
-
-            // Validation du blob
-            if (!resultBlob || resultBlob.size === 0) {
-                throw new Error('Blob résultat invalide');
-            }
-            
-            return {
-                file: resultBlob,
-                method: 'lsb',
-                metadata: {
-                    originalSize: carrierBuffer.byteLength,
-                    finalSize: resultBlob.size,
-                    capacity: result.capacity,
-                    used: result.used,
-                    efficiency: result.efficiency
-                }
-            };
-            
-        } catch (error) {
-            throw new Error(`Erreur LSB Hide: ${error.message}`);
-        }
-    }
-
-    async lsbExtract(carrierFile, options = {}) {
-        try {
-            // Validation d'entrée
-            if (!carrierFile) {
-                throw new Error('Fichier manquant pour extraction');
-            }
-
-            // Lecture du fichier
-            const carrierBuffer = await this.fileToArrayBuffer(carrierFile);
-            
-            // Extraction avec la méthode LSB
-            const extractedData = await this.extractLSB(carrierBuffer);
-            
-            // Validation du résultat
-            if (!extractedData || extractedData.length === 0) {
-                throw new Error('Aucune donnée extraite');
-            }
-
-            return {
-                data: extractedData,
-                method: 'lsb',
-                confidence: 90,
-                size: extractedData.length
-            };
-            
-        } catch (error) {
-            throw new Error(`Erreur LSB Extract: ${error.message}`);
-        }
-    }
-
-    // Méthodes simplifiées pour les autres types
-    async metadataMethod(carrierFile, secretData, operation, options = {}) {
-        // Implémentation simplifiée
-        if (operation === 'hide') {
-            const result = new Uint8Array(await carrierFile.arrayBuffer());
-            // Ajouter les données dans les métadonnées (simulation)
-            return new Blob([result], { type: carrierFile.type });
-        } else {
-            // Extraction des métadonnées (simulation)
-            throw new Error('Données non trouvées dans les métadonnées');
-        }
-    }
-
-    async audioSpreadMethod(carrierFile, secretData, operation, options = {}) {
-        // Méthode de dispersion audio simplifiée
-        if (operation === 'hide') {
-            const result = new Uint8Array(await carrierFile.arrayBuffer());
-            return new Blob([result], { type: carrierFile.type });
-        } else {
-            throw new Error('Données audio non trouvées');
-        }
-    }
-
-    async videoFrameMethod(carrierFile, secretData, operation, options = {}) {
-        // Méthode de dissimulation dans les frames vidéo
-        if (operation === 'hide') {
-            const result = new Uint8Array(await carrierFile.arrayBuffer());
-            return new Blob([result], { type: carrierFile.type });
-        } else {
-            throw new Error('Données vidéo non trouvées');
-        }
-    }
-
-    async documentHiddenMethod(carrierFile, secretData, operation, options = {}) {
-        // Méthode de dissimulation dans les documents
-        if (operation === 'hide') {
-            const result = new Uint8Array(await carrierFile.arrayBuffer());
-            return new Blob([result], { type: carrierFile.type });
-        } else {
-            throw new Error('Données document non trouvées');
-        }
-    }
-
-    // Analyse forensique
-    async analyzeFile(file) {
-        const analysis = {
-            filename: file.name,
-            size: file.size,
-            type: this.detectFileType(file),
-            detectedMethods: [],
-            entropy: 0,
-            suspicious: false
-        };
-        
-        // Calcul de l'entropie
-        const data = new Uint8Array(await file.arrayBuffer());
-        analysis.entropy = this.calculateEntropy(data);
-        
-        // Détection des méthodes possibles
-        analysis.detectedMethods = await this.detectHiddenData(file);
-        
-        // Analyse de suspicion
-        analysis.suspicious = analysis.entropy > 7.8 || analysis.detectedMethods.length > 0;
-        
-        return analysis;
-    }
-
-    // Calcul d'entropie
-    calculateEntropy(data) {
-        const frequency = new Array(256).fill(0);
+        let seed = 0x2F6E2B1; // Fixed seed for reproducibility
         
         for (let i = 0; i < data.length; i++) {
-            frequency[data[i]]++;
+            seed = (seed * 16807) % 2147483647;
+            positions.push({ original: i, scrambled: seed % data.length });
         }
         
-        let entropy = 0;
-        for (let i = 0; i < 256; i++) {
-            if (frequency[i] > 0) {
-                const p = frequency[i] / data.length;
-                entropy -= p * Math.log2(p);
-            }
+        // Sort by scrambled position to create new order
+        positions.sort((a, b) => a.scrambled - b.scrambled);
+        
+        const result = new Uint8Array(data.length);
+        positions.forEach((pos, index) => {
+            result[index] = data[pos.original];
+        });
+        
+        return result;
+    }
+
+    addDecoyPatterns(data) {
+        const result = new Uint8Array(data);
+        const decoyCount = Math.floor(data.length * 0.001); // 0.1% decoy data
+        
+        for (let i = 0; i < decoyCount; i++) {
+            const pos = Math.floor(Math.random() * result.length);
+            const pattern = Math.floor(Math.random() * 256);
+            result[pos] = (result[pos] & 0xFE) | (pattern & 1);
         }
         
-        return entropy;
+        return result;
     }
 
-    // Génération de rapport
-    generateReport(analysis) {
-        let report = `═══════════════════════════════════════
-🔍 RAPPORT D'ANALYSE FORENSIQUE OBSCURA
-═══════════════════════════════════════
-
-📁 FICHIER ANALYSÉ:
-   Nom: ${analysis.filename}
-   Taille: ${this.formatFileSize(analysis.size)}
-   Type: ${analysis.type.toUpperCase()}
-
-📊 ANALYSE ENTROPIQUE:
-   Entropie: ${analysis.entropy.toFixed(3)} bits/octet
-   Seuil normal: < 7.8 bits/octet
-   Statut: ${analysis.entropy > 7.8 ? '⚠️  SUSPECT' : '✅ NORMAL'}
-
-🎯 MÉTHODES DÉTECTÉES:`;
-
-        if (analysis.detectedMethods.length > 0) {
-            analysis.detectedMethods.forEach((method, index) => {
-                report += `\n   ${index + 1}. ${method.name.toUpperCase()}`;
-                report += `\n      Confiance: ${method.confidence}%`;
-            });
-        } else {
-            report += '\n   ❌ Aucune méthode de stéganographie détectée';
+    mimicNaturalPatterns(data, method) {
+        const result = new Uint8Array(data);
+        
+        // Add patterns that mimic natural file compression artifacts
+        const noiseLevel = 0.005; // Very subtle noise
+        const noiseCount = Math.floor(data.length * noiseLevel);
+        
+        for (let i = 0; i < noiseCount; i++) {
+            const pos = Math.floor(Math.random() * result.length);
+            // Mimic JPEG quantization noise or similar
+            const noise = Math.sin(pos * 0.1) > 0 ? 1 : 0;
+            result[pos] = (result[pos] & 0xFE) | noise;
         }
-
-        report += `\n\n🔒 CONCLUSION GÉNÉRALE:
-   ${analysis.suspicious ? '🚨 FICHIER SUSPECT' : '✅ FICHIER NORMAL'}
-   ${analysis.suspicious ? 'Présence probable de données cachées' : 'Aucun signe de stéganographie détecté'}
-
-═══════════════════════════════════════
-Rapport généré par Obscura v2.0
-${new Date().toLocaleString()}
-═══════════════════════════════════════`;
-
-        return report;
+        
+        return result;
     }
 
-    formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
+    // ========== MAIN EMBEDDING FUNCTIONS ==========
 
-    // ========== MÉTHODES D'ENCODAGE ==========
-
-    async encodeLSB(carrierData, secretData, options = {}) {
+    async embedMessage(carrierFile, secretMessage, options = {}) {
         try {
-            const carrier = new Uint8Array(carrierData);
-            const secret = new Uint8Array(secretData);
+            await this.addAntiAnalysisDelay();
             
-            // Préparation des données avec signature et taille
-            const signature = new TextEncoder().encode('OBSCURA_DATA:');
-            const sizeBuffer = new ArrayBuffer(4);
-            new DataView(sizeBuffer).setUint32(0, secret.length, true);
-            const sizeBytes = new Uint8Array(sizeBuffer);
+            const {
+                method = 'auto',
+                encryption = 'none',
+                password = '',
+                compression = false,
+                stealth = false
+            } = options;
             
-            // Données complètes à encoder
-            const fullData = new Uint8Array(signature.length + sizeBytes.length + secret.length);
-            fullData.set(signature, 0);
-            fullData.set(sizeBytes, signature.length);
-            fullData.set(secret, signature.length + sizeBytes.length);
+            // Validate inputs
+            if (!carrierFile) throw new Error(window.t('message.file.required'));
+            if (!secretMessage.trim()) throw new Error(window.t('message.secret.required'));
             
-            // Vérification de la capacité
-            const requiredBits = fullData.length * 8;
-            const availableBits = carrier.length;
-            
-            if (requiredBits > availableBits) {
-                throw new Error(`Capacité insuffisante. Requis: ${requiredBits} bits, Disponible: ${availableBits} bits`);
+            // Check file size
+            if (carrierFile.size > this.maxFileSize) {
+                throw new Error(window.t('message.file.too.large', { 
+                    max: this.formatFileSize(this.maxFileSize) 
+                }));
             }
             
-            // Encodage LSB
-            const result = new Uint8Array(carrier);
-            let dataIndex = 0;
+            // Determine format and method
+            const format = this.detectFormat(carrierFile);
+            const finalMethod = method === 'auto' ? this.selectBestMethod(format) : method;
             
-            for (let i = 0; i < fullData.length; i++) {
-                const dataByte = fullData[i];
-                
-                for (let bit = 0; bit < 8; bit++) {
-                    const secretBit = (dataByte >> bit) & 1;
-                    const carrierIndex = dataIndex;
-                    
-                    if (carrierIndex >= result.length) {
-                        throw new Error('Dépassement de capacité du porteur');
-                    }
-                    
-                    // Modification du bit de poids faible
-                    result[carrierIndex] = (result[carrierIndex] & 0xFE) | secretBit;
-                    dataIndex++;
-                }
+            // Process secret message
+            let processedSecret = new TextEncoder().encode(secretMessage);
+            
+            if (compression) {
+                processedSecret = await this.compressData(processedSecret);
             }
+            
+            if (encryption !== 'none' && password) {
+                processedSecret = await this.encryptData(processedSecret, password, encryption);
+            }
+            
+            // Read carrier file in chunks for large files
+            const carrierBuffer = await this.readFileInChunks(carrierFile);
+            
+            // Embed data
+            const result = await this.performEmbedding(
+                carrierBuffer, 
+                processedSecret, 
+                finalMethod, 
+                format,
+                { stealth }
+            );
+            
+            await this.addAntiAnalysisDelay();
             
             return {
                 data: result,
-                method: 'lsb',
-                capacity: availableBits,
-                used: requiredBits,
-                efficiency: (requiredBits / availableBits * 100).toFixed(2)
+                method: finalMethod,
+                encrypted: encryption !== 'none',
+                compressed: compression,
+                originalSize: carrierFile.size,
+                finalSize: result.byteLength
             };
             
         } catch (error) {
-            throw new Error(`Erreur encodage LSB: ${error.message}`);
+            throw new Error(`Embedding failed: ${error.message}`);
         }
     }
 
-    async extractLSB(carrierData) {
+    async extractMessage(encodedFile, options = {}) {
         try {
-            const carrier = new Uint8Array(carrierData);
-            const signature = new TextEncoder().encode('OBSCURA_DATA:');
+            await this.addAntiAnalysisDelay();
             
-            // Recherche de la signature
-            let signatureFound = false;
-            let dataStartBit = 0;
+            const {
+                method = 'auto',
+                password = '',
+                bruteForce = false
+            } = options;
             
-            for (let startBit = 0; startBit <= carrier.length - signature.length * 8; startBit += 8) {
-                let extractedSignature = [];
+            if (!encodedFile) throw new Error(window.t('message.file.required'));
+            
+            // Read file
+            const fileBuffer = await this.readFileInChunks(encodedFile);
+            
+            // Detect format
+            const format = this.detectFormat(encodedFile);
+            
+            // Try extraction methods
+            const methods = method === 'auto' ? 
+                this.getSupportedMethods(format) : [method];
+            
+            let lastError = null;
+            
+            for (const testMethod of methods) {
+                try {
+                    const extracted = await this.performExtraction(
+                        fileBuffer, 
+                        testMethod, 
+                        format
+                    );
+                    
+                    if (extracted && extracted.length > 0) {
+                        let result = extracted;
+                        
+                        // Try decryption if password provided
+                        if (password) {
+                            try {
+                                result = await this.decryptData(result, password);
+                            } catch (decryptError) {
+                                // If decryption fails, maybe it wasn't encrypted
+                                console.warn('Decryption failed, using raw data');
+                            }
+                        }
+                        
+                        // Try decompression
+                        try {
+                            const decompressed = await this.decompressData(result);
+                            if (decompressed.length > 0) {
+                                result = decompressed;
+                            }
+                        } catch (decompError) {
+                            // Not compressed, continue with current result
+                        }
+                        
+                        await this.addAntiAnalysisDelay();
+                        
+                        return {
+                            data: result,
+                            method: testMethod,
+                            confidence: this.calculateConfidence(result, testMethod)
+                        };
+                    }
+                } catch (error) {
+                    lastError = error;
+                    continue;
+                }
+            }
+            
+            throw new Error(lastError?.message || window.t('message.extraction.failed'));
+            
+        } catch (error) {
+            throw new Error(`Extraction failed: ${error.message}`);
+        }
+    }
+
+    // ========== FILE PROCESSING ==========
+
+    async readFileInChunks(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                resolve(e.target.result);
+            };
+            
+            reader.onerror = () => {
+                reject(new Error('Failed to read file'));
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // ========== FORMAT-SPECIFIC PROCESSORS ==========
+
+    async processImage(buffer, operation, data, method, options = {}) {
+        const imageData = new Uint8Array(buffer);
+        
+        switch (method) {
+            case 'lsb':
+                return operation === 'embed' ? 
+                    this.embedImageLSB(imageData, data, options) :
+                    this.extractImageLSB(imageData, options);
+                    
+            case 'metadata':
+                return this.processImageMetadata(imageData, operation, data);
                 
-                // Extraction de la signature potentielle
-                for (let i = 0; i < signature.length; i++) {
-                    let byte = 0;
-                    for (let bit = 0; bit < 8; bit++) {
+            case 'distributed':
+                return operation === 'embed' ?
+                    this.embedImageDistributed(imageData, data, options) :
+                    this.extractImageDistributed(imageData, options);
+                    
+            default:
+                throw new Error(`Unsupported image method: ${method}`);
+        }
+    }
+
+    embedImageLSB(imageData, secretData, options) {
+        const { stealth = false } = options;
+        const result = new Uint8Array(imageData);
+        
+        // Create header with length information
+        const header = this.createDataHeader(secretData.length);
+        const allData = new Uint8Array(header.length + secretData.length);
+        allData.set(header, 0);
+        allData.set(secretData, header.length);
+        
+        // Convert to bits
+        const bits = this.bytesToBits(allData);
+        
+        if (bits.length > imageData.length) {
+            throw new Error('Secret data too large for carrier image');
+        }
+        
+        // Generate embedding positions
+        const positions = stealth ? 
+            this.generateStealthPositions(bits.length, imageData.length) :
+            this.generateSequentialPositions(bits.length);
+        
+        // Embed bits
+        for (let i = 0; i < bits.length; i++) {
+            const pos = positions[i];
+            result[pos] = (result[pos] & 0xFE) | bits[i];
+        }
+        
+        // Apply anti-analysis obfuscation
+        if (stealth) {
+            return this.obfuscateEmbeddingPattern(result, 'lsb');
+        }
+        
+        return result.buffer;
+    }
+
+    extractImageLSB(imageData, options) {
+        const { stealth = false } = options;
+        
+        // Read header first (32 bits for length)
+        const headerPositions = stealth ?
+            this.generateStealthPositions(32, imageData.length) :
+            this.generateSequentialPositions(32);
+        
+        const headerBits = [];
+        for (const pos of headerPositions) {
+            headerBits.push(imageData[pos] & 1);
+        }
+        
+        const dataLength = this.bitsToNumber(headerBits);
+        
+        if (dataLength <= 0 || dataLength > imageData.length / 8) {
+            return null; // Invalid data length
+        }
+        
+        // Extract data bits
+        const dataBitCount = dataLength * 8;
+        const dataPositions = stealth ?
+            this.generateStealthPositions(dataBitCount, imageData.length, 32) :
+            this.generateSequentialPositions(dataBitCount, 32);
+        
+        const dataBits = [];
+        for (const pos of dataPositions) {
                         const carrierIndex = startBit + i * 8 + bit;
                         if (carrierIndex < carrier.length) {
                             byte |= (carrier[carrierIndex] & 1) << bit;
