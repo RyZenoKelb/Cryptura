@@ -425,6 +425,17 @@ class ObscuraApp {
 
     
     setupEventListeners() {
+        // Upload zones
+        document.getElementById('carrier-upload').addEventListener('click', () => {
+            document.getElementById('carrier-file').click();
+        });
+        
+        // Suppression de l'événement pour secret-file-btn car il n'existe plus
+        
+        document.getElementById('decode-upload').addEventListener('click', () => {
+            document.getElementById('decode-file').click();
+        });
+
         // Navigation entre panneaux
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
@@ -549,11 +560,7 @@ class ObscuraApp {
             });
         }
 
-        if (secretFileInput) {
-            secretFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'secret');
-            });
-        }
+        // Suppression de l'événement pour secret-file car il n'existe plus
 
         if (decodeFileInput) {
             decodeFileInput.addEventListener('change', (e) => {
@@ -874,35 +881,30 @@ class ObscuraApp {
     // ========== ENCODAGE ==========
 
     async handleEncode() {
-        // Récupération des paramètres
-        const carrierFile = this.currentFiles.carrier;
-        const secretText = document.getElementById('secret-text').value.trim();
-        const secretFile = this.currentFiles.secret;
-        const stegoMethod = document.getElementById('stego-method').value;
-        const cryptoLevel = document.getElementById('crypto-level').value;
-        const password = document.getElementById('encode-password').value;
-
-        // Validation des entrées
-        const validation = this.validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password);
-        if (!validation.valid) {
-            this.showMessage(validation.message, 'error');
-            return;
-        }
-
         try {
-            this.showProgress('encode-progress', 'Préparation de l\'encodage...', 'encoding');
+            const carrierFile = document.getElementById('carrier-file').files[0];
+            const secretText = document.getElementById('secret-text').value.trim();
+            const cryptoLevel = document.getElementById('crypto-level').value;
+            const password = document.getElementById('encode-password').value;
 
-            // Préparation des données secrètes
-            let secretData;
-            if (secretFile) {
-                this.updateProgress('encode-progress', 'Lecture du fichier secret...', 15);
-                secretData = await this.fileToArrayBuffer(secretFile);
-                secretData = new Uint8Array(secretData);
-            } else {
-                secretData = new TextEncoder().encode(secretText);
+            // Validation - seulement texte maintenant
+            if (!this.validateEncodeInputs(carrierFile, secretText, null, cryptoLevel, password)) {
+                return;
             }
 
-            this.updateProgress('encode-progress', 'Données préparées...', 25);
+            this.showProgress('encode-progress', 'Préparation de l\'encodage...', 'encoding');
+
+            // Préparation des données secrètes (seulement texte)
+            const secretData = new TextEncoder().encode(secretText);
+            
+            // Configuration des options
+            const options = {
+                method: document.getElementById('stego-method').value,
+                compress: document.getElementById('compress-data').checked,
+                noise: document.getElementById('add-noise').checked,
+                multiLayer: document.getElementById('multi-layer').checked,
+                cryptoComplexity: this.mapCryptoComplexity(cryptoLevel)
+            };
 
             // Chiffrement si nécessaire
             if (cryptoLevel !== 'none' && password) {
@@ -932,11 +934,11 @@ class ObscuraApp {
             }
 
             // Stéganographie avec le moteur principal
-            this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`, 75);
+            this.updateProgress('encode-progress', `Dissimulation via ${options.method}...`, 75);
 
-            const result = await this.steganographyEngine.hideData(carrierFile, secretData, stegoMethod, {
+            const result = await this.steganographyEngine.hideData(carrierFile, secretData, options.method, {
                 quality: 'high',
-                method: stegoMethod
+                method: options.method
             });
 
             // Vérification du résultat
@@ -966,102 +968,45 @@ class ObscuraApp {
             
             setTimeout(() => {
                 this.hideProgress('encode-progress', true);
-                this.showEncodeResult(resultFile, stegoMethod, cryptoLevel);
+                this.showEncodeResult(resultFile, options.method, cryptoLevel);
             }, 500);
 
         } catch (error) {
-            this.hideProgress('encode-progress', false);
             this.handleError(error, 'encodage');
         }
     }
 
-    // MÉTHODE MANQUANTE - AJOUT CRITIQUE
+    // MÉTHODE MISE À JOUR - validation simplifiée
     validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
-        // Validation du fichier porteur
+        this.clearMessages();
+
         if (!carrierFile) {
-            return { 
-                valid: false, 
-                message: '❌ Veuillez sélectionner un fichier porteur (image, audio, vidéo ou document)' 
-            };
+            this.showMessage('Veuillez sélectionner un fichier porteur', 'error');
+            return false;
         }
 
-        // Validation du contenu secret
-        if (!secretText && !secretFile) {
-            return { 
-                valid: false, 
-                message: '❌ Veuillez entrer un message texte ou sélectionner un fichier à cacher' 
-            };
+        // Validation pour texte seulement
+        if (!secretText) {
+            this.showMessage('Veuillez saisir un message secret', 'error');
+            return false;
         }
 
-        // Si les deux sont fournis, privilégier le fichier
-        if (secretText && secretFile) {
-            this.showMessage('ℹ️ Fichier secret sélectionné, le texte sera ignoré', 'info');
+        if (secretText.length > 100000) {
+            this.showMessage('Le message est trop long (maximum 100 000 caractères)', 'error');
+            return false;
         }
 
-        // Validation du chiffrement
-        if (cryptoLevel && cryptoLevel !== 'none') {
-            if (!password || password.length === 0) {
-                return { 
-                    valid: false, 
-                    message: '❌ Un mot de passe est requis pour le chiffrement' 
-                };
-            }
-
-            // Validation spécifique pour UltraCrypte
-            if (cryptoLevel === 'ultra' && password.length < 8) {
-                return { 
-                    valid: false, 
-                    message: '❌ UltraCrypte nécessite un mot de passe d\'au moins 8 caractères' 
-                };
-            }
-
-            // Validation pour AES
-            if (cryptoLevel === 'aes' && password.length < 6) {
-                return { 
-                    valid: false, 
-                    message: '❌ Le chiffrement AES nécessite un mot de passe d\'au moins 6 caractères' 
-                };
-            }
+        if (cryptoLevel !== 'none' && !password) {
+            this.showMessage('Un mot de passe est requis pour le chiffrement', 'error');
+            return false;
         }
 
-        // Validation de la taille du fichier secret
-        if (secretFile && secretFile.size > 50 * 1024 * 1024) { // 50MB max
-            return { 
-                valid: false, 
-                message: '❌ Le fichier secret est trop volumineux (max 50MB)' 
-            };
+        if (password && password.length < 6) {
+            this.showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
+            return false;
         }
 
-        // Validation de la taille du message texte
-        if (secretText && secretText.length > 1000000) { // 1M caractères max
-            return { 
-                valid: false, 
-                message: '❌ Le message texte est trop long (max 1M caractères)' 
-            };
-        }
-
-        // Estimation de capacité basique
-        if (secretFile) {
-            const estimatedCapacity = carrierFile.size * 0.1; // 10% approximatif
-            if (secretFile.size > estimatedCapacity) {
-                return { 
-                    valid: false, 
-                    message: `❌ Fichier secret trop volumineux pour ce porteur. Capacité estimée: ${this.formatFileSize(estimatedCapacity)}` 
-                };
-            }
-        } else if (secretText) {
-            const textSize = new TextEncoder().encode(secretText).length;
-            const estimatedCapacity = carrierFile.size * 0.1;
-            if (textSize > estimatedCapacity) {
-                return { 
-                    valid: false, 
-                    message: `❌ Message texte trop long pour ce porteur. Capacité estimée: ${this.formatFileSize(estimatedCapacity)}` 
-                };
-            }
-        }
-
-        // Tout est valide
-        return { valid: true };
+        return true;
     }
 
     // MÉTHODE MANQUANTE - AJOUT CRITIQUE
@@ -1223,6 +1168,61 @@ class ObscuraApp {
         return results;
     }
 
+    calculateEntropy(data) {
+        const freq = new Array(256).fill(0);
+        for (let byte of data) {
+            freq[byte]++;
+        }
+        
+        let entropy = 0;
+        const len = data.length;
+        for (let count of freq) {
+            if (count > 0) {
+                const p = count / len;
+                entropy -= p * Math.log2(p);
+            }
+        }
+        
+        return entropy;
+    }
+
+    detectSignatures(data) {
+        const signatures = [];
+        const dataStr = new TextDecoder('utf-8', { fatal: false }).decode(data);
+        
+        if (dataStr.includes('OBSCURA')) {
+            signatures.push('METADATA_MARKER');
+        }
+        
+        // Détection de patterns LSB
+        let lsbPattern = 0;
+        for (let i = 0; i < Math.min(1000, data.length); i++) {
+            if ((data[i] & 1) !== (data[i] >> 1 & 1)) {
+                lsbPattern++;
+            }
+        }
+        
+        if (lsbPattern > 400) { // Plus de 40% de variation dans les LSB
+            signatures.push('LSB_PATTERN');
+        }
+        
+        return signatures;
+    }
+
+    detectSuspiciousPatterns(data) {
+        const patterns = [];
+        
+        // Recherche de données répétitives (indicateur de padding)
+        let repeatedBytes = 0;
+        for (let i = 1; i < Math.min(1000, data.length); i++) {
+            if (data[i] === data[i-1]) {
+                repeatedBytes++;
+            }
+        }
+        
+        if (repeatedBytes > 500) {
+            patterns.push('Repeated byte patterns detected');
+        }
     calculateEntropy(data) {
         const freq = new Array(256).fill(0);
         for (let byte of data) {
