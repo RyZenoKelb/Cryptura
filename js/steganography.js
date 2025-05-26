@@ -516,81 +516,127 @@ class SteganographyEngine {
     // ========== LSB IMPLEMENTATION ==========
 
     embedImageLSB(imageData, secretData, options) {
-        for (let i = 0; i < bits.length; i += 8) {
-            let byte = 0;
-            for (let j = 0; j < 8; j++) {
-                byte |= (bits[i + j] << j);
-            }
-            bytes.push(byte);
+        const { stealth = false } = options;
+        const result = new Uint8Array(imageData);
+        
+        // Create header with length information
+        const header = this.createDataHeader(secretData.length);
+        const allData = new Uint8Array(header.length + secretData.length);
+        allData.set(header, 0);
+        allData.set(secretData, header.length);
+        
+        // Convert to bits
+        const bits = this.bytesToBits(allData);
+        
+        if (bits.length > imageData.length) {
+            throw new Error('Secret data too large for carrier image');
         }
-        return new Uint8Array(bytes);
-    }
-
-    bitsToNumber(bits) {
-        let number = 0;
+        
+        // Generate embedding positions
+        const positions = stealth ? 
+            this.generateStealthPositions(bits.length, imageData.length) :
+            this.generateSequentialPositions(bits.length);
+        
+        // Embed bits
         for (let i = 0; i < bits.length; i++) {
-            number |= (bits[i] << i);
+            const pos = positions[i];
+            result[pos] = (result[pos] & 0xFE) | bits[i];
         }
-        return number;
-    }
-
-    generateSequentialPositions(length, offset = 0) {
-        const positions = [];
-        for (let i = 0; i < length; i++) {
-            positions.push(i + offset);
+        
+        // Apply anti-analysis obfuscation
+        if (stealth) {
+            return this.obfuscateEmbeddingPattern(result, 'lsb');
         }
-        return positions;
+        
+        return result.buffer;
     }
 
-    generateStealthPositions(length, max, offset = 0) {
-        const positions = [];
-        const step = Math.floor(max / length);
-        for (let i = 0; i < length; i++) {
-            positions.push((i * step) + offset);
+    extractImageLSB(imageData, options) {
+        const { stealth = false } = options;
+        
+        // Read header first (32 bits for length)
+        const headerPositions = stealth ?
+            this.generateStealthPositions(32, imageData.length) :
+            this.generateSequentialPositions(32);
+        
+        const headerBits = [];
+        for (const pos of headerPositions) {
+            headerBits.push(imageData[pos] & 1);
         }
-        return positions;
+        
+        const dataLength = this.bitsToNumber(headerBits);
+        
+        if (dataLength <= 0 || dataLength > imageData.length / 8) {
+            return null; // Invalid data length
+        }
+        
+        // Extract data bits
+        const dataBitCount = dataLength * 8;
+        const dataPositions = stealth ?
+            this.generateStealthPositions(dataBitCount, imageData.length, 32) :
+            this.generateSequentialPositions(dataBitCount, 32);
+        
+        const dataBits = [];
+        for (const pos of dataPositions) {
+            dataBits.push(imageData[pos] & 1);
+        }
+        
+        return this.bitsToBytes(dataBits);
     }
 
-    async compressData(data) {
-        // Implement compression logic here
-        return data;
+    // ========== BASIC IMPLEMENTATIONS FOR OTHER FORMATS ==========
+
+    embedBasic(data, secretData, options) {
+        // Basic LSB embedding for non-image formats
+        return this.embedImageLSB(data, secretData, options);
     }
 
-    async encryptData(data, password, algorithm) {
-        // Implement encryption logic here
-        return data;
+    extractBasic(data, options) {
+        // Basic LSB extraction for non-image formats
+        return this.extractImageLSB(data, options);
     }
 
-    async decryptData(data, password) {
-        // Implement decryption logic here
-        return data;
+    embedAudioLSB(audioData, secretData, options) {
+        // Use same LSB logic for audio
+        return this.embedImageLSB(audioData, secretData, options);
     }
 
-    async decompressData(data) {
-        // Implement decompression logic here
-        return data;
+    extractAudioLSB(audioData, options) {
+        // Use same LSB logic for audio
+        return this.extractImageLSB(audioData, options);
     }
 
-    calculateConfidence(data, method) {
-        // Implement confidence calculation logic here
-        return 100;
+    // Placeholder implementations for specialized methods
+    embedImageDistributed(imageData, secretData, options) {
+        return this.embedImageLSB(imageData, secretData, options);
     }
 
-    formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    extractImageDistributed(imageData, options) {
+        return this.extractImageLSB(imageData, options);
     }
-}
 
-// Export pour modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = SteganographyEngine;
-}
+    embedImageAlpha(imageData, secretData, options) {
+        return this.embedImageLSB(imageData, secretData, options);
+    }
 
-// Export global
-if (typeof window !== 'undefined') {
-    window.SteganographyEngine = SteganographyEngine;
-}
+    extractImageAlpha(imageData, options) {
+        return this.extractImageLSB(imageData, options);
+    }
+
+    embedAudioEcho(audioData, secretData, options) {
+        return this.embedImageLSB(audioData, secretData, options);
+    }
+
+    extractAudioEcho(audioData, options) {
+        return this.extractImageLSB(audioData, options);
+    }
+
+    embedDocumentWhitespace(docData, secretData, options) {
+        return this.embedImageLSB(docData, secretData, options);
+    }
+
+    extractDocumentWhitespace(docData, options) {
+        return this.extractImageLSB(docData, options);
+    }
+
+    embedTextWhitespace(textData, secretData, options) {
