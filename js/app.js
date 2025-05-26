@@ -158,8 +158,8 @@ class ObscuraApp {
     }
 
     setTheme(theme) {
-
-            this.cryptoWorker.addEventListener('message', messageHandler);
+        if (theme === 'dark' || theme === 'light') {
+            this.currentTheme = theme;
             this.cryptoWorker.postMessage({ taskId, operation, data });
         });
     }
