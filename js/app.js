@@ -596,30 +596,30 @@ class ObscuraApp {
         const targetPanel = document.getElementById(`${tabName}-panel`);
         const targetTab = document.querySelector(`[data-tab="${tabName}"]`);
         
-            // Prévention du comportement par défaut
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                zone.addEventListener(eventName, this.preventDefaults, false);
-            });
+        if (targetPanel && targetTab) {
+            targetPanel.classList.add('active');
+            targetTab.classList.add('active');
+            this.currentTab = tabName;
+        }
+    }
 
-            // Highlight visuel lors du drag
-            ['dragenter', 'dragover'].forEach(eventName => {
-                zone.addEventListener(eventName, () => {
-                    zone.classList.add('dragover');
-                }, false);
-            });
+    // ========== GESTION DES FICHIERS ==========
 
-            ['dragleave', 'drop'].forEach(eventName => {
-                zone.addEventListener(eventName, () => {
-                    zone.classList.remove('dragover');
-                }, false);
-            });
+    preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
 
-            // Gestion du drop
-            zone.addEventListener('drop', (e) => {
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    const zoneId = zone.id;
-                    let type = '';
+    handleFileSelect(input, type) {
+        if (input.files && input.files.length > 0) {
+            this.handleFileDrop(input.files[0], type);
+        }
+    }
+
+    handleFileDrop(file, type) {
+        const maxSize = 100 * 1024 * 1024; // 100MB
+
+        // Validation de la taille
 
                     if (zoneId === 'carrier-upload') type = 'carrier';
                     else if (zoneId === 'secret-upload') type = 'secret';
