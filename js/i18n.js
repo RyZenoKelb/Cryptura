@@ -510,3 +510,123 @@ class I18nSystem {
         document.querySelectorAll('[data-i18n-title]').forEach(element => {
             const key = element.getAttribute('data-i18n-title');
             const translation = this.t(key);
+            
+            if (translation) {
+                element.title = translation;
+            }
+        });
+    }
+
+    setupLanguageToggle() {
+        const toggle = document.getElementById('language-toggle');
+        const dropdown = document.getElementById('language-dropdown');
+        const currentLang = document.getElementById('current-language');
+        
+        if (!toggle || !dropdown) return;
+        
+        // Update current language display
+        this.updateLanguageToggle();
+        
+        // Toggle dropdown
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('active');
+        });
+        
+        // Language selection
+        dropdown.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const option = e.target.closest('.language-option');
+            if (option) {
+                const lang = option.getAttribute('data-lang');
+                if (lang && lang !== this.currentLanguage) {
+                    this.switchLanguage(lang);
+                }
+                dropdown.classList.remove('active');
+            }
+        });
+    }
+
+    updateLanguageToggle() {
+        const currentLang = document.getElementById('current-language');
+        const options = document.querySelectorAll('.language-option');
+        
+        if (currentLang) {
+            currentLang.textContent = this.currentLanguage.toUpperCase();
+        }
+        
+        // Update active state
+        options.forEach(option => {
+            const lang = option.getAttribute('data-lang');
+            option.classList.toggle('active', lang === this.currentLanguage);
+        });
+    }
+
+    // ========== FORMATTING HELPERS ==========
+
+    formatFileSize(bytes) {
+        const units = this.currentLanguage === 'fr' ? 
+            ['octets', 'Ko', 'Mo', 'Go'] : 
+            ['bytes', 'KB', 'MB', 'GB'];
+        
+        let size = bytes;
+        let unitIndex = 0;
+        
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        
+        return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+    }
+
+    formatPercentage(value) {
+        return `${Math.round(value)}%`;
+    }
+
+    formatNumber(value) {
+        return new Intl.NumberFormat(this.currentLanguage).format(value);
+    }
+
+    // ========== UTILITIES ==========
+
+    addLanguage(lang, translations) {
+        if (!this.translations[lang]) {
+            this.translations[lang] = {};
+        }
+        
+        Object.assign(this.translations[lang], translations);
+        this.loadedLanguages.add(lang);
+    }
+
+    getAvailableLanguages() {
+        return Array.from(this.loadedLanguages);
+    }
+}
+
+// ========== GLOBAL INITIALIZATION ==========
+
+// Initialize the i18n system
+window.i18n = new I18nSystem();
+
+// Helper function for easy access
+window.t = (key, params) => window.i18n.t(key, params);
+
+// Auto-update UI when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        window.i18n.updateUI();
+    });
+} else {
+    window.i18n.updateUI();
+}
+
+// Export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = I18nSystem;
+}
