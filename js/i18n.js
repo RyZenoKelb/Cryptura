@@ -1,514 +1,335 @@
-// ============= I18N.JS - Système de Traduction Complet =============
-// Gestion multilingue avancée pour l'interface utilisateur
+// ============= I18N.JS - Système d'internationalisation =============
+// Support multilingue pour l'interface Obscura
 
-class I18nSystem {
+class I18nManager {
     constructor() {
         this.currentLanguage = 'fr';
         this.fallbackLanguage = 'fr';
-        this.translations = new Map();
-        this.observers = [];
+        this.translations = {};
+        this.init();
+    }
+
+    init() {
+        // Chargement des traductions
+        this.loadTranslations();
         
-        this.initTranslations();
-        this.detectLanguage();
+        // Détection de la langue du navigateur
+        this.detectBrowserLanguage();
+        
+        // Application de la langue
+        this.applyLanguage(this.currentLanguage);
+        
+        // Suppression du console.log
+        // console.log(`🌍 I18n initialisé - Langue: ${this.currentLanguage}`);
     }
 
-    // ========== INITIALISATION ==========
-
-    initTranslations() {
-        // Traductions françaises
-        this.translations.set('fr', {
-            // Header
-            'header.tagline': 'Stéganographie Avancée',
-            'header.status': 'Système actif',
-            'theme.dark': 'Sombre',
-            'theme.light': 'Clair',
-
-            // Navigation
-            'nav.encode': 'Encoder',
-            'nav.decode': 'Décoder',
-            'nav.ultracrypte': 'UltraCrypte',
-            'nav.help': 'Documentation',
-
-            // Panels
-            'panel.encode.title': 'Encodage Sécurisé',
-            'panel.encode.subtitle': 'Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire',
-            'panel.decode.title': 'Extraction & Analyse',
-            'panel.decode.subtitle': 'Détection et extraction intelligente de données cachées avec déchiffrement automatique',
-            'panel.help.title': 'Documentation',
-            'panel.help.subtitle': 'Guide complet d\'utilisation d\'Obscura et meilleures pratiques de sécurité',
-
-            // Upload zones
-            'upload.carrier.title': 'Fichier Porteur',
-            'upload.carrier.desc': 'Glissez votre média ou cliquez pour sélectionner',
-            'upload.carrier.types': 'Images • Audio • Vidéo • Documents',
-            'upload.secret.title': 'Contenu Secret',
-            'upload.secret.placeholder': 'Votre message confidentiel...',
-            'upload.decode.title': 'Fichier à Analyser',
-            'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
-            'upload.decode.types': 'Tous formats supportés',
-
-            // Options
-            'options.stego.method': 'Méthode de Stéganographie',
-            'options.crypto.level': 'Niveau de Chiffrement',
-            'options.password': 'Mot de passe de chiffrement',
-            'options.advanced': 'Options Avancées',
-
-            // Buttons
-            'btn.encode': 'Lancer l\'encodage',
-            'btn.decode': 'Extraire les données',
-            'btn.analyze': 'Analyse forensique',
-            'btn.download': 'Télécharger le résultat',
-            'btn.reset': 'Réinitialiser',
-
-            // Messages
-            'message.file.required': 'Un fichier est requis',
-            'message.secret.required': 'Le contenu secret ne peut pas être vide',
-            'message.file.too.large': 'Fichier trop volumineux (max: {max})',
-            'message.encoding.success': 'Encodage réussi avec succès',
-            'message.decoding.success': 'Données extraites avec succès',
-            'message.extraction.failed': 'Aucune donnée cachée détectée',
-            'message.invalid.password': 'Mot de passe incorrect',
-            'message.analysis.complete': 'Analyse forensique terminée',
-
-            // Footer
-            'footer.copyright': '© 2025 Obscura',
-            'footer.tagline': 'Stéganographie Professionnelle',
-            'footer.mode': 'Mode Hors-ligne',
-            'footer.processed': 'fichiers traités',
-
-            // Progress
-            'progress.encoding': 'Encodage en cours...',
-            'progress.decoding': 'Extraction en cours...',
-            'progress.analyzing': 'Analyse en cours...',
-            'progress.encrypting': 'Chiffrement en cours...',
-            'progress.complete': 'Terminé',
-
-            // File types
-            'file.type.text': 'Message texte',
-            'file.type.image': 'Image',
-            'file.type.audio': 'Audio',
-            'file.type.video': 'Vidéo',
-            'file.type.document': 'Document',
-            'file.type.archive': 'Archive',
-            'file.type.unknown': 'Type inconnu',
-
-            // Security levels
-            'security.standard': 'Standard',
-            'security.military': 'Militaire',
-            'security.quantum': 'Quantique',
-
-            // UltraCrypte
-            'ultra.master.key': 'Clé maître ultra-sécurisée',
-            'ultra.security.level': 'Niveau de sécurité',
-            'ultra.advanced.options': 'Options avancées',
-            'ultra.encrypt': 'Chiffrer avec UltraCrypte™',
-            'ultra.decrypt': 'Déchiffrer',
-
-            // Errors
-            'error.generic': 'Une erreur est survenue',
-            'error.file.read': 'Impossible de lire le fichier',
-            'error.encoding.failed': 'Échec de l\'encodage',
-            'error.decoding.failed': 'Échec du décodage',
-            'error.encryption.failed': 'Échec du chiffrement',
-            'error.decryption.failed': 'Échec du déchiffrement',
-
-            // Admin
-            'admin.panel.title': 'Panneau Administrateur',
-            'admin.crack.title': 'Crackage Avancé',
-            'admin.analysis.title': 'Analyse Forensique',
-            'admin.tools.title': 'Outils Système'
-        });
-
-        // Traductions anglaises
-        this.translations.set('en', {
-            // Header
-            'header.tagline': 'Advanced Steganography',
-            'header.status': 'System active',
-            'theme.dark': 'Dark',
-            'theme.light': 'Light',
-
-            // Navigation
-            'nav.encode': 'Encode',
-            'nav.decode': 'Decode',
-            'nav.ultracrypte': 'UltraCrypt',
-            'nav.help': 'Documentation',
-
-            // Panels
-            'panel.encode.title': 'Secure Encoding',
-            'panel.encode.subtitle': 'Advanced data concealment in multimedia files with military-grade encryption',
-            'panel.decode.title': 'Extraction & Analysis',
-            'panel.decode.subtitle': 'Intelligent detection and extraction of hidden data with automatic decryption',
-            'panel.help.title': 'Documentation',
-            'panel.help.subtitle': 'Complete Obscura usage guide and security best practices',
-
-            // Upload zones
-            'upload.carrier.title': 'Carrier File',
-            'upload.carrier.desc': 'Drag your media or click to select',
-            'upload.carrier.types': 'Images • Audio • Video • Documents',
-            'upload.secret.title': 'Secret Content',
-            'upload.secret.placeholder': 'Your confidential message...',
-            'upload.decode.title': 'File to Analyze',
-            'upload.decode.desc': 'Select the suspect or encoded file',
-            'upload.decode.types': 'All supported formats',
-
-            // Options
-            'options.stego.method': 'Steganography Method',
-            'options.crypto.level': 'Encryption Level',
-            'options.password': 'Encryption password',
-            'options.advanced': 'Advanced Options',
-
-            // Buttons
-            'btn.encode': 'Start encoding',
-            'btn.decode': 'Extract data',
-            'btn.analyze': 'Forensic analysis',
-            'btn.download': 'Download result',
-            'btn.reset': 'Reset',
-
-            // Messages
-            'message.file.required': 'A file is required',
-            'message.secret.required': 'Secret content cannot be empty',
-            'message.file.too.large': 'File too large (max: {max})',
-            'message.encoding.success': 'Encoding completed successfully',
-            'message.decoding.success': 'Data extracted successfully',
-            'message.extraction.failed': 'No hidden data detected',
-            'message.invalid.password': 'Incorrect password',
-            'message.analysis.complete': 'Forensic analysis completed',
-
-            // Footer
-            'footer.copyright': '© 2025 Obscura',
-            'footer.tagline': 'Professional Steganography',
-            'footer.mode': 'Offline Mode',
-            'footer.processed': 'files processed',
-
-            // Progress
-            'progress.encoding': 'Encoding in progress...',
-            'progress.decoding': 'Extraction in progress...',
-            'progress.analyzing': 'Analysis in progress...',
-            'progress.encrypting': 'Encryption in progress...',
-            'progress.complete': 'Complete',
-
-            // File types
-            'file.type.text': 'Text message',
-            'file.type.image': 'Image',
-            'file.type.audio': 'Audio',
-            'file.type.video': 'Video',
-            'file.type.document': 'Document',
-            'file.type.archive': 'Archive',
-            'file.type.unknown': 'Unknown type',
-
-            // Security levels
-            'security.standard': 'Standard',
-            'security.military': 'Military',
-            'security.quantum': 'Quantum',
-
-            // UltraCrypte
-            'ultra.master.key': 'Ultra-secure master key',
-            'ultra.security.level': 'Security level',
-            'ultra.advanced.options': 'Advanced options',
-            'ultra.encrypt': 'Encrypt with UltraCrypt™',
-            'ultra.decrypt': 'Decrypt',
-
-            // Errors
-            'error.generic': 'An error occurred',
-            'error.file.read': 'Unable to read file',
-            'error.encoding.failed': 'Encoding failed',
-            'error.decoding.failed': 'Decoding failed',
-            'error.encryption.failed': 'Encryption failed',
-            'error.decryption.failed': 'Decryption failed',
-
-            // Admin
-            'admin.panel.title': 'Administrator Panel',
-            'admin.crack.title': 'Advanced Cracking',
-            'admin.analysis.title': 'Forensic Analysis',
-            'admin.tools.title': 'System Tools'
-        });
+    loadTranslations() {
+        this.translations = {
+            fr: {
+                // Header
+                'header.tagline': 'Stéganographie Avancée',
+                'header.status': 'Système actif',
+                'theme.dark': 'Sombre',
+                'theme.light': 'Clair',
+                
+                // Navigation
+                'nav.encode': 'Encoder',
+                'nav.decode': 'Décoder',
+                'nav.ultracrypte': 'UltraCrypte',
+                'nav.help': 'Documentation',
+                
+                // Panels
+                'panel.encode.title': 'Encodage Sécurisé',
+                'panel.encode.subtitle': 'Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire',
+                'panel.decode.title': 'Extraction & Analyse',
+                'panel.decode.subtitle': 'Détection et extraction intelligente de données cachées avec déchiffrement automatique',
+                'panel.help.title': 'Documentation',
+                'panel.help.subtitle': 'Guide complet d\'utilisation d\'Obscura et meilleures pratiques de sécurité',
+                
+                // Upload zones
+                'upload.carrier.title': 'Fichier Porteur',
+                'upload.carrier.desc': 'Glissez votre média ou cliquez pour sélectionner',
+                'upload.carrier.types': 'Images • Audio • Vidéo • Documents',
+                'upload.secret.title': 'Contenu Secret',
+                'upload.secret.desc': 'Message ou fichier à dissimuler',
+                'upload.secret.placeholder': 'Votre message confidentiel...',
+                'upload.decode.title': 'Fichier à Analyser',
+                'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
+                'upload.decode.types': 'Tous formats supportés',
+                
+                // Options
+                'options.stego.method': 'Méthode de Stéganographie',
+                'options.crypto.level': 'Niveau de Chiffrement',
+                'options.password': 'Mot de passe de chiffrement',
+                'options.advanced': 'Options Avancées',
+                
+                // Buttons
+                'btn.encode': 'Lancer l\'encodage',
+                'btn.decode': 'Extraire les données',
+                'btn.analyze': 'Analyse forensique',
+                'btn.reset': 'Réinitialiser',
+                'btn.download': 'Télécharger le résultat',
+                'btn.save': 'Sauvegarder l\'extraction',
+                
+                // Footer
+                'footer.copyright': '© 2025 Obscura',
+                'footer.tagline': 'Stéganographie Professionnelle',
+                'footer.mode': 'Mode Hors-ligne',
+                'footer.processed': 'fichiers traités',
+                
+                // Messages
+                'message.welcome': 'Bienvenue dans Obscura - Stéganographie professionnelle'
+            },
+            
+            en: {
+                // Header
+                'header.tagline': 'Advanced Steganography',
+                'header.status': 'System Active',
+                'theme.dark': 'Dark',
+                'theme.light': 'Light',
+                
+                // Navigation
+                'nav.encode': 'Encode',
+                'nav.decode': 'Decode',
+                'nav.ultracrypte': 'UltraCrypt',
+                'nav.help': 'Documentation',
+                
+                // Panels
+                'panel.encode.title': 'Secure Encoding',
+                'panel.encode.subtitle': 'Advanced data concealment in your multimedia files with military-grade encryption',
+                'panel.decode.title': 'Extraction & Analysis',
+                'panel.decode.subtitle': 'Intelligent detection and extraction of hidden data with automatic decryption',
+                'panel.help.title': 'Documentation',
+                'panel.help.subtitle': 'Complete guide to using Obscura and security best practices',
+                
+                // Upload zones
+                'upload.carrier.title': 'Carrier File',
+                'upload.carrier.desc': 'Drag your media or click to select',
+                'upload.carrier.types': 'Images • Audio • Video • Documents',
+                'upload.secret.title': 'Secret Content',
+                'upload.secret.desc': 'Message or file to hide',
+                'upload.secret.placeholder': 'Your confidential message...',
+                'upload.decode.title': 'File to Analyze',
+                'upload.decode.desc': 'Select the suspicious or encoded file',
+                'upload.decode.types': 'All supported formats',
+                
+                // Options
+                'options.stego.method': 'Steganography Method',
+                'options.crypto.level': 'Encryption Level',
+                'options.password': 'Encryption password',
+                'options.advanced': 'Advanced Options',
+                
+                // Buttons
+                'btn.encode': 'Start encoding',
+                'btn.decode': 'Extract data',
+                'btn.analyze': 'Forensic analysis',
+                'btn.reset': 'Reset',
+                'btn.download': 'Download result',
+                'btn.save': 'Save extraction',
+                
+                // Footer
+                'footer.copyright': '© 2025 Obscura',
+                'footer.tagline': 'Professional Steganography',
+                'footer.mode': 'Offline Mode',
+                'footer.processed': 'files processed',
+                
+                // Messages
+                'message.welcome': 'Welcome to Obscura - Professional Steganography'
+            }
+        };
     }
 
-    // ========== DÉTECTION DE LANGUE ==========
-
-    detectLanguage() {
-        // Priorité : localStorage > URL > navigateur > défaut
-        let detectedLang = this.fallbackLanguage;
-
-        // 1. Vérifier localStorage
+    detectBrowserLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        const langCode = browserLang.split('-')[0].toLowerCase();
+        
+        if (this.translations[langCode]) {
+            this.currentLanguage = langCode;
+        }
+        
+        // Vérifier le localStorage
         const savedLang = localStorage.getItem('obscura_language');
-        if (savedLang && this.translations.has(savedLang)) {
-            detectedLang = savedLang;
+        if (savedLang && this.translations[savedLang]) {
+            this.currentLanguage = savedLang;
         }
-        // 2. Vérifier l'URL
-        else if (window.location.search.includes('lang=')) {
-            const urlParams = new URLSearchParams(window.location.search);
-            const urlLang = urlParams.get('lang');
-            if (urlLang && this.translations.has(urlLang)) {
-                detectedLang = urlLang;
-            }
-        }
-        // 3. Détecter depuis le navigateur
-        else {
-            const browserLang = navigator.language.substring(0, 2);
-            if (this.translations.has(browserLang)) {
-                detectedLang = browserLang;
-            }
-        }
-
-        this.setLanguage(detectedLang);
     }
 
-    // ========== GESTION DES LANGUES ==========
-
-    setLanguage(lang) {
-        if (!this.translations.has(lang)) {
-            console.warn(`Language '${lang}' not supported, falling back to '${this.fallbackLanguage}'`);
-            lang = this.fallbackLanguage;
+    setLanguage(language) {
+        if (this.translations[language]) {
+            this.currentLanguage = language;
+            localStorage.setItem('obscura_language', language);
+            this.applyLanguage(language);
+            
+            // Mise à jour du sélecteur de langue
+            this.updateLanguageSelector();
+            
+            // Suppression du console.log
+            // console.log(`🌍 Langue changée: ${language}`);
+            return true;
         }
+        return false;
+    }
 
-        const oldLang = this.currentLanguage;
-        this.currentLanguage = lang;
+    applyLanguage(language) {
+        const elements = document.querySelectorAll('[data-i18n]');
+        
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const translation = this.translate(key, language);
+            
+            if (translation) {
+                element.textContent = translation;
+            }
+        });
+        
+        // Gestion des placeholders
+        const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+        placeholderElements.forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            const translation = this.translate(key, language);
+            
+            if (translation) {
+                element.placeholder = translation;
+            }
+        });
+        
+        // Mise à jour de l'attribut lang du document
+        document.documentElement.lang = language;
+    }
 
-        // Sauvegarder la préférence
-        localStorage.setItem('obscura_language', lang);
-
-        // Appliquer les traductions
-        this.applyLanguage();
-
-        // Notifier les observateurs
-        this.notifyObservers(oldLang, lang);
+    translate(key, language = null) {
+        const lang = language || this.currentLanguage;
+        const translations = this.translations[lang] || this.translations[this.fallbackLanguage];
+        
+        return translations[key] || key;
     }
 
     getCurrentLanguage() {
         return this.currentLanguage;
     }
 
-    getSupportedLanguages() {
-        return Array.from(this.translations.keys());
-    }
-
-    // ========== TRADUCTIONS ==========
-
-    t(key, params = {}) {
-        const translations = this.translations.get(this.currentLanguage);
-        let translation = translations[key];
-
-        // Fallback vers la langue par défaut
-        if (!translation) {
-            const fallbackTranslations = this.translations.get(this.fallbackLanguage);
-            translation = fallbackTranslations[key];
-        }
-
-        // Si toujours pas trouvé, retourner la clé
-        if (!translation) {
-            console.warn(`Translation missing for key: ${key}`);
-            return key;
-        }
-
-        // Remplacer les paramètres
-        return this.interpolate(translation, params);
-    }
-
-    interpolate(text, params) {
-        return text.replace(/\{(\w+)\}/g, (match, key) => {
-            return params[key] !== undefined ? params[key] : match;
-        });
-    }
-
-    // ========== APPLICATION DES TRADUCTIONS ==========
-
-    applyLanguage() {
-        // Traduire tous les éléments avec data-i18n
-        const elements = document.querySelectorAll('[data-i18n]');
-        elements.forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            element.textContent = this.t(key);
-        });
-
-        // Traduire les placeholders
-        const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-        placeholderElements.forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            element.placeholder = this.t(key);
-        });
-
-        // Traduire les titres
-        const titleElements = document.querySelectorAll('[data-i18n-title]');
-        titleElements.forEach(element => {
-            const key = element.getAttribute('data-i18n-title');
-            element.title = this.t(key);
-        });
-
-        // Mettre à jour le sélecteur de langue
-        this.updateLanguageSelector();
-
-        // Mettre à jour l'attribut lang du document
-        document.documentElement.lang = this.currentLanguage;
+    getAvailableLanguages() {
+        return Object.keys(this.translations);
     }
 
     updateLanguageSelector() {
-        const currentLangElement = document.getElementById('current-language');
-        if (currentLangElement) {
-            currentLangElement.textContent = this.currentLanguage.toUpperCase();
+        const currentLangEl = document.getElementById('current-language');
+        const dropdown = document.getElementById('language-dropdown');
+        
+        if (currentLangEl) {
+            currentLangEl.textContent = this.currentLanguage.toUpperCase();
         }
-
-        // Mettre à jour les options actives
-        const languageOptions = document.querySelectorAll('.language-option');
-        languageOptions.forEach(option => {
-            const lang = option.getAttribute('data-lang');
-            option.classList.toggle('active', lang === this.currentLanguage);
-        });
-    }
-
-    // ========== OBSERVATEURS ==========
-
-    addObserver(callback) {
-        this.observers.push(callback);
-    }
-
-    removeObserver(callback) {
-        const index = this.observers.indexOf(callback);
-        if (index > -1) {
-            this.observers.splice(index, 1);
+        
+        if (dropdown) {
+            const options = dropdown.querySelectorAll('.language-option');
+            options.forEach(option => {
+                const lang = option.getAttribute('data-lang');
+                option.classList.toggle('active', lang === this.currentLanguage);
+            });
         }
     }
 
-    notifyObservers(oldLang, newLang) {
-        this.observers.forEach(callback => {
-            try {
-                callback(oldLang, newLang);
-            } catch (error) {
-                console.error('Error in i18n observer:', error);
-            }
-        });
-    }
-
-    // ========== UTILITAIRES ==========
-
-    getLanguageInfo(lang) {
-        const info = {
-            'fr': {
-                name: 'Français',
-                nativeName: 'Français',
-                flag: 'fr'
-            },
-            'en': {
-                name: 'English',
-                nativeName: 'English',
-                flag: 'us'
-            }
-        };
-
-        return info[lang] || info[this.fallbackLanguage];
-    }
-
-    formatNumber(number, options = {}) {
+    // Formatage de nombres avec localisation
+    formatNumber(number) {
         try {
-            return new Intl.NumberFormat(this.currentLanguage, options).format(number);
-        } catch (error) {
+            return new Intl.NumberFormat(this.currentLanguage).format(number);
+        } catch {
             return number.toString();
         }
     }
 
-    formatDate(date, options = {}) {
+    // Formatage de dates avec localisation
+    formatDate(date) {
         try {
-            return new Intl.DateTimeFormat(this.currentLanguage, options).format(date);
-        } catch (error) {
+            return new Intl.DateTimeFormat(this.currentLanguage, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(date);
+        } catch {
             return date.toString();
         }
     }
 
+    // Formatage de taille de fichier avec localisation
     formatFileSize(bytes) {
-        const sizes = this.currentLanguage === 'fr' ? 
-            ['octets', 'Ko', 'Mo', 'Go', 'To'] :
-            ['bytes', 'KB', 'MB', 'GB', 'TB'];
-
-        if (bytes === 0) return `0 ${sizes[0]}`;
-
-        const i = Math.floor(Math.log(bytes) / Math.log(1024));
-        const size = (bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1);
-
-        return `${size} ${sizes[i]}`;
-    }
-
-    // ========== PLURALISATION ==========
-
-    plural(count, key, params = {}) {
-        const pluralKey = count === 1 ? `${key}.singular` : `${key}.plural`;
-        return this.t(pluralKey, { ...params, count });
-    }
-
-    // ========== VALIDATION ==========
-
-    validateTranslations() {
-        const languages = this.getSupportedLanguages();
-        const baseKeys = new Set();
+        const units = this.currentLanguage === 'fr' ? 
+            ['o', 'Ko', 'Mo', 'Go'] : 
+            ['B', 'KB', 'MB', 'GB'];
         
-        // Collecter toutes les clés de la langue de base
-        const baseTranslations = this.translations.get(this.fallbackLanguage);
-        Object.keys(baseTranslations).forEach(key => baseKeys.add(key));
-
-        const report = {
-            languages: languages.length,
-            keys: baseKeys.size,
-            missing: []
-        };
-
-        // Vérifier chaque langue
-        languages.forEach(lang => {
-            if (lang === this.fallbackLanguage) return;
-
-            const translations = this.translations.get(lang);
-            baseKeys.forEach(key => {
-                if (!translations[key]) {
-                    report.missing.push({ language: lang, key });
-                }
-            });
-        });
-
-        return report;
-    }
-
-    // ========== EXPORT/IMPORT ==========
-
-    exportTranslations(lang = null) {
-        if (lang) {
-            return this.translations.get(lang);
+        let size = bytes;
+        let unitIndex = 0;
+        
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
         }
         
-        const exported = {};
-        this.translations.forEach((translations, language) => {
-            exported[language] = translations;
-        });
-        
-        return exported;
+        return `${size.toFixed(1)} ${units[unitIndex]}`;
     }
 
-    importTranslations(data, lang = null) {
-        if (lang) {
-            this.translations.set(lang, data);
-        } else {
-            Object.entries(data).forEach(([language, translations]) => {
-                this.translations.set(language, translations);
-            });
-        }
+    // Méthode manquante ajoutée
+    updateInterface() {
+        this.applyLanguage(this.currentLanguage);
+    }
+
+    // Méthode de traduction simplifiée (alias pour translate)
+    t(key, language = null) {
+        return this.translate(key, language);
     }
 }
 
-// ========== INITIALISATION GLOBALE ==========
+// Initialisation automatique
+let i18n;
 
-// Créer l'instance globale
-window.i18n = new I18nSystem();
-
-// Fonction globale de traduction
-window.t = (key, params) => window.i18n.t(key, params);
-
-// Auto-application quand le DOM est prêt
-if (document.readyState === 'loading') {
+if (typeof window !== 'undefined') {
+    i18n = new I18nManager();
+    
+    // Export global
+    window.i18n = i18n;
+    
+    // Event listeners pour le sélecteur de langue
     document.addEventListener('DOMContentLoaded', () => {
-        window.i18n.applyLanguage();
+        const languageToggle = document.getElementById('language-toggle');
+        const languageDropdown = document.getElementById('language-dropdown');
+        const languageOptions = document.querySelectorAll('.language-option');
+        
+        // Toggle dropdown
+        if (languageToggle && languageDropdown) {
+            languageToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('active');
+            });
+            
+            // Fermer dropdown en cliquant ailleurs
+            document.addEventListener('click', () => {
+                languageDropdown.classList.remove('active');
+            });
+        }
+        
+        // Changement de langue
+        languageOptions.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const lang = option.getAttribute('data-lang');
+                
+                if (i18n.setLanguage(lang)) {
+                    languageDropdown.classList.remove('active');
+                }
+            });
+        });
+        
+        // Application initiale de la langue
+        i18n.applyLanguage(i18n.getCurrentLanguage());
     });
-} else {
-    window.i18n.applyLanguage();
 }
 
 // Export pour modules
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = I18nSystem;
+    module.exports = I18nManager;
 }
+
+// Suppression du console.log final
+// console.log('🌍 Système I18n chargé');

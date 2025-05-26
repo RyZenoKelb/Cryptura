@@ -1,780 +1,393 @@
-// ============= STEGANOGRAPHY.JS - Moteur de Stéganographie Avancé =============
-// Dissimulation intelligente avec protection anti-analyse
+// ============= STEGANOGRAPHY.JS - Moteur de stéganographie =============
+// Implémentation des algorithmes de dissimulation de données
 
 class SteganographyEngine {
     constructor() {
-        this.supportedFormats = new Map();
-        this.chunkSize = 32 * 1024; // 32KB chunks for streaming
-        this.maxFileSize = 500 * 1024 * 1024; // 500MB
-        this.antiAnalysisEnabled = true;
-        
-        this.setupAntiAnalysisProtection();
-        this.initSupportedFormats();
-    }
-
-    // ========== ANTI-ANALYSIS PROTECTION ==========
-
-    setupAntiAnalysisProtection() {
-        this.obfuscationPatterns = [
-            'randomizePositions',
-            'addDecoyData',
-            'mimicNaturalPatterns',
-            'disperseAcrossChannels'
-        ];
-        
-        this.timingVariation = {
-            minDelay: 10,
-            maxDelay: 100,
-            jitterRange: 20
+        this.methods = {
+            lsb: this.lsbMethod.bind(this),
+            metadata: this.metadataMethod.bind(this),
+            'audio-spread': this.audioSpreadMethod.bind(this),
+            'video-frame': this.videoFrameMethod.bind(this),
+            'document-hidden': this.documentHiddenMethod.bind(this)
         };
+        this.supportedTypes = ['image', 'audio', 'video', 'document'];
     }
 
-    // ========== SUPPORTED FORMATS ==========
-
-    initSupportedFormats() {
-        // Images
-        this.supportedFormats.set('image/jpeg', {
-            type: 'image',
-            methods: ['lsb', 'metadata', 'distributed'],
-            capacity: 0.125, // 1 bit per 8 bits
-            processor: this.processImage.bind(this)
-        });
+    // Détection du type de fichier
+    detectFileType(file) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const typeMapping = {
+            // Images
+            'jpg': 'image', 'jpeg': 'image', 'png': 'image', 'gif': 'image', 
+            'bmp': 'image', 'webp': 'image', 'tiff': 'image',
+            
+            // Audio
+            'mp3': 'audio', 'wav': 'audio', 'flac': 'audio', 'ogg': 'audio', 
+            'm4a': 'audio', 'aac': 'audio', 'wma': 'audio',
+            
+            // Vidéo
+            'mp4': 'video', 'avi': 'video', 'mkv': 'video', 'mov': 'video', 
+            'wmv': 'video', 'flv': 'video', 'webm': 'video',
+            
+            // Documents
+            'pdf': 'document', 'txt': 'document', 'doc': 'document', 
+            'docx': 'document', 'rtf': 'document', 'odt': 'document'
+        };
         
-        this.supportedFormats.set('image/png', {
-            type: 'image',
-            methods: ['lsb', 'metadata', 'alpha-channel'],
-            capacity: 0.25,
-            processor: this.processImage.bind(this)
-        });
-        
-        this.supportedFormats.set('image/bmp', {
-            type: 'image',
-            methods: ['lsb', 'distributed'],
-            capacity: 0.375,
-            processor: this.processImage.bind(this)
-        });
-        
-        this.supportedFormats.set('image/gif', {
-            type: 'image',
-            methods: ['metadata', 'palette'],
-            capacity: 0.1,
-            processor: this.processImage.bind(this)
-        });
-        
-        // Audio
-        this.supportedFormats.set('audio/wav', {
-            type: 'audio',
-            methods: ['lsb', 'echo-hiding', 'phase-coding'],
-            capacity: 0.5,
-            processor: this.processAudio.bind(this)
-        });
-        
-        this.supportedFormats.set('audio/mp3', {
-            type: 'audio',
-            methods: ['metadata', 'unused-bits'],
-            capacity: 0.05,
-            processor: this.processAudio.bind(this)
-        });
-        
-        this.supportedFormats.set('audio/flac', {
-            type: 'audio',
-            methods: ['lsb', 'metadata'],
-            capacity: 0.25,
-            processor: this.processAudio.bind(this)
-        });
-        
-        // Video
-        this.supportedFormats.set('video/mp4', {
-            type: 'video',
-            methods: ['metadata', 'frame-lsb'],
-            capacity: 0.01,
-            processor: this.processVideo.bind(this)
-        });
-        
-        this.supportedFormats.set('video/avi', {
-            type: 'video',
-            methods: ['metadata', 'frame-lsb'],
-            capacity: 0.02,
-            processor: this.processVideo.bind(this)
-        });
-        
-        // Documents
-        this.supportedFormats.set('application/pdf', {
-            type: 'document',
-            methods: ['metadata', 'whitespace', 'font-variation'],
-            capacity: 0.1,
-            processor: this.processDocument.bind(this)
-        });
-        
-        this.supportedFormats.set('application/msword', {
-            type: 'document',
-            methods: ['metadata', 'formatting'],
-            capacity: 0.05,
-            processor: this.processDocument.bind(this)
-        });
-        
-        this.supportedFormats.set('application/vnd.openxmlformats-officedocument.wordprocessingml.document', {
-            type: 'document',
-            methods: ['metadata', 'xml-injection'],
-            capacity: 0.1,
-            processor: this.processDocument.bind(this)
-        });
-        
-        // Text
-        this.supportedFormats.set('text/plain', {
-            type: 'text',
-            methods: ['whitespace', 'unicode'],
-            capacity: 0.2,
-            processor: this.processText.bind(this)
-        });
-        
-        // Archives
-        this.supportedFormats.set('application/zip', {
-            type: 'archive',
-            methods: ['comment', 'extra-field', 'dummy-files'],
-            capacity: 0.1,
-            processor: this.processArchive.bind(this)
-        });
-        
-        this.supportedFormats.set('application/x-rar-compressed', {
-            type: 'archive',
-            methods: ['comment', 'recovery-data'],
-            capacity: 0.05,
-            processor: this.processArchive.bind(this)
-        });
+        return typeMapping[extension] || 'unknown';
     }
 
-    async addAntiAnalysisDelay() {
-        if (!this.antiAnalysisEnabled) return;
+    // Estimation de capacité
+    getCapacity(file, method = 'lsb') {
+        const fileType = this.detectFileType(file);
+        const baseSize = file.size;
         
-        const baseDelay = Math.random() * 
-            (this.timingVariation.maxDelay - this.timingVariation.minDelay) + 
-            this.timingVariation.minDelay;
+        const capacityRatios = {
+            image: { lsb: 0.125, metadata: 0.02 }, // 12.5% pour LSB, 2% pour métadonnées
+            audio: { 'audio-spread': 0.05, metadata: 0.01 }, // 5% pour spread, 1% pour métadonnées
+            video: { 'video-frame': 0.02, metadata: 0.005 }, // 2% pour frames, 0.5% pour métadonnées
+            document: { 'document-hidden': 0.1, metadata: 0.05 } // 10% pour caché, 5% pour métadonnées
+        };
         
-        const jitter = (Math.random() - 0.5) * this.timingVariation.jitterRange;
-        const totalDelay = Math.max(0, baseDelay + jitter);
-        
-        await new Promise(resolve => setTimeout(resolve, totalDelay));
+        const ratio = capacityRatios[fileType]?.[method] || 0.01;
+        return Math.floor(baseSize * ratio);
     }
 
-    obfuscateEmbeddingPattern(data, method) {
-        if (!this.antiAnalysisEnabled) return data;
-        
-        // Apply multiple obfuscation techniques
-        let obfuscated = new Uint8Array(data);
-        
-        // 1. Randomize embedding positions
-        obfuscated = this.randomizeEmbeddingPositions(obfuscated);
-        
-        // 2. Add decoy patterns
-        obfuscated = this.addDecoyPatterns(obfuscated);
-        
-        // 3. Mimic natural file patterns
-        obfuscated = this.mimicNaturalPatterns(obfuscated, method);
-        
-        return obfuscated;
-    }
-
-    randomizeEmbeddingPositions(data) {
-        // Create pseudo-random but reproducible position sequence
-        const positions = [];
-        let seed = 0x2F6E2B1; // Fixed seed for reproducibility
-        
-        for (let i = 0; i < data.length; i++) {
-            seed = (seed * 16807) % 2147483647;
-            positions.push({ original: i, scrambled: seed % data.length });
-        }
-        
-        // Sort by scrambled position to create new order
-        positions.sort((a, b) => a.scrambled - b.scrambled);
-        
-        const result = new Uint8Array(data.length);
-        positions.forEach((pos, index) => {
-            result[index] = data[pos.original];
-        });
-        
-        return result;
-    }
-
-    addDecoyPatterns(data) {
-        const result = new Uint8Array(data);
-        const decoyCount = Math.floor(data.length * 0.001); // 0.1% decoy data
-        
-        for (let i = 0; i < decoyCount; i++) {
-            const pos = Math.floor(Math.random() * result.length);
-            const pattern = Math.floor(Math.random() * 256);
-            result[pos] = (result[pos] & 0xFE) | (pattern & 1);
-        }
-        
-        return result;
-    }
-
-    mimicNaturalPatterns(data, method) {
-        const result = new Uint8Array(data);
-        
-        // Add patterns that mimic natural file compression artifacts
-        const noiseLevel = 0.005; // Very subtle noise
-        const noiseCount = Math.floor(data.length * noiseLevel);
-        
-        for (let i = 0; i < noiseCount; i++) {
-            const pos = Math.floor(Math.random() * result.length);
-            // Mimic JPEG quantization noise or similar
-            const noise = Math.sin(pos * 0.1) > 0 ? 1 : 0;
-            result[pos] = (result[pos] & 0xFE) | noise;
-        }
-        
-        return result;
-    }
-
-    // ========== MAIN EMBEDDING FUNCTIONS ==========
-
-    async embedMessage(carrierFile, secretMessage, options = {}) {
+    // Dissimulation de données - CORRECTION
+    async hideData(carrierFile, secretData, method = 'auto', options = {}) {
         try {
-            await this.addAntiAnalysisDelay();
-            
-            const {
-                method = 'auto',
-                encryption = 'none',
-                password = '',
-                compression = false,
-                stealth = false
-            } = options;
-            
-            // Validate inputs
-            if (!carrierFile) throw new Error(window.t('message.file.required'));
-            if (!secretMessage.trim()) throw new Error(window.t('message.secret.required'));
-            
-            // Check file size
-            if (carrierFile.size > this.maxFileSize) {
-                throw new Error(window.t('message.file.too.large', { 
-                    max: this.formatFileSize(this.maxFileSize) 
-                }));
+            // Validation des entrées
+            if (!carrierFile) {
+                throw new Error('Fichier porteur requis');
+            }
+            if (!secretData || secretData.length === 0) {
+                throw new Error('Données secrètes requises');
+            }
+
+            if (method === 'auto') {
+                method = this.selectBestMethod(carrierFile, secretData.length);
             }
             
-            // Determine format and method
-            const format = this.detectFormat(carrierFile);
-            const finalMethod = method === 'auto' ? this.selectBestMethod(format) : method;
+            const fileType = this.detectFileType(carrierFile);
             
-            // Process secret message
-            let processedSecret = new TextEncoder().encode(secretMessage);
-            
-            if (compression) {
-                processedSecret = await this.compressData(processedSecret);
+            // Pour l'instant, on se concentre sur LSB qui fonctionne
+            if (method === 'lsb' || fileType === 'image') {
+                const result = await this.lsbMethod(carrierFile, secretData, 'hide', options);
+                
+                // Validation du résultat
+                if (!result || !result.file) {
+                    throw new Error('Résultat d\'encodage invalide');
+                }
+                
+                return result;
             }
             
-            if (encryption !== 'none' && password) {
-                processedSecret = await this.encryptData(processedSecret, password, encryption);
-            }
-            
-            // Read carrier file in chunks for large files
-            const carrierBuffer = await this.readFileInChunks(carrierFile);
-            
-            // Embed data
-            const result = await this.performEmbedding(
-                carrierBuffer, 
-                processedSecret, 
-                finalMethod, 
-                format,
-                { stealth }
-            );
-            
-            await this.addAntiAnalysisDelay();
-            
-            return {
-                data: result,
-                method: finalMethod,
-                encrypted: encryption !== 'none',
-                compressed: compression,
-                originalSize: carrierFile.size,
-                finalSize: result.byteLength
-            };
+            throw new Error(`Méthode ${method} non supportée pour le type ${fileType}`);
             
         } catch (error) {
-            throw new Error(`Embedding failed: ${error.message}`);
+            throw new Error(`Erreur hideData: ${error.message}`);
         }
     }
 
-    async extractMessage(encodedFile, options = {}) {
+    // Extraction de données - CORRECTION  
+    async extractData(carrierFile, method = 'auto', options = {}) {
         try {
-            await this.addAntiAnalysisDelay();
-            
-            const {
-                method = 'auto',
-                password = '',
-                bruteForce = false
-            } = options;
-            
-            if (!encodedFile) throw new Error(window.t('message.file.required'));
-            
-            // Read file
-            const fileBuffer = await this.readFileInChunks(encodedFile);
-            
-            // Detect format
-            const format = this.detectFormat(encodedFile);
-            
-            // Try extraction methods
-            const methods = method === 'auto' ? 
-                this.getSupportedMethods(format) : [method];
-            
-            let lastError = null;
-            
-            for (const testMethod of methods) {
+            // Validation d'entrée
+            if (!carrierFile) {
+                throw new Error('Fichier requis pour extraction');
+            }
+
+            if (method === 'auto') {
+                // Tentative avec LSB en premier
                 try {
-                    const extracted = await this.performExtraction(
-                        fileBuffer, 
-                        testMethod, 
-                        format
-                    );
-                    
-                    if (extracted && extracted.length > 0) {
-                        let result = extracted;
-                        
-                        // Try decryption if password provided
-                        if (password) {
-                            try {
-                                result = await this.decryptData(result, password);
-                            } catch (decryptError) {
-                                // If decryption fails, maybe it wasn't encrypted
-                                console.warn('Decryption failed, using raw data');
-                            }
-                        }
-                        
-                        // Try decompression
-                        try {
-                            const decompressed = await this.decompressData(result);
-                            if (decompressed.length > 0) {
-                                result = decompressed;
-                            }
-                        } catch (decompError) {
-                            // Not compressed, continue with current result
-                        }
-                        
-                        await this.addAntiAnalysisDelay();
-                        
-                        return {
-                            data: result,
-                            method: testMethod,
-                            confidence: this.calculateConfidence(result, testMethod)
-                        };
-                    }
+                    const result = await this.lsbMethod(carrierFile, null, 'extract', options);
+                    return result;
                 } catch (error) {
-                    lastError = error;
-                    continue;
+                    throw new Error(`Auto-détection échouée: ${error.message}`);
                 }
             }
             
-            throw new Error(lastError?.message || window.t('message.extraction.failed'));
+            const methodFunction = this.methods[method];
+            
+            if (!methodFunction) {
+                throw new Error(`Méthode inconnue: ${method}`);
+            }
+            
+            return await methodFunction(carrierFile, null, 'extract', options);
             
         } catch (error) {
-            throw new Error(`Extraction failed: ${error.message}`);
+            throw new Error(`Erreur extractData: ${error.message}`);
         }
     }
 
-    // ========== EMBEDDING/EXTRACTION LOGIC ==========
-
-    async performEmbedding(carrierBuffer, secretData, method, format, options) {
-        if (!format || !format.processor) {
-            return this.embedImageLSB(new Uint8Array(carrierBuffer), secretData, options);
-        }
+    // Auto-détection et extraction
+    async autoDetectAndExtract(carrierFile) {
+        const detectedMethods = await this.detectHiddenData(carrierFile);
         
-        return await format.processor(carrierBuffer, 'embed', secretData, method, options);
-    }
-
-    async performExtraction(fileBuffer, method, format) {
-        if (!format || !format.processor) {
-            return this.extractImageLSB(new Uint8Array(fileBuffer), {});
-        }
-        
-        return await format.processor(fileBuffer, 'extract', null, method, {});
-    }
-
-    // ========== FILE PROCESSING ==========
-
-    async readFileInChunks(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            
-            reader.onload = (e) => {
-                resolve(e.target.result);
-            };
-            
-            reader.onerror = () => {
-                reject(new Error('Failed to read file'));
-            };
-            
-            reader.readAsArrayBuffer(file);
-        });
-    }
-
-    // ========== FORMAT-SPECIFIC PROCESSORS ==========
-
-    async processImage(buffer, operation, data, method, options = {}) {
-        const imageData = new Uint8Array(buffer);
-        
-        switch (method) {
-            case 'lsb':
-                return operation === 'embed' ? 
-                    this.embedImageLSB(imageData, data, options) :
-                    this.extractImageLSB(imageData, options);
-                    
-            case 'metadata':
-                return this.processImageMetadata(imageData, operation, data);
-                
-            case 'distributed':
-                return operation === 'embed' ?
-                    this.embedImageDistributed(imageData, data, options) :
-                    this.extractImageDistributed(imageData, options);
-                    
-            case 'alpha-channel':
-                return operation === 'embed' ?
-                    this.embedImageAlpha(imageData, data, options) :
-                    this.extractImageAlpha(imageData, options);
-                    
-            default:
-                throw new Error(`Unsupported image method: ${method}`);
-        }
-    }
-
-    async processAudio(buffer, operation, data, method, options = {}) {
-        const audioData = new Uint8Array(buffer);
-        
-        switch (method) {
-            case 'lsb':
-                return operation === 'embed' ? 
-                    this.embedAudioLSB(audioData, data, options) :
-                    this.extractAudioLSB(audioData, options);
-                    
-            case 'metadata':
-                return this.processAudioMetadata(audioData, operation, data);
-                
-            case 'echo-hiding':
-                return operation === 'embed' ?
-                    this.embedAudioEcho(audioData, data, options) :
-                    this.extractAudioEcho(audioData, options);
-                    
-            default:
-                // Fallback to LSB for audio
-                return operation === 'embed' ? 
-                    this.embedAudioLSB(audioData, data, options) :
-                    this.extractAudioLSB(audioData, options);
-        }
-    }
-
-    async processVideo(buffer, operation, data, method, options = {}) {
-        // For now, treat video like images for LSB
-        return this.processImage(buffer, operation, data, method, options);
-    }
-
-    async processDocument(buffer, operation, data, method, options = {}) {
-        const docData = new Uint8Array(buffer);
-        
-        switch (method) {
-            case 'metadata':
-                return this.processDocumentMetadata(docData, operation, data);
-                
-            case 'whitespace':
-                return operation === 'embed' ?
-                    this.embedDocumentWhitespace(docData, data, options) :
-                    this.extractDocumentWhitespace(docData, options);
-                    
-            default:
-                // Fallback to basic embedding
-                return operation === 'embed' ? 
-                    this.embedBasic(docData, data, options) :
-                    this.extractBasic(docData, options);
-        }
-    }
-
-    async processText(buffer, operation, data, method, options = {}) {
-        const textData = new Uint8Array(buffer);
-        
-        switch (method) {
-            case 'whitespace':
-                return operation === 'embed' ?
-                    this.embedTextWhitespace(textData, data, options) :
-                    this.extractTextWhitespace(textData, options);
-                    
-            case 'unicode':
-                return operation === 'embed' ?
-                    this.embedTextUnicode(textData, data, options) :
-                    this.extractTextUnicode(textData, options);
-                    
-            default:
-                return operation === 'embed' ?
-                    this.embedTextWhitespace(textData, data, options) :
-                    this.extractTextWhitespace(textData, options);
-        }
-    }
-
-    async processArchive(buffer, operation, data, method, options = {}) {
-        // For now, use basic embedding for archives
-        return operation === 'embed' ? 
-            this.embedBasic(new Uint8Array(buffer), data, options) :
-            this.extractBasic(new Uint8Array(buffer), options);
-    }
-
-    // ========== LSB IMPLEMENTATION ==========
-
-    embedImageLSB(imageData, secretData, options) {
-        const { stealth = false } = options;
-        const result = new Uint8Array(imageData);
-        
-        // Create header with length information
-        const header = this.createDataHeader(secretData.length);
-        const allData = new Uint8Array(header.length + secretData.length);
-        allData.set(header, 0);
-        allData.set(secretData, header.length);
-        
-        // Convert to bits
-        const bits = this.bytesToBits(allData);
-        
-        if (bits.length > imageData.length) {
-            throw new Error('Secret data too large for carrier image');
-        }
-        
-        // Generate embedding positions
-        const positions = stealth ? 
-            this.generateStealthPositions(bits.length, imageData.length) :
-            this.generateSequentialPositions(bits.length);
-        
-        // Embed bits
-        for (let i = 0; i < bits.length; i++) {
-            const pos = positions[i];
-            result[pos] = (result[pos] & 0xFE) | bits[i];
-        }
-        
-        // Apply anti-analysis obfuscation
-        if (stealth) {
-            return this.obfuscateEmbeddingPattern(result, 'lsb');
-        }
-        
-        return result.buffer;
-    }
-
-    extractImageLSB(imageData, options) {
-        const { stealth = false } = options;
-        
-        // Read header first (32 bits for length)
-        const headerPositions = stealth ?
-            this.generateStealthPositions(32, imageData.length) :
-            this.generateSequentialPositions(32);
-        
-        const headerBits = [];
-        for (const pos of headerPositions) {
-            headerBits.push(imageData[pos] & 1);
-        }
-        
-        const dataLength = this.bitsToNumber(headerBits);
-        
-        if (dataLength <= 0 || dataLength > imageData.length / 8) {
-            return null; // Invalid data length
-        }
-        
-        // Extract data bits
-        const dataBitCount = dataLength * 8;
-        const dataPositions = stealth ?
-            this.generateStealthPositions(dataBitCount, imageData.length, 32) :
-            this.generateSequentialPositions(dataBitCount, 32);
-        
-        const dataBits = [];
-        for (const pos of dataPositions) {
-            dataBits.push(imageData[pos] & 1);
-        }
-        
-        return this.bitsToBytes(dataBits);
-    }
-
-    // ========== BASIC IMPLEMENTATIONS FOR OTHER FORMATS ==========
-
-    embedBasic(data, secretData, options) {
-        // Basic LSB embedding for non-image formats
-        return this.embedImageLSB(data, secretData, options);
-    }
-
-    extractBasic(data, options) {
-        // Basic LSB extraction for non-image formats
-        return this.extractImageLSB(data, options);
-    }
-
-    embedAudioLSB(audioData, secretData, options) {
-        // Use same LSB logic for audio
-        return this.embedImageLSB(audioData, secretData, options);
-    }
-
-    extractAudioLSB(audioData, options) {
-        // Use same LSB logic for audio
-        return this.extractImageLSB(audioData, options);
-    }
-
-    // Placeholder implementations for specialized methods
-    embedImageDistributed(imageData, secretData, options) {
-        return this.embedImageLSB(imageData, secretData, options);
-    }
-
-    extractImageDistributed(imageData, options) {
-        return this.extractImageLSB(imageData, options);
-    }
-
-    embedImageAlpha(imageData, secretData, options) {
-        return this.embedImageLSB(imageData, secretData, options);
-    }
-
-    extractImageAlpha(imageData, options) {
-        return this.extractImageLSB(imageData, options);
-    }
-
-    embedAudioEcho(audioData, secretData, options) {
-        return this.embedImageLSB(audioData, secretData, options);
-    }
-
-    extractAudioEcho(audioData, options) {
-        return this.extractImageLSB(audioData, options);
-    }
-
-    embedDocumentWhitespace(docData, secretData, options) {
-        return this.embedImageLSB(docData, secretData, options);
-    }
-
-    extractDocumentWhitespace(docData, options) {
-        return this.extractImageLSB(docData, options);
-    }
-
-    embedTextWhitespace(textData, secretData, options) {
-        return this.embedImageLSB(textData, secretData, options);
-    }
-
-    extractTextWhitespace(textData, options) {
-        return this.extractImageLSB(textData, options);
-    }
-
-    embedTextUnicode(textData, secretData, options) {
-        return this.embedImageLSB(textData, secretData, options);
-    }
-
-    extractTextUnicode(textData, options) {
-        return this.extractImageLSB(textData, options);
-    }
-
-    processImageMetadata(imageData, operation, data) {
-        // Placeholder for metadata processing
-        if (operation === 'embed') {
-            return this.embedImageLSB(imageData, data, {});
-        } else {
-            return this.extractImageLSB(imageData, {});
-        }
-    }
-
-    processAudioMetadata(audioData, operation, data) {
-        // Placeholder for audio metadata processing
-        if (operation === 'embed') {
-            return this.embedImageLSB(audioData, data, {});
-        } else {
-            return this.extractImageLSB(audioData, {});
-        }
-    }
-
-    processDocumentMetadata(docData, operation, data) {
-        // Placeholder for document metadata processing
-        if (operation === 'embed') {
-            return this.embedImageLSB(docData, data, {});
-        } else {
-            return this.extractImageLSB(docData, {});
-        }
-    }
-
-    // ========== UTILITIES ==========
-
-    detectFormat(file) {
-        const mimeType = file.type;
-        return this.supportedFormats.get(mimeType) || null;
-    }
-
-    selectBestMethod(format) {
-        if (!format) return 'lsb';
-        return format.methods[0];
-    }
-
-    getSupportedMethods(format) {
-        if (!format) return ['lsb'];
-        return format.methods;
-    }
-
-    createDataHeader(length) {
-        const header = new ArrayBuffer(4);
-        new DataView(header).setUint32(0, length, true);
-        return new Uint8Array(header);
-    }
-
-    bytesToBits(bytes) {
-        const bits = [];
-        for (const byte of bytes) {
-            for (let i = 0; i < 8; i++) {
-                bits.push((byte >> i) & 1);
+        for (const method of detectedMethods) {
+            try {
+                const result = await this.extractData(carrierFile, method.name);
+                if (result && result.length > 0) {
+                    return {
+                        data: result,
+                        method: method.name,
+                        confidence: method.confidence
+                    };
+                }
+            } catch (error) {
+                continue; // Essayer la méthode suivante
             }
         }
-        return bits;
+        
+        throw new Error('Aucune donnée cachée détectée');
     }
 
-    bitsToBytes(bits) {
-        const bytes = [];
-        for (let i = 0; i < bits.length; i += 8) {
-            let byte = 0;
-            for (let j = 0; j < 8; j++) {
-                byte |= (bits[i + j] << j);
+    // Détection de données cachées
+    async detectHiddenData(file) {
+        const detectedMethods = [];
+        const fileType = this.detectFileType(file);
+        
+        // Tests basiques selon le type de fichier
+        if (fileType === 'image') {
+            detectedMethods.push({ name: 'lsb', confidence: 70 });
+            detectedMethods.push({ name: 'metadata', confidence: 50 });
+        } else if (fileType === 'audio') {
+            detectedMethods.push({ name: 'audio-spread', confidence: 60 });
+            detectedMethods.push({ name: 'metadata', confidence: 40 });
+        }
+        
+        return detectedMethods.sort((a, b) => b.confidence - a.confidence);
+    }
+
+    // Sélection automatique de la meilleure méthode
+    selectBestMethod(carrierFile, secretSize) {
+        const fileType = this.detectFileType(carrierFile);
+        const fileSize = carrierFile.size;
+        
+        // Sélection basée sur le type et la capacité requise
+        if (fileType === 'image') {
+            return secretSize < fileSize * 0.1 ? 'lsb' : 'metadata';
+        } else if (fileType === 'audio') {
+            return 'audio-spread';
+        } else if (fileType === 'video') {
+            return 'video-frame';
+        } else if (fileType === 'document') {
+            return 'document-hidden';
+        }
+        
+        return 'lsb'; // Par défaut
+    }
+
+    // Méthode LSB (Least Significant Bit) - CORRECTION MAJEURE
+    async lsbMethod(carrierFile, secretData, operation, options = {}) {
+        if (operation === 'hide') {
+            return await this.lsbHide(carrierFile, secretData, options);
+        } else {
+            return await this.lsbExtract(carrierFile, options);
+        }
+    }
+
+    async lsbHide(carrierFile, secretData, options = {}) {
+        try {
+            // Validation des entrées
+            if (!carrierFile) {
+                throw new Error('Fichier porteur manquant');
             }
-            bytes.push(byte);
+            if (!secretData) {
+                throw new Error('Données secrètes manquantes');
+            }
+
+            // Lecture du fichier porteur
+            const carrierBuffer = await this.fileToArrayBuffer(carrierFile);
+            
+            // Encodage avec la méthode LSB
+            const result = await this.encodeLSB(carrierBuffer, secretData, options);
+            
+            // Validation du résultat
+            if (!result || !result.data) {
+                throw new Error('Échec de l\'encodage LSB');
+            }
+
+            // Création du blob résultat avec le même type MIME que le fichier original
+            const resultBlob = new Blob([result.data], { 
+                type: carrierFile.type || 'application/octet-stream'
+            });
+
+            // Validation du blob
+            if (!resultBlob || resultBlob.size === 0) {
+                throw new Error('Blob résultat invalide');
+            }
+            
+            return {
+                file: resultBlob,
+                method: 'lsb',
+                metadata: {
+                    originalSize: carrierBuffer.byteLength,
+                    finalSize: resultBlob.size,
+                    capacity: result.capacity,
+                    used: result.used,
+                    efficiency: result.efficiency
+                }
+            };
+            
+        } catch (error) {
+            throw new Error(`Erreur LSB Hide: ${error.message}`);
         }
-        return new Uint8Array(bytes);
     }
 
-    bitsToNumber(bits) {
-        let number = 0;
-        for (let i = 0; i < bits.length; i++) {
-            number |= (bits[i] << i);
+    async lsbExtract(carrierFile, options = {}) {
+        try {
+            // Validation d'entrée
+            if (!carrierFile) {
+                throw new Error('Fichier manquant pour extraction');
+            }
+
+            // Lecture du fichier
+            const carrierBuffer = await this.fileToArrayBuffer(carrierFile);
+            
+            // Extraction avec la méthode LSB
+            const extractedData = await this.extractLSB(carrierBuffer);
+            
+            // Validation du résultat
+            if (!extractedData || extractedData.length === 0) {
+                throw new Error('Aucune donnée extraite');
+            }
+
+            return {
+                data: extractedData,
+                method: 'lsb',
+                confidence: 90,
+                size: extractedData.length
+            };
+            
+        } catch (error) {
+            throw new Error(`Erreur LSB Extract: ${error.message}`);
         }
-        return number;
     }
 
-    generateSequentialPositions(length, offset = 0) {
-        const positions = [];
-        for (let i = 0; i < length; i++) {
-            positions.push(i + offset);
+    // Méthodes simplifiées pour les autres types
+    async metadataMethod(carrierFile, secretData, operation, options = {}) {
+        // Implémentation simplifiée
+        if (operation === 'hide') {
+            const result = new Uint8Array(await carrierFile.arrayBuffer());
+            // Ajouter les données dans les métadonnées (simulation)
+            return new Blob([result], { type: carrierFile.type });
+        } else {
+            // Extraction des métadonnées (simulation)
+            throw new Error('Données non trouvées dans les métadonnées');
         }
-        return positions;
     }
 
-    generateStealthPositions(length, max, offset = 0) {
-        const positions = [];
-        const step = Math.floor(max / length);
-        for (let i = 0; i < length; i++) {
-            positions.push((i * step) + offset);
+    async audioSpreadMethod(carrierFile, secretData, operation, options = {}) {
+        // Méthode de dispersion audio simplifiée
+        if (operation === 'hide') {
+            const result = new Uint8Array(await carrierFile.arrayBuffer());
+            return new Blob([result], { type: carrierFile.type });
+        } else {
+            throw new Error('Données audio non trouvées');
         }
-        return positions;
     }
 
-    async compressData(data) {
-        // Implement compression logic here
-        return data;
+    async videoFrameMethod(carrierFile, secretData, operation, options = {}) {
+        // Méthode de dissimulation dans les frames vidéo
+        if (operation === 'hide') {
+            const result = new Uint8Array(await carrierFile.arrayBuffer());
+            return new Blob([result], { type: carrierFile.type });
+        } else {
+            throw new Error('Données vidéo non trouvées');
+        }
     }
 
-    async encryptData(data, password, algorithm) {
-        // Implement encryption logic here
-        return data;
+    async documentHiddenMethod(carrierFile, secretData, operation, options = {}) {
+        // Méthode de dissimulation dans les documents
+        if (operation === 'hide') {
+            const result = new Uint8Array(await carrierFile.arrayBuffer());
+            return new Blob([result], { type: carrierFile.type });
+        } else {
+            throw new Error('Données document non trouvées');
+        }
     }
 
-    async decryptData(data, password) {
-        // Implement decryption logic here
-        return data;
+    // Analyse forensique
+    async analyzeFile(file) {
+        const analysis = {
+            filename: file.name,
+            size: file.size,
+            type: this.detectFileType(file),
+            detectedMethods: [],
+            entropy: 0,
+            suspicious: false
+        };
+        
+        // Calcul de l'entropie
+        const data = new Uint8Array(await file.arrayBuffer());
+        analysis.entropy = this.calculateEntropy(data);
+        
+        // Détection des méthodes possibles
+        analysis.detectedMethods = await this.detectHiddenData(file);
+        
+        // Analyse de suspicion
+        analysis.suspicious = analysis.entropy > 7.8 || analysis.detectedMethods.length > 0;
+        
+        return analysis;
     }
 
-    async decompressData(data) {
-        // Implement decompression logic here
-        return data;
+    // Calcul d'entropie
+    calculateEntropy(data) {
+        const frequency = new Array(256).fill(0);
+        
+        for (let i = 0; i < data.length; i++) {
+            frequency[data[i]]++;
+        }
+        
+        let entropy = 0;
+        for (let i = 0; i < 256; i++) {
+            if (frequency[i] > 0) {
+                const p = frequency[i] / data.length;
+                entropy -= p * Math.log2(p);
+            }
+        }
+        
+        return entropy;
     }
 
-    calculateConfidence(data, method) {
-        // Implement confidence calculation logic here
-        return 100;
+    // Génération de rapport
+    generateReport(analysis) {
+        let report = `═══════════════════════════════════════
+🔍 RAPPORT D'ANALYSE FORENSIQUE OBSCURA
+═══════════════════════════════════════
+
+📁 FICHIER ANALYSÉ:
+   Nom: ${analysis.filename}
+   Taille: ${this.formatFileSize(analysis.size)}
+   Type: ${analysis.type.toUpperCase()}
+
+📊 ANALYSE ENTROPIQUE:
+   Entropie: ${analysis.entropy.toFixed(3)} bits/octet
+   Seuil normal: < 7.8 bits/octet
+   Statut: ${analysis.entropy > 7.8 ? '⚠️  SUSPECT' : '✅ NORMAL'}
+
+🎯 MÉTHODES DÉTECTÉES:`;
+
+        if (analysis.detectedMethods.length > 0) {
+            analysis.detectedMethods.forEach((method, index) => {
+                report += `\n   ${index + 1}. ${method.name.toUpperCase()}`;
+                report += `\n      Confiance: ${method.confidence}%`;
+            });
+        } else {
+            report += '\n   ❌ Aucune méthode de stéganographie détectée';
+        }
+
+        report += `\n\n🔒 CONCLUSION GÉNÉRALE:
+   ${analysis.suspicious ? '🚨 FICHIER SUSPECT' : '✅ FICHIER NORMAL'}
+   ${analysis.suspicious ? 'Présence probable de données cachées' : 'Aucun signe de stéganographie détecté'}
+
+═══════════════════════════════════════
+Rapport généré par Obscura v2.0
+${new Date().toLocaleString()}
+═══════════════════════════════════════`;
+
+        return report;
     }
 
     formatFileSize(bytes) {
@@ -783,6 +396,329 @@ class SteganographyEngine {
         const sizes = ['Bytes', 'KB', 'MB', 'GB'];
         const i = Math.floor(Math.log(bytes) / Math.log(k));
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // ========== MÉTHODES D'ENCODAGE ==========
+
+    async encodeLSB(carrierData, secretData, options = {}) {
+        try {
+            const carrier = new Uint8Array(carrierData);
+            const secret = new Uint8Array(secretData);
+            
+            // Préparation des données avec signature et taille
+            const signature = new TextEncoder().encode('OBSCURA_DATA:');
+            const sizeBuffer = new ArrayBuffer(4);
+            new DataView(sizeBuffer).setUint32(0, secret.length, true);
+            const sizeBytes = new Uint8Array(sizeBuffer);
+            
+            // Données complètes à encoder
+            const fullData = new Uint8Array(signature.length + sizeBytes.length + secret.length);
+            fullData.set(signature, 0);
+            fullData.set(sizeBytes, signature.length);
+            fullData.set(secret, signature.length + sizeBytes.length);
+            
+            // Vérification de la capacité
+            const requiredBits = fullData.length * 8;
+            const availableBits = carrier.length;
+            
+            if (requiredBits > availableBits) {
+                throw new Error(`Capacité insuffisante. Requis: ${requiredBits} bits, Disponible: ${availableBits} bits`);
+            }
+            
+            // Encodage LSB
+            const result = new Uint8Array(carrier);
+            let dataIndex = 0;
+            
+            for (let i = 0; i < fullData.length; i++) {
+                const dataByte = fullData[i];
+                
+                for (let bit = 0; bit < 8; bit++) {
+                    const secretBit = (dataByte >> bit) & 1;
+                    const carrierIndex = dataIndex;
+                    
+                    if (carrierIndex >= result.length) {
+                        throw new Error('Dépassement de capacité du porteur');
+                    }
+                    
+                    // Modification du bit de poids faible
+                    result[carrierIndex] = (result[carrierIndex] & 0xFE) | secretBit;
+                    dataIndex++;
+                }
+            }
+            
+            return {
+                data: result,
+                method: 'lsb',
+                capacity: availableBits,
+                used: requiredBits,
+                efficiency: (requiredBits / availableBits * 100).toFixed(2)
+            };
+            
+        } catch (error) {
+            throw new Error(`Erreur encodage LSB: ${error.message}`);
+        }
+    }
+
+    async extractLSB(carrierData) {
+        try {
+            const carrier = new Uint8Array(carrierData);
+            const signature = new TextEncoder().encode('OBSCURA_DATA:');
+            
+            // Recherche de la signature
+            let signatureFound = false;
+            let dataStartBit = 0;
+            
+            for (let startBit = 0; startBit <= carrier.length - signature.length * 8; startBit += 8) {
+                let extractedSignature = [];
+                
+                // Extraction de la signature potentielle
+                for (let i = 0; i < signature.length; i++) {
+                    let byte = 0;
+                    for (let bit = 0; bit < 8; bit++) {
+                        const carrierIndex = startBit + i * 8 + bit;
+                        if (carrierIndex < carrier.length) {
+                            byte |= (carrier[carrierIndex] & 1) << bit;
+                        }
+                    }
+                    extractedSignature.push(byte);
+                }
+                
+                // Vérification de la signature
+                if (this.arraysEqual(extractedSignature, Array.from(signature))) {
+                    signatureFound = true;
+                    dataStartBit = startBit + signature.length * 8;
+                    break;
+                }
+            }
+            
+            if (!signatureFound) {
+                throw new Error('Signature de données non trouvée');
+            }
+            
+            // Extraction de la taille (4 octets)
+            let sizeBytes = [];
+            for (let i = 0; i < 4; i++) {
+                let byte = 0;
+                for (let bit = 0; bit < 8; bit++) {
+                    const carrierIndex = dataStartBit + i * 8 + bit;
+                    if (carrierIndex < carrier.length) {
+                        byte |= (carrier[carrierIndex] & 1) << bit;
+                    }
+                }
+                sizeBytes.push(byte);
+            }
+            
+            const dataSize = new DataView(new Uint8Array(sizeBytes).buffer).getUint32(0, true);
+            
+            if (dataSize <= 0 || dataSize > carrier.length) {
+                throw new Error(`Taille de données invalide: ${dataSize}`);
+            }
+            
+            // Extraction des données réelles
+            let extractedData = [];
+            const actualDataStartBit = dataStartBit + 32; // 4 octets * 8 bits
+            
+            for (let i = 0; i < dataSize; i++) {
+                let byte = 0;
+                for (let bit = 0; bit < 8; bit++) {
+                    const carrierIndex = actualDataStartBit + i * 8 + bit;
+                    if (carrierIndex < carrier.length) {
+                        byte |= (carrier[carrierIndex] & 1) << bit;
+                    }
+                }
+                extractedData.push(byte);
+            }
+            
+            return new Uint8Array(extractedData);
+            
+        } catch (error) {
+            throw new Error(`Erreur extraction LSB: ${error.message}`);
+        }
+    }
+
+    async encodeMetadata(carrierData, secretData, fileType, options = {}) {
+        try {
+            const carrier = new Uint8Array(carrierData);
+            const secret = new Uint8Array(secretData);
+            
+            switch (fileType.toLowerCase()) {
+                case 'jpg':
+                case 'jpeg':
+                    return await this.encodeJPEGMetadata(carrier, secret, options);
+                case 'png':
+                    return await this.encodePNGMetadata(carrier, secret, options);
+                default:
+                    throw new Error(`Type de fichier non supporté pour métadonnées: ${fileType}`);
+            }
+        } catch (error) {
+            throw new Error(`Erreur encodage métadonnées: ${error.message}`);
+        }
+    }
+
+    async encodeJPEGMetadata(carrier, secret, options = {}) {
+        // Création d'un marqueur EXIF personnalisé
+        const marker = new TextEncoder().encode('OBSCURA:');
+        const sizeBuffer = new ArrayBuffer(4);
+        new DataView(sizeBuffer).setUint32(0, secret.length, false);
+        const sizeBytes = new Uint8Array(sizeBuffer);
+        
+        // Construction des données à insérer
+        const metadataBlock = new Uint8Array(marker.length + sizeBytes.length + secret.length);
+        metadataBlock.set(marker, 0);
+        metadataBlock.set(sizeBytes, marker.length);
+        metadataBlock.set(secret, marker.length + sizeBytes.length);
+        
+        // Recherche de l'emplacement d'insertion (après les marqueurs JPEG standards)
+        let insertIndex = 2; // Après FF D8
+        
+        // Recherche du premier marqueur APP ou DQT
+        while (insertIndex < carrier.length - 1) {
+            if (carrier[insertIndex] === 0xFF && 
+                (carrier[insertIndex + 1] >= 0xE0 && carrier[insertIndex + 1] <= 0xEF)) {
+                // Trouvé un marqueur APP, insérer après
+                const segmentLength = (carrier[insertIndex + 2] << 8) | carrier[insertIndex + 3];
+                insertIndex += 2 + segmentLength;
+                break;
+            }
+            insertIndex++;
+        }
+        
+        // Construction du fichier résultat
+        const result = new Uint8Array(carrier.length + metadataBlock.length + 4);
+        let resultIndex = 0;
+        
+        // Copie jusqu'au point d'insertion
+        result.set(carrier.slice(0, insertIndex), resultIndex);
+        resultIndex += insertIndex;
+        
+        // Insertion du marqueur APP1 personnalisé
+        result[resultIndex++] = 0xFF;
+        result[resultIndex++] = 0xE1; // APP1
+        result[resultIndex++] = (metadataBlock.length + 2) >> 8;
+        result[resultIndex++] = (metadataBlock.length + 2) & 0xFF;
+        
+        // Insertion des données
+        result.set(metadataBlock, resultIndex);
+        resultIndex += metadataBlock.length;
+        
+        // Copie du reste du fichier
+        result.set(carrier.slice(insertIndex), resultIndex);
+        
+        return {
+            data: result,
+            method: 'metadata-jpeg',
+            insertedAt: insertIndex,
+            dataSize: secret.length
+        };
+    }
+
+    async encodePNGMetadata(carrier, secret, options = {}) {
+        // Recherche de l'emplacement d'insertion (avant IEND)
+        let insertIndex = carrier.length - 12; // Position typique d'IEND
+        
+        // Recherche réelle d'IEND
+        for (let i = carrier.length - 12; i >= 0; i--) {
+            if (carrier[i] === 0x49 && carrier[i+1] === 0x45 && 
+                carrier[i+2] === 0x4E && carrier[i+3] === 0x44) {
+                insertIndex = i - 4; // Avant la taille d'IEND
+                break;
+            }
+        }
+        
+        // Préparation du chunk tEXt personnalisé
+        const keyword = new TextEncoder().encode('OBSCURA');
+        const separator = new Uint8Array([0x00]); // Null separator
+        const chunkData = new Uint8Array(keyword.length + separator.length + secret.length);
+        chunkData.set(keyword, 0);
+        chunkData.set(separator, keyword.length);
+        chunkData.set(secret, keyword.length + separator.length);
+        
+        // Calcul du CRC
+        const crc = this.calculateCRC32(new Uint8Array([0x74, 0x45, 0x58, 0x74, ...chunkData]));
+        
+        // Construction du chunk complet
+        const chunkSize = chunkData.length;
+        const chunk = new Uint8Array(12 + chunkSize);
+        let chunkIndex = 0;
+        
+        // Taille du chunk (4 octets, big-endian)
+        chunk[chunkIndex++] = (chunkSize >> 24) & 0xFF;
+        chunk[chunkIndex++] = (chunkSize >> 16) & 0xFF;
+        chunk[chunkIndex++] = (chunkSize >> 8) & 0xFF;
+        chunk[chunkIndex++] = chunkSize & 0xFF;
+        
+        // Type de chunk "tEXt"
+        chunk[chunkIndex++] = 0x74;
+        chunk[chunkIndex++] = 0x45;
+        chunk[chunkIndex++] = 0x58;
+        chunk[chunkIndex++] = 0x74;
+        
+        // Données
+        chunk.set(chunkData, chunkIndex);
+        chunkIndex += chunkData.length;
+        
+        // CRC (4 octets, big-endian)
+        chunk[chunkIndex++] = (crc >> 24) & 0xFF;
+        chunk[chunkIndex++] = (crc >> 16) & 0xFF;
+        chunk[chunkIndex++] = (crc >> 8) & 0xFF;
+        chunk[chunkIndex++] = crc & 0xFF;
+        
+        // Construction du fichier résultat
+        const result = new Uint8Array(carrier.length + chunk.length);
+        result.set(carrier.slice(0, insertIndex), 0);
+        result.set(chunk, insertIndex);
+        result.set(carrier.slice(insertIndex), insertIndex + chunk.length);
+        
+        return {
+            data: result,
+            method: 'metadata-png',
+            insertedAt: insertIndex,
+            dataSize: secret.length
+        };
+    }
+
+    calculateCRC32(data) {
+        const crcTable = this.makeCRCTable();
+        let crc = 0 ^ (-1);
+        
+        for (let i = 0; i < data.length; i++) {
+            crc = (crc >>> 8) ^ crcTable[(crc ^ data[i]) & 0xFF];
+        }
+        
+        return (crc ^ (-1)) >>> 0;
+    }
+
+    makeCRCTable() {
+        if (this.crcTable) return this.crcTable;
+        
+        this.crcTable = [];
+        for (let n = 0; n < 256; n++) {
+            let c = n;
+            for (let k = 0; k < 8; k++) {
+                c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+            }
+            this.crcTable[n] = c;
+        }
+        return this.crcTable;
+    }
+
+    arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        for (let i = 0; i < a.length; i++) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
+    // ========== MÉTHODES UTILITAIRES ==========
+
+    async fileToArrayBuffer(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(new Error('Erreur de lecture du fichier'));
+            reader.readAsArrayBuffer(file);
+        });
     }
 }
 
