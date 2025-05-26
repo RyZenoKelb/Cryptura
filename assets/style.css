@@ -1002,11 +1002,11 @@ body::before {
     color: var(--text-primary);
     font-size: 0.875rem;
     resize: vertical;
-    margin-bottom: 1rem;
     font-family: inherit;
     transition: var(--transition-base);
 }
 
+#secret-upload textarea:focus {
 #secret-upload textarea:focus {
     outline: none;
     border-color: var(--primary-500);
