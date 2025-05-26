@@ -7,61 +7,61 @@ class CryptoWorker {
         this.chunkSize = 64 * 1024; // 64KB chunks
         this.maxRandomDelay = 50; // Max delay in ms for timing attack protection
         
-    }
-
-    async handleMessage(event) {
-        const { taskId, operation, data } = event.data;
-        
-        try {
-            let result;
-            
-            switch (operation) {
-                case 'encrypt':
-                    result = await this.performEncryption(data);
-                    break;
-                case 'decrypt':
-                    result = await this.performDecryption(data);
-                    break;
-                case 'hash':
-                    result = await this.performHashing(data);
-                    break;
-                case 'generateKey':
-                    result = await this.generateKey(data);
-                    break;
-                case 'benchmark':
-                    result = await this.performBenchmark(data);
-                    break;
-                default:
-                    throw new Error(`Opération non supportée: ${operation}`);
-            }
-            
-            // Retour du résultat
-            self.postMessage({
-                taskId,
-                success: true,
-                result: result
-            });
-            
-        } catch (error) {
-            // Retour de l'erreur
-            self.postMessage({
-                taskId,
-                success: false,
-                error: error.message
-            });
+        if (this.isWorker) {
+            this.setupWorkerHandlers();
         }
     }
 
-    async performEncryption({ data, password, algorithm, options = {} }) {
-        console.log(`🔐 Worker: Chiffrement ${algorithm}...`);
-        
-        const startTime = performance.now();
-        
-        switch (algorithm) {
-            case 'aes-gcm':
-                return await this.encryptAESGCM(data, password, options);
-            case 'ultra':
-                return await this.encryptUltra(data, password, options);
+    // ========== WORKER MESSAGE HANDLING ==========
+
+    setupWorkerHandlers() {
+        self.onmessage = async (e) => {
+            const { id, type, data } = e.data;
+            
+            try {
+                // Random delay to prevent timing analysis
+                await this.addRandomDelay();
+                
+                let result;
+                
+                switch (type) {
+                    case 'encrypt':
+                        result = await this.encryptChunked(data);
+                        break;
+                    case 'decrypt':
+                        result = await this.decryptChunked(data);
+                        break;
+                    case 'hash':
+                        result = await this.hashData(data);
+                        break;
+                    case 'compress':
+                        result = await this.compressData(data);
+                        break;
+                    case 'decompress':
+                        result = await this.decompressData(data);
+                        break;
+                    case 'steganography':
+                        result = await this.processSteganography(data);
+                        break;
+                    default:
+                        throw new Error(`Unknown operation: ${type}`);
+                }
+                
+                self.postMessage({ id, success: true, result });
+                
+            } catch (error) {
+                self.postMessage({ 
+                    id, 
+                    success: false, 
+                    error: {
+                        message: error.message,
+                        stack: error.stack,
+                        type: error.constructor.name
+                    }
+                });
+            }
+        };
+    }
             default:
                 throw new Error(`Algorithme de chiffrement non supporté: ${algorithm}`);
         }
