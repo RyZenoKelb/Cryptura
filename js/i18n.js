@@ -229,69 +229,69 @@ class I18nSystem {
     detectLanguage() {
         // Priorité : localStorage > URL > navigateur > défaut
         let detectedLang = this.fallbackLanguage;
-                'upload.carrier.desc': 'Drag your media or click to select',
-                'upload.carrier.types': 'Images • Audio • Video • Documents',
-                'upload.secret.title': 'Secret Message',
-                'upload.secret.desc': 'Enter your confidential message',
-                'upload.secret.placeholder': 'Your secret message...',
-                'upload.decode.title': 'File to Analyze',
-                'upload.decode.desc': 'Select the suspicious or encoded file',
-                'upload.decode.types': 'All supported formats',
-                
-                // Options
-                'options.stego.method': 'Steganography Method',
-                'options.crypto.level': 'Encryption Level',
-                'options.password': 'Encryption password',
-                'options.advanced': 'Advanced Options',
-                'options.detection.mode': 'Detection mode',
-                'options.decode.password': 'Decryption password',
-                
-                // Buttons
-                'btn.encode': 'Start encoding',
-                'btn.decode': 'Extract data',
-                'btn.analyze': 'Forensic analysis',
-                'btn.reset': 'Reset',
-                'btn.download': 'Download result',
-                'btn.copy': 'Copy text',
-                'btn.save.file': 'Download file',
-                
-                // Progress Messages
-                'progress.encoding': 'Encoding in progress...',
-                'progress.decoding': 'Decoding in progress...',
-                'progress.analyzing': 'Analysis in progress...',
-                'progress.encrypting': 'Encrypting in progress...',
-                'progress.decrypting': 'Decrypting in progress...',
-                'progress.processing': 'Processing in progress...',
-                'progress.loading': 'Loading...',
-                'progress.chunk': 'Processing chunk {current}/{total}',
-                
-                // Results
-                'result.encode.success': 'Encoding Successful',
-                'result.decode.success': 'Data Extracted',
-                'result.file.generated': 'Generated file:',
-                'result.file.size': 'Final size:',
-                'result.method.used': 'Method used:',
-                'result.method.detected': 'Detected method:',
-                'result.size.extracted': 'Extracted size:',
-                'result.encryption': 'Encryption:',
-                'result.confidence': 'Confidence:',
-                
-                // Methods
-                'method.auto': 'Auto-detection',
-                'method.lsb': 'LSB (Least Significant Bit)',
-                'method.metadata': 'Metadata',
-                'method.audio.spread': 'Audio Spread',
-                'method.document.hidden': 'Hidden Document',
-                'method.distributed': 'Advanced Distribution',
-                
-                // Crypto Levels
-                'crypto.none': 'No encryption',
-                'crypto.aes': 'AES-256-GCM',
-                'crypto.ultra': 'UltraCrypte™',
-                'crypto.detected.none': 'Not encrypted',
-                'crypto.detected.basic': 'Basic encryption',
-                'crypto.detected.advanced': 'Advanced encryption',
-                
+
+        // 1. Vérifier localStorage
+        const savedLang = localStorage.getItem('obscura_language');
+        if (savedLang && this.translations.has(savedLang)) {
+            detectedLang = savedLang;
+        }
+        // 2. Vérifier l'URL
+        else if (window.location.search.includes('lang=')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang && this.translations.has(urlLang)) {
+                detectedLang = urlLang;
+            }
+        }
+        // 3. Détecter depuis le navigateur
+        else {
+            const browserLang = navigator.language.substring(0, 2);
+            if (this.translations.has(browserLang)) {
+                detectedLang = browserLang;
+            }
+        }
+
+        this.setLanguage(detectedLang);
+    }
+
+    // ========== GESTION DES LANGUES ==========
+
+    setLanguage(lang) {
+        if (!this.translations.has(lang)) {
+            console.warn(`Language '${lang}' not supported, falling back to '${this.fallbackLanguage}'`);
+            lang = this.fallbackLanguage;
+        }
+
+        const oldLang = this.currentLanguage;
+        this.currentLanguage = lang;
+
+        // Sauvegarder la préférence
+        localStorage.setItem('obscura_language', lang);
+
+        // Appliquer les traductions
+        this.applyLanguage();
+
+        // Notifier les observateurs
+        this.notifyObservers(oldLang, lang);
+    }
+
+    getCurrentLanguage() {
+        return this.currentLanguage;
+    }
+
+    getSupportedLanguages() {
+        return Array.from(this.translations.keys());
+    }
+
+    // ========== TRADUCTIONS ==========
+
+    t(key, params = {}) {
+        const translations = this.translations.get(this.currentLanguage);
+        let translation = translations[key];
+
+        // Fallback vers la langue par défaut
+        if (!translation) {
+            const fallbackTranslations = this.translations.get(this.fallbackLanguage);
                 // Detection Modes
                 'detection.auto': 'Automatic detection',
                 'detection.lsb.only': 'LSB only',
