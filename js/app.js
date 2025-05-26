@@ -145,19 +145,19 @@ class ObscuraApp {
 
     setupThemeSystem() {
         // Application du thème initial
-            const messageHandler = (e) => {
-                const response = e.data;
-                if (response.taskId === taskId) {
-                    clearTimeout(timeout);
-                    this.cryptoWorker.removeEventListener('message', messageHandler);
+        document.documentElement.setAttribute('data-theme', this.currentTheme);
+        
+        // Mise à jour de l'icône du bouton
+        this.updateThemeToggle();
+        
+        // Event listener pour le toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => this.toggleTheme());
+        }
+    }
 
-                    if (response.success) {
-                        resolve(response.result);
-                    } else {
-                        reject(new Error(response.error));
-                    }
-                }
-            };
+    setTheme(theme) {
 
             this.cryptoWorker.addEventListener('message', messageHandler);
             this.cryptoWorker.postMessage({ taskId, operation, data });
