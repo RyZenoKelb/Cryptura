@@ -101,51 +101,51 @@ class CryptoWorker {
             // Add execution noise
             this.addExecutionNoise();
             
-        );
-        
-        // Assemblage IV + données chiffrées
-        const result = new Uint8Array(iv.length + encrypted.byteLength);
-        result.set(iv);
-        result.set(new Uint8Array(encrypted), iv.length);
+            const chunk = chunks[i];
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            
+            const encryptedChunk = await crypto.subtle.encrypt(
+                { name: algorithm, iv },
+                key,
+                chunk
+            );
+            
+            encryptedChunks.push({
+                data: new Uint8Array(encryptedChunk),
+                iv: iv,
+                index: i
+            });
+            
+            // Report progress
+            progress = Math.floor(((i + 1) / totalChunks) * 100);
+            self.postMessage({
+                type: 'progress',
+                progress,
+                message: `Encrypting chunk ${i + 1}/${totalChunks}`
+            });
+            
+            // Random micro-delay between chunks
+            await this.addRandomDelay();
+        }
         
         return {
-            data: result,
-            algorithm: 'AES-256-GCM',
-            keyDerivation: 'PBKDF2',
-            iv: Array.from(iv)
+            chunks: encryptedChunks,
+            salt: salt,
+            algorithm,
+            metadata: {
+                originalSize: buffer.byteLength,
+                chunkCount: totalChunks,
+                timestamp: Date.now()
+            }
         };
     }
 
-    async decryptAESGCM(encryptedData, password, options) {
-        if (encryptedData.length < 12) {
-            throw new Error('Données insuffisantes pour déchiffrement AES-GCM');
-        }
+    async decryptChunked(data) {
+        const { encryptedData, password } = data;
+        const { chunks, salt, algorithm, metadata } = encryptedData;
         
-        const encoder = new TextEncoder();
-        const keyMaterial = encoder.encode(password.padEnd(32, '0').slice(0, 32));
-        
-        const key = await crypto.subtle.importKey(
-            'raw',
-            keyMaterial,
-            'AES-GCM',
-            false,
-            ['decrypt']
-        );
-        
-        const iv = encryptedData.slice(0, 12);
-        const encrypted = encryptedData.slice(12);
-        
-        const decrypted = await crypto.subtle.decrypt(
-            { name: 'AES-GCM', iv: iv },
-            key,
-            encrypted
-        );
-        
-        return {
-            data: new Uint8Array(decrypted),
-            algorithm: 'AES-256-GCM'
-        };
-    }
+        // Derive key
+        const key = await this.deriveKey(password, salt, algorithm);
 
     async encryptUltra(data, password, options) {
         // Simulation UltraCrypte dans le worker
