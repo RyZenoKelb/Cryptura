@@ -124,60 +124,60 @@ class SteganographyEngine {
             methods: ['comment', 'recovery-data'],
             capacity: 0.05,
             processor: this.processArchive.bind(this)
-        for (const method of detectedMethods) {
-            try {
-                const result = await this.extractData(carrierFile, method.name);
-                if (result && result.length > 0) {
-                    return {
-                        data: result,
-                        method: method.name,
-                        confidence: method.confidence
-                    };
-                }
-            } catch (error) {
-                continue; // Essayer la méthode suivante
-            }
-        }
-        
-        throw new Error('Aucune donnée cachée détectée');
+        });
     }
 
-    // Détection de données cachées
-    async detectHiddenData(file) {
-        const detectedMethods = [];
-        const fileType = this.detectFileType(file);
+    // ========== ANTI-ANALYSIS PROTECTION ==========
+
+    setupAntiAnalysisProtection() {
+        this.obfuscationPatterns = [
+            'randomizePositions',
+            'addDecoyData',
+            'mimicNaturalPatterns',
+            'disperseAcrossChannels'
+        ];
         
-        // Tests basiques selon le type de fichier
-        if (fileType === 'image') {
-            detectedMethods.push({ name: 'lsb', confidence: 70 });
-            detectedMethods.push({ name: 'metadata', confidence: 50 });
-        } else if (fileType === 'audio') {
-            detectedMethods.push({ name: 'audio-spread', confidence: 60 });
-            detectedMethods.push({ name: 'metadata', confidence: 40 });
-        }
-        
-        return detectedMethods.sort((a, b) => b.confidence - a.confidence);
+        this.timingVariation = {
+            minDelay: 10,
+            maxDelay: 100,
+            jitterRange: 20
+        };
     }
 
-    // Sélection automatique de la meilleure méthode
-    selectBestMethod(carrierFile, secretSize) {
-        const fileType = this.detectFileType(carrierFile);
-        const fileSize = carrierFile.size;
+    async addAntiAnalysisDelay() {
+        if (!this.antiAnalysisEnabled) return;
         
-        // Sélection basée sur le type et la capacité requise
-        if (fileType === 'image') {
-            return secretSize < fileSize * 0.1 ? 'lsb' : 'metadata';
-        } else if (fileType === 'audio') {
-            return 'audio-spread';
-        } else if (fileType === 'video') {
-            return 'video-frame';
-        } else if (fileType === 'document') {
-            return 'document-hidden';
-        }
+        const baseDelay = Math.random() * 
+            (this.timingVariation.maxDelay - this.timingVariation.minDelay) + 
+            this.timingVariation.minDelay;
         
-        return 'lsb'; // Par défaut
+        const jitter = (Math.random() - 0.5) * this.timingVariation.jitterRange;
+        const totalDelay = Math.max(0, baseDelay + jitter);
+        
+        await new Promise(resolve => setTimeout(resolve, totalDelay));
     }
 
+    obfuscateEmbeddingPattern(data, method) {
+        if (!this.antiAnalysisEnabled) return data;
+        
+        // Apply multiple obfuscation techniques
+        let obfuscated = new Uint8Array(data);
+        
+        // 1. Randomize embedding positions
+        obfuscated = this.randomizeEmbeddingPositions(obfuscated);
+        
+        // 2. Add decoy patterns
+        obfuscated = this.addDecoyPatterns(obfuscated);
+        
+        // 3. Mimic natural file patterns
+        obfuscated = this.mimicNaturalPatterns(obfuscated, method);
+        
+        return obfuscated;
+    }
+
+    randomizeEmbeddingPositions(data) {
+        // Create pseudo-random but reproducible position sequence
+        const positions = [];
     // Méthode LSB (Least Significant Bit) - CORRECTION MAJEURE
     async lsbMethod(carrierFile, secretData, operation, options = {}) {
         if (operation === 'hide') {

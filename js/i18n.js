@@ -452,3 +452,61 @@ class I18nSystem {
     }
 
     // ========== LANGUAGE SWITCHING ==========
+
+    switchLanguage(lang) {
+        if (!this.translations[lang]) {
+            console.error(`Language ${lang} not supported`);
+            return false;
+        }
+        
+        this.currentLanguage = lang;
+        localStorage.setItem('obscura_language', lang);
+        
+        this.updateUI();
+        this.updateLanguageToggle();
+        
+        // Dispatch event for other components
+        window.dispatchEvent(new CustomEvent('languageChanged', {
+            detail: { language: lang }
+        }));
+        
+        return true;
+    }
+
+    getCurrentLanguage() {
+        return this.currentLanguage;
+    }
+
+    // ========== UI UPDATE ==========
+
+    updateUI() {
+        // Update all elements with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            const translation = this.t(key);
+            
+            if (translation) {
+                if (element.tagName === 'INPUT' && element.type === 'text') {
+                    element.placeholder = translation;
+                } else if (element.tagName === 'TEXTAREA') {
+                    element.placeholder = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            }
+        });
+        
+        // Update placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-i18n-placeholder');
+            const translation = this.t(key);
+            
+            if (translation) {
+                element.placeholder = translation;
+            }
+        });
+        
+        // Update titles and tooltips
+        document.querySelectorAll('[data-i18n-title]').forEach(element => {
+            const key = element.getAttribute('data-i18n-title');
+            const translation = this.t(key);
