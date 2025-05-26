@@ -557,27 +557,27 @@ class SteganographyEngine {
     }
 
     async encryptData(data, password, algorithm) {
-        const marker = new TextEncoder().encode('OBSCURA:');
-        const sizeBuffer = new ArrayBuffer(4);
-        new DataView(sizeBuffer).setUint32(0, secret.length, false);
-        const sizeBytes = new Uint8Array(sizeBuffer);
-        
-        // Construction des données à insérer
-        const metadataBlock = new Uint8Array(marker.length + sizeBytes.length + secret.length);
-        metadataBlock.set(marker, 0);
-        metadataBlock.set(sizeBytes, marker.length);
-        metadataBlock.set(secret, marker.length + sizeBytes.length);
-        
-        // Recherche de l'emplacement d'insertion (après les marqueurs JPEG standards)
-        let insertIndex = 2; // Après FF D8
-        
-        // Recherche du premier marqueur APP ou DQT
-        while (insertIndex < carrier.length - 1) {
-            if (carrier[insertIndex] === 0xFF && 
-                (carrier[insertIndex + 1] >= 0xE0 && carrier[insertIndex + 1] <= 0xEF)) {
-                // Trouvé un marqueur APP, insérer après
-                const segmentLength = (carrier[insertIndex + 2] << 8) | carrier[insertIndex + 3];
-                insertIndex += 2 + segmentLength;
+        // Implement encryption logic here
+        return data;
+    }
+
+    async decryptData(data, password) {
+        // Implement decryption logic here
+        return data;
+    }
+
+    async decompressData(data) {
+        // Implement decompression logic here
+        return data;
+    }
+
+    calculateConfidence(data, method) {
+        // Implement confidence calculation logic here
+        return 100;
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
                 break;
             }
             insertIndex++;
