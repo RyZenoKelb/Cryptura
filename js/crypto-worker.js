@@ -1,12 +1,12 @@
+// ============= CRYPTO-WORKER.JS - Web Worker pour Cryptographie Lourde =============
+// Worker dédié au traitement cryptographique des gros fichiers en arrière-plan
+
 class CryptoWorker {
     constructor() {
-        this.tasks = new Map();
-        this.taskId = 0;
+        this.isWorker = typeof importScripts !== 'undefined';
+        this.chunkSize = 64 * 1024; // 64KB chunks
+        this.maxRandomDelay = 50; // Max delay in ms for timing attack protection
         
-        // Écoute des messages du thread principal
-        self.onmessage = (event) => {
-            this.handleMessage(event);
-        };
     }
 
     async handleMessage(event) {
