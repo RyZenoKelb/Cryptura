@@ -1824,10 +1824,10 @@ body::before {
         display: block !important;
     }
 }
-@media print {
-    .header, .nav-container, .footer, .action-buttons {
-        display: none;
-    }
+
+/* Interface UltraCrypte complètement revue */
+.trademark {
+    font-size: 0.6em;
     
     .main-content {
         padding: 0;
