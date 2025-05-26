@@ -286,91 +286,91 @@ class ObscuraApp {
                 if (typeof window.adminMode.toggleVisibility === 'function') {
                     window.adminMode.toggleVisibility();
                 } else {
-                    this.logoClicks = 0;
+                    this.showMessage('Panel admin défaillant', 'error');
                 }
-                
-                // Reset après 2 secondes
-                setTimeout(() => {
-                    if (this.logoClicks < 3) this.logoClicks = 0;
-                }, 2000);
-            });
-        }
-    }
-
-    promptForAdminCode() {
-        // Effet visuel pour indiquer l'activation
-        this.showAdminPromptHint();
-        
-        setTimeout(() => {
-            const code = prompt('🔑 Code d\'accès administrateur:');
-            
-            if (code === 'OBSCURA') {
-                this.activateAdminMode();
-            } else if (code !== null) { // Si pas annulé
-                this.showMessage('Code d\'accès incorrect', 'error');
             }
         }, 500);
     }
 
-    showAdminPromptHint() {
-        const hint = document.createElement('div');
-        hint.className = 'admin-hint';
-        hint.style.cssText = `
+    showAdminActivationEffect() {
+        const effect = document.createElement('div');
+        effect.style.cssText = `
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.95);
-            color: #00ff00;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 1.2rem;
-            z-index: 9999;
-            animation: pulse 1s ease-in-out 3;
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(45deg, #00ff00, #0080ff, #ff0080);
+            opacity: 0;
+            z-index: 10000;
+            pointer-events: none;
+            animation: adminActivation 1.5s ease-out;
         `;
-        hint.textContent = 'ACCESS REQUESTED...';
-        document.body.appendChild(hint);
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes adminActivation {
+                0% { opacity: 0; transform: scale(0); }
+                50% { opacity: 0.8; transform: scale(1.1); }
+                100% { opacity: 0; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(effect);
         
         setTimeout(() => {
-            if (hint.parentNode) hint.parentNode.removeChild(hint);
-        }, 2000);
+            if (effect.parentNode) effect.parentNode.removeChild(effect);
+            if (style.parentNode) style.parentNode.removeChild(style);
+        }, 1500);
     }
 
-    activateAdminMode() {
-        // Effet visuel
-        this.showAdminActivationEffect();
+    setupNotificationSystem() {
+        // Création de la zone de notification si elle n'existe pas
+        if (!document.getElementById('notification-zone')) {
+            const notificationZone = document.createElement('div');
+            notificationZone.className = 'notification-zone';
+            notificationZone.id = 'notification-zone';
+            document.body.appendChild(notificationZone);
+        }
+    }
+
+    
+    setupEventListeners() {
+        // Upload zones
+        document.getElementById('carrier-upload').addEventListener('click', () => {
+            document.getElementById('carrier-file').click();
+        });
         
-        // Message de confirmation
-        this.showMessage('🔓 Mode administrateur activé!', 'success');
+        // Suppression de l'événement pour secret-file-btn car il n'existe plus
         
-        // Charger le script admin si pas déjà fait
-        setTimeout(() => {
-            if (!window.adminMode) {
-                const script = document.createElement('script');
-                script.src = 'js/admin.js';
-                script.onload = () => {
-                    // Attendre que l'AdminPanel soit complètement initialisé
-                    let attempts = 0;
-                    const checkAdmin = () => {
-                        attempts++;
-                        if (window.adminMode && typeof window.adminMode.toggleVisibility === 'function') {
-                            window.adminMode.toggleVisibility();
-                        } else if (attempts < 10) {
-                            setTimeout(checkAdmin, 200);
-                        } else {
-                            this.showMessage('Erreur d\'initialisation du mode admin', 'error');
-                        }
-                    };
-                    
-                    setTimeout(checkAdmin, 100);
-                };
-                script.onerror = (error) => {
-                    this.showMessage('Erreur de chargement du mode admin', 'error');
-                };
-                document.head.appendChild(script);
+        document.getElementById('decode-upload').addEventListener('click', () => {
+            document.getElementById('decode-file').click();
+        });
+
+        // Navigation entre panneaux
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const tabName = e.currentTarget.dataset.tab;
+                this.showPanel(tabName);
+            });
+        });
+
+        // Boutons d'upload de fichiers - CORRECTION
+        const carrierUpload = document.getElementById('carrier-upload');
+        const secretUpload = document.getElementById('secret-upload');
+        const decodeUpload = document.getElementById('decode-upload');
+        const ultraUpload = document.getElementById('ultra-file-upload');
+        const secretFileBtn = document.getElementById('secret-file-btn');
+
+        if (carrierUpload) {
+            carrierUpload.addEventListener('click', () => {
+                document.getElementById('carrier-file').click();
+            });
+        }
+
+        if (secretUpload) {
+            secretUpload.addEventListener('click', (e) => {
+                // Ne pas ouvrir le sélecteur si on clique sur la textarea
             } else {
                 if (typeof window.adminMode.toggleVisibility === 'function') {
                     window.adminMode.toggleVisibility();
