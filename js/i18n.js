@@ -222,21 +222,21 @@ class I18nManager {
         const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
         placeholderElements.forEach(element => {
             const key = element.getAttribute('data-i18n-placeholder');
-            options.forEach(option => {
-                const lang = option.getAttribute('data-lang');
-                option.classList.toggle('active', lang === this.currentLanguage);
-            });
-        }
+            const translation = this.translate(key, language);
+            
+            if (translation) {
+                element.placeholder = translation;
+            }
+        });
+        
+        // Mise à jour de l'attribut lang du document
+        document.documentElement.lang = language;
     }
 
-    // Formatage de nombres avec localisation
-    formatNumber(number) {
-        try {
-            return new Intl.NumberFormat(this.currentLanguage).format(number);
-        } catch {
-            return number.toString();
-        }
-    }
+    translate(key, language = null) {
+        const lang = language || this.currentLanguage;
+        const translations = this.translations[lang] || this.translations[this.fallbackLanguage];
+        
 
     // Formatage de dates avec localisation
     formatDate(date) {
