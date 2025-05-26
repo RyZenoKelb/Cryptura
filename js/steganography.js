@@ -475,33 +475,33 @@ class SteganographyEngine {
         
         const dataBits = [];
         for (const pos of dataPositions) {
-                        const carrierIndex = startBit + i * 8 + bit;
-                        if (carrierIndex < carrier.length) {
-                            byte |= (carrier[carrierIndex] & 1) << bit;
-                        }
-                    }
-                    extractedSignature.push(byte);
-                }
-                
-                // Vérification de la signature
-                if (this.arraysEqual(extractedSignature, Array.from(signature))) {
-                    signatureFound = true;
-                    dataStartBit = startBit + signature.length * 8;
-                    break;
-                }
-            }
-            
-            if (!signatureFound) {
-                throw new Error('Signature de données non trouvée');
-            }
-            
-            // Extraction de la taille (4 octets)
-            let sizeBytes = [];
-            for (let i = 0; i < 4; i++) {
-                let byte = 0;
-                for (let bit = 0; bit < 8; bit++) {
-                    const carrierIndex = dataStartBit + i * 8 + bit;
-                    if (carrierIndex < carrier.length) {
+            dataBits.push(imageData[pos] & 1);
+        }
+        
+        return this.bitsToBytes(dataBits);
+    }
+
+    // ========== UTILITIES ==========
+
+    detectFormat(file) {
+        const mimeType = file.type;
+        return this.supportedFormats.get(mimeType) || null;
+    }
+
+    selectBestMethod(format) {
+        if (!format) return 'lsb';
+        return format.methods[0];
+    }
+
+    getSupportedMethods(format) {
+        if (!format) return ['lsb'];
+        return format.methods;
+    }
+
+    createDataHeader(length) {
+        const header = new ArrayBuffer(4);
+        new DataView(header).setUint32(0, length, true);
+        return new Uint8Array(header);
                         byte |= (carrier[carrierIndex] & 1) << bit;
                     }
                 }
