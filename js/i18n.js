@@ -5,26 +5,26 @@ class I18nSystem {
     constructor() {
         this.currentLanguage = 'fr';
         this.fallbackLanguage = 'fr';
-        this.translations = {};
-        this.loadedLanguages = new Set();
+        this.translations = new Map();
+        this.observers = [];
         
-        this.init();
-    }
-
-    init() {
-        this.loadTranslations();
+        this.initTranslations();
         this.detectLanguage();
-        this.setupLanguageToggle();
     }
 
-    // ========== TRANSLATIONS DATABASE ==========
+    // ========== INITIALISATION ==========
 
-    loadTranslations() {
-        this.translations = {
-            fr: {
-                // Header
-                'header.tagline': 'Stéganographie Avancée',
-                'header.status': 'Système actif',
+    initTranslations() {
+        // Traductions françaises
+        this.translations.set('fr', {
+            // Header
+            'header.tagline': 'Stéganographie Avancée',
+            'header.status': 'Système actif',
+            'theme.dark': 'Sombre',
+            'theme.light': 'Clair',
+
+            // Navigation
+            'nav.encode': 'Encoder',
                 'theme.dark': 'Sombre',
                 'theme.light': 'Clair',
                 
