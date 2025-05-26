@@ -97,10 +97,10 @@ class CryptoWorker {
         let progress = 0;
         const totalChunks = chunks.length;
         
-        const encrypted = await crypto.subtle.encrypt(
-            { name: 'AES-GCM', iv: iv },
-            key,
-            data
+        for (let i = 0; i < chunks.length; i++) {
+            // Add execution noise
+            this.addExecutionNoise();
+            
         );
         
         // Assemblage IV + données chiffrées
