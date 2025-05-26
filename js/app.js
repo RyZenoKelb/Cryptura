@@ -646,32 +646,32 @@ class ObscuraApp {
         // Mise à jour des informations contextuelles
         this.updateFileInfo(type, file);
     }
-            else if (e.ctrlKey && e.key === 'u') {
-                e.preventDefault();
-                this.showPanel('ultracrypte');
-            }
-            // Ctrl+H : Aide
-            else if (e.ctrlKey && e.key === 'h') {
-                e.preventDefault();
-                this.showPanel('help');
-            }
-            // Escape : Reset/Annulation
-            else if (e.key === 'Escape') {
-                this.cancelOperations();
-            }
-        });
-    }
 
-    // ========== GESTION DES ONGLETS ==========
+    validateFileType(file, usage) {
+        // Méthode simplifiée pour éviter l'erreur
+        const extension = file.name.split('.').pop().toLowerCase();
+        const supportedExtensions = {
+            image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'],
+            audio: ['mp3', 'wav', 'flac', 'ogg', 'm4a'],
+            video: ['mp4', 'avi', 'mkv', 'mov', 'wmv'],
+            document: ['pdf', 'txt', 'doc', 'docx', 'rtf']
+        };
 
-    switchTab(tabName) {
-        // Masquer tous les panels
-        document.querySelectorAll('.panel').forEach(panel => {
-            panel.classList.remove('active');
-        });
-        
-        // Masquer toutes les barres de progression actives
-        document.querySelectorAll('.progress-container.active').forEach(progress => {
+        // Détection du type de fichier basique
+        let fileType = 'unknown';
+        for (const [type, extensions] of Object.entries(supportedExtensions)) {
+            if (extensions.includes(extension)) {
+                fileType = type;
+                break;
+            }
+        }
+
+        // Types supportés selon l'usage
+        const supportedTypes = {
+            carrier: ['image', 'audio', 'video', 'document'],
+            secret: ['any'], // Tout type de fichier peut être caché
+            decode: ['any'], // Tout fichier peut potentiellement contenir des données
+            ultra: ['any'] // UltraCrypte peut chiffrer tout type de fichier
             progress.classList.remove('active');
             progress.style.display = 'none';
         });
