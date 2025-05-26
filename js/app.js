@@ -1962,27 +1962,27 @@ class ObscuraApp {
 
         document.getElementById('carrier-file').value = '';
         document.getElementById('secret-file').value = '';
+        document.getElementById('secret-text').value = '';
+        document.getElementById('encode-password').value = '';
+
+        // Réinitialisation des zones d'upload
+        this.resetUploadZone('carrier-upload', 'Fichier Porteur', 'Glissez-déposez ou cliquez pour sélectionner', 'fas fa-cloud-upload-alt');
+        this.resetUploadZone('secret-upload', 'Contenu Secret', 'Message texte ou fichier à cacher', 'fas fa-eye-slash');
+
+        // Masquage des résultats
+        document.getElementById('encode-result').style.display = 'none';
+        document.getElementById('encode-progress').style.display = 'none';
+
+        // Réinitialisation des options
+        document.getElementById('stego-method').selectedIndex = 0;
+        document.getElementById('crypto-level').selectedIndex = 0;
+        document.querySelectorAll('#encode-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+        this.showMessage('Interface d\'encodage réinitialisée', 'info');
     }
 
-    getCharsetSize(password) {
-        let size = 0;
-        if (/[a-z]/.test(password)) size += 26;
-        if (/[A-Z]/.test(password)) size += 26;
-        if (/[0-9]/.test(password)) size += 10;
-        if (/[^a-zA-Z0-9]/.test(password)) size += 32;
-        return Math.max(size, 1);
-    }
-
-    // Nouvelles méthodes pour UltraCrypte
-    async handleUltraEncrypt() {
-        const masterKey = document.getElementById('ultra-master-key').value;
-        const ultraFile = this.currentFiles.ultra;
-        const textInput = document.getElementById('ultra-text-input').value.trim();
-        const securityLevel = document.querySelector('input[name="security-level"]:checked')?.value || 'standard';
-        
-        if (!masterKey) {
-            this.showMessage('Veuillez saisir une clé maître', 'error');
-            return;
+    resetUploadZone(zoneId, title, description, iconClass) {
+        const zone = document.getElementById(zoneId);
         }
 
         if (!ultraFile && !textInput) {
