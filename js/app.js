@@ -1684,127 +1684,127 @@ class ObscuraApp {
         const progressElement = document.getElementById(progressId);
         const interval = progressElement.dataset.interval;
         const progressBar = progressElement.querySelector('.progress-fill');
-        // Configuration du bouton de téléchargement
-        saveBtn.style.display = 'inline-flex';
-        saveBtn.onclick = () => {
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-            let filename = `fichier_extrait_${timestamp}`;
-            
-            // Extension basée sur le type détecté
-            const extensions = {
-                'PNG': '.png',
-                'JPEG': '.jpg',
-                'GIF': '.gif',
-                'PDF': '.pdf',
-                'ZIP/Office': '.zip',
-                'WAV/AVI': '.wav',
-                'MP3': '.mp3',
-                'FLAC': '.flac',
-                'OGG': '.ogg',
-                'MPEG': '.mpg',
-                'MP4/MOV': '.mp4'
-            };
-
-            filename += extensions[analysis.fileType] || '.bin';
-
-            let blob;
-            if (data instanceof Uint8Array) {
-                blob = new Blob([data]);
-            } else if (data instanceof ArrayBuffer) {
-                blob = new Blob([data]);
-            } else {
-                blob = new Blob([new Uint8Array(data)]);
-            }
-
-            this.downloadFile(blob, filename);
-            this.showMessage(`Fichier téléchargé: ${filename}`, 'success');
-        };
-    }
-
-    prepareContentPreview(data) {
-        let displayText = '';
-        let isText = true;
-
-        try {
-            // Tentative de décodage en UTF-8
-            displayText = new TextDecoder('utf-8').decode(data);
-
-            // Vérification si c'est du texte lisible
-            if (displayText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/)) {
-                isText = false;
-            }
-        } catch (error) {
-            isText = false;
-        }
-
-        if (!isText) {
-            // Affichage hexadécimal pour les données binaires
-            const maxBytes = 256; // Limite d'affichage
-            const bytesToShow = Math.min(data.length, maxBytes);
-            const hexLines = [];
-
-            for (let i = 0; i < bytesToShow; i += 16) {
-                const chunk = data.slice(i, i + 16);
-                const hex = Array.from(chunk).map(b => b.toString(16).padStart(2, '0')).join(' ');
-                const ascii = Array.from(chunk).map(b => b >= 32 && b <= 126 ? String.fromCharCode(b) : '.').join('');
-                hexLines.push(`${i.toString(16).padStart(4, '0')}: ${hex.padEnd(48)} | ${ascii}`);
-            }
-
-            if (data.length > 16) {
-                hexLines.push(`... et ${data.length - 16} octets supplémentaires`);
-            }
-
-            displayText = hexLines.join('\n');
-        }
-
-        // Limitation de la taille d'affichage
-        if (displayText.length > 5000) {
-            displayText = displayText.substring(0, 5000) + '\n... [contenu tronqué]';
-        }
-
-        return {
-            html: `<pre>${this.escapeHtml(displayText)}</pre>`,
-            isText: isText
-        };
-    }
-
-    // ========== UTILITAIRES D'INTERFACE ==========
-
-    showProgress(progressId, message, type = 'default') {
-        const progressElement = document.getElementById(progressId);
         const textElement = progressElement.querySelector('.progress-text');
-        const progressBar = progressElement.querySelector('.progress-fill');
 
-        // Réinitialiser les classes
-        progressElement.className = 'progress-container active';
-        if (type !== 'default') {
-            progressElement.classList.add(type);
+        if (interval) {
+            clearInterval(interval);
         }
 
-        textElement.textContent = message;
-        textElement.classList.add('active');
-        progressElement.style.display = 'block';
+        // Compléter la barre avec le bon état
+        if (success) {
+            progressElement.classList.add('success');
+            textElement.textContent = 'Terminé avec succès!';
+        } else {
+            progressElement.classList.add('error');
+            textElement.textContent = 'Erreur lors du traitement';
+        }
+        
+        progressBar.style.width = '100%';
+        textElement.classList.remove('active');
 
-        // Animation de la barre de progression avec pourcentage
-        let width = 0;
-        const interval = setInterval(() => {
-            if (width >= 90) {
-                clearInterval(interval);
-            } else {
-                width += Math.random() * 8 + 2; // Progression plus fluide
-                const finalWidth = Math.min(width, 90);
-                progressBar.style.width = `${finalWidth}%`;
-                
-                // Ajouter le pourcentage si l'élément existe
-                const percentageElement = progressElement.querySelector('.progress-percentage');
-                if (percentageElement) {
-                    percentageElement.textContent = `${Math.floor(finalWidth)}%`;
-                }
-            }
-        }, 200);
-
-        progressElement.dataset.interval = interval;
+        setTimeout(() => {
+            progressElement.style.display = 'none';
+            progressBar.style.width = '0%';
+            progressElement.className = 'progress-container';
+        }, success ? 1500 : 3000);
     }
+
+    showMessage(message, type = 'info') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+
+        const icon = type === 'error' ? 'exclamation-triangle' : 
+                    type === 'success' ? 'check-circle' : 
+                    type === 'warning' ? 'exclamation-triangle' : 'info-circle';
+
+        messageDiv.innerHTML = `
+            <i class="fas fa-${icon}"></i>
+            <span>${message}</span>
+        `;
+
+        // Insertion au début du contenu principal
+        const mainContent = document.querySelector('.main-content');
+        mainContent.insertBefore(messageDiv, mainContent.firstChild);
+
+        // Suppression automatique
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, type === 'error' ? 8000 : 5000);
+
+        // Animation d'entrée
+        messageDiv.classList.add('fade-in');
+    }
+
+    clearMessages() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(msg => {
+            if (msg.parentNode) {
+                msg.parentNode.removeChild(msg);
+            }
+        });
+    }
+
+    togglePasswordVisibility(e) {
+        const input = e.target.closest('.password-input').querySelector('input');
+        const icon = e.target.closest('.toggle-password').querySelector('i');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.className = 'fas fa-eye-slash';
+        } else {
+            input.type = 'password';
+            icon.className = 'fas fa-eye';
+        }
+    }
+
+    checkPasswordStrength(password) {
+        const strengthBar = document.querySelector('.strength-fill');
+        const strengthText = document.querySelector('.strength-text');
+        const entropyElement = document.getElementById('key-entropy');
+
+        if (!strengthBar || !strengthText) return;
+
+        let score = 0;
+        const feedback = [];
+
+        // Critères de notation
+        if (password.length >= 8) score += 20;
+        if (password.length >= 12) score += 15;
+        if (password.length >= 20) score += 15;
+        else feedback.push('20+ caractères recommandés');
+
+        if (/[a-z]/.test(password)) score += 10;
+        else feedback.push('Minuscules manquantes');
+
+        if (/[A-Z]/.test(password)) score += 10;
+        else feedback.push('Majuscules manquantes');
+
+        if (/[0-9]/.test(password)) score += 10;
+        else feedback.push('Chiffres manquants');
+
+        if (/[^a-zA-Z0-9]/.test(password)) score += 15;
+        else feedback.push('Caractères spéciaux manquants');
+
+        if (/(.)\1{2,}/.test(password)) score -= 10; // Répétitions
+        if (password.toLowerCase().includes('password')) score -= 20;
+
+        // Calcul de l'entropie approximative
+        const entropy = Math.floor(password.length * Math.log2(this.getCharsetSize(password)));
+
+        // Mise à jour visuelle
+        strengthBar.style.width = `${score}%`;
+
+        let level, color;
+        if (score < 30) {
+            level = 'Très faible';
+            color = '#ef4444';
+        } else if (score < 50) {
+            level = 'Faible';
+            color = '#f59e0b';
+        } else if (score < 75) {
+            level = 'Correct';
 
     updateProgress(progressId, message, percentage) {
         const progressElement = document.getElementById(progressId);
