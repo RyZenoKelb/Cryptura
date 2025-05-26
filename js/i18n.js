@@ -1,27 +1,27 @@
-// ============= I18N.JS - Système d'internationalisation =============
-// Support multilingue pour l'interface Obscura
+// ============= I18N.JS - Système de Traduction Complet =============
+// Gestion multilingue avancée pour l'interface utilisateur
 
-class I18nManager {
+class I18nSystem {
     constructor() {
         this.currentLanguage = 'fr';
         this.fallbackLanguage = 'fr';
         this.translations = {};
+        this.loadedLanguages = new Set();
+        
         this.init();
     }
 
     init() {
-        // Chargement des traductions
         this.loadTranslations();
-        
-        // Détection de la langue du navigateur
-        this.detectBrowserLanguage();
-        
-        // Application de la langue
-        this.applyLanguage(this.currentLanguage);
-        
-        // Suppression du console.log
-        // console.log(`🌍 I18n initialisé - Langue: ${this.currentLanguage}`);
+        this.detectLanguage();
+        this.setupLanguageToggle();
     }
+
+    // ========== TRANSLATIONS DATABASE ==========
+
+    loadTranslations() {
+        this.translations = {
+            fr: {
 
     loadTranslations() {
         this.translations = {
