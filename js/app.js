@@ -2281,14 +2281,14 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         window.app = new ObscuraApp();
     } catch (error) {
-        if (document.getElementById('add-noise')?.checked) options.push('Bruit');
-        if (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
-
-        if (options.length > 0) {
-            this.showMessage(`⚙️ Options: ${options.join(', ')}`, 'info');
-        }
-    }
-
+        console.error('Erreur d\'initialisation:', error);
+        document.body.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: Inter, sans-serif;">
+                <h1 style="color: #ef4444; margin-bottom: 1rem;">⚠️ Erreur d'initialisation</h1>
+                <p style="color: #64748b; margin-bottom: 2rem;">Impossible de charger l'application Obscura</p>
+                <button onclick="location.reload()" style="padding: 0.75rem 1.5rem; background: #3b82f6; color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
+                    🔄 Recharger la page
+                </button>
     updateHelpStats() {
         const statsElement = document.querySelector('#help-panel .help-content');
         if (statsElement) {
