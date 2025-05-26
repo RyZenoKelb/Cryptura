@@ -1023,15 +1023,15 @@ body::before {
     padding: 0.75rem;
     color: var(--text-primary);
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    resize: vertical;
+    margin-bottom: 0;
+    font-family: inherit;
+    transition: var(--transition-base);
 }
 
-/* Options Grid */
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+#secret-upload textarea:focus {
+    outline: none;
+    border-color: var(--primary-500);
 }
 
 .option-group {

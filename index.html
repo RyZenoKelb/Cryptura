@@ -708,19 +708,19 @@
         
         // Raccourci clavier alternatif: Ctrl+Shift+A (3 fois)
         let adminKeySequence = 0;
-                    }
-                }, 1000);
-            }
-        });
-        
-        // Raccourci clavier alternatif: Ctrl+Shift+A (3 fois)
-        let adminKeySequence = 0;
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.key === 'A') {
                 adminKeySequence++;
                 
                 setTimeout(() => { 
                     if (adminKeySequence < 3) adminKeySequence = 0; 
+                }, 2000);
+                
+                if (adminKeySequence >= 3) {
+                    if (window.app) {
+                        window.app.promptForAdminCode();
+                    }
+                    adminKeySequence = 0;
                 }, 2000);
                 
                 if (adminKeySequence >= 3) {

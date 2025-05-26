@@ -57,12 +57,12 @@ class I18nManager {
                 'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
                 'upload.decode.types': 'Tous formats supportés',
                 
-                // Options
-                'options.stego.method': 'Méthode de Stéganographie',
-                'options.crypto.level': 'Niveau de Chiffrement',
-                'options.password': 'Mot de passe de chiffrement',
-                'options.advanced': 'Options Avancées',
-                
+                upload: {
+                    carrier: {
+                        title: "Fichier Porteur",
+                        desc: "Glissez votre média ou cliquez pour sélectionner",
+                        types: "Images • Audio • Vidéo • Documents"
+                    },
                 // Buttons
                 'btn.encode': 'Lancer l\'encodage',
                 'btn.decode': 'Extraire les données',
