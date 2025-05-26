@@ -661,3 +661,137 @@ class SteganographyEngine {
             return this.embedImageLSB(imageData, data, {});
         } else {
             return this.extractImageLSB(imageData, {});
+        }
+    }
+
+    processAudioMetadata(audioData, operation, data) {
+        // Placeholder for audio metadata processing
+        if (operation === 'embed') {
+            return this.embedImageLSB(audioData, data, {});
+        } else {
+            return this.extractImageLSB(audioData, {});
+        }
+    }
+
+    processDocumentMetadata(docData, operation, data) {
+        // Placeholder for document metadata processing
+        if (operation === 'embed') {
+            return this.embedImageLSB(docData, data, {});
+        } else {
+            return this.extractImageLSB(docData, {});
+        }
+    }
+
+    // ========== UTILITIES ==========
+
+    detectFormat(file) {
+        const mimeType = file.type;
+        return this.supportedFormats.get(mimeType) || null;
+    }
+
+    selectBestMethod(format) {
+        if (!format) return 'lsb';
+        return format.methods[0];
+    }
+
+    getSupportedMethods(format) {
+        if (!format) return ['lsb'];
+        return format.methods;
+    }
+
+    createDataHeader(length) {
+        const header = new ArrayBuffer(4);
+        new DataView(header).setUint32(0, length, true);
+        return new Uint8Array(header);
+    }
+
+    bytesToBits(bytes) {
+        const bits = [];
+        for (const byte of bytes) {
+            for (let i = 0; i < 8; i++) {
+                bits.push((byte >> i) & 1);
+            }
+        }
+        return bits;
+    }
+
+    bitsToBytes(bits) {
+        const bytes = [];
+        for (let i = 0; i < bits.length; i += 8) {
+            let byte = 0;
+            for (let j = 0; j < 8; j++) {
+                byte |= (bits[i + j] << j);
+            }
+            bytes.push(byte);
+        }
+        return new Uint8Array(bytes);
+    }
+
+    bitsToNumber(bits) {
+        let number = 0;
+        for (let i = 0; i < bits.length; i++) {
+            number |= (bits[i] << i);
+        }
+        return number;
+    }
+
+    generateSequentialPositions(length, offset = 0) {
+        const positions = [];
+        for (let i = 0; i < length; i++) {
+            positions.push(i + offset);
+        }
+        return positions;
+    }
+
+    generateStealthPositions(length, max, offset = 0) {
+        const positions = [];
+        const step = Math.floor(max / length);
+        for (let i = 0; i < length; i++) {
+            positions.push((i * step) + offset);
+        }
+        return positions;
+    }
+
+    async compressData(data) {
+        // Implement compression logic here
+        return data;
+    }
+
+    async encryptData(data, password, algorithm) {
+        // Implement encryption logic here
+        return data;
+    }
+
+    async decryptData(data, password) {
+        // Implement decryption logic here
+        return data;
+    }
+
+    async decompressData(data) {
+        // Implement decompression logic here
+        return data;
+    }
+
+    calculateConfidence(data, method) {
+        // Implement confidence calculation logic here
+        return 100;
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+}
+
+// Export pour modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = SteganographyEngine;
+}
+
+// Export global
+if (typeof window !== 'undefined') {
+    window.SteganographyEngine = SteganographyEngine;
+}
