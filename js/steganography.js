@@ -391,6 +391,24 @@ class SteganographyEngine {
     // ========== FILE PROCESSING ==========
 
     async readFileInChunks(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                resolve(e.target.result);
+            };
+            
+            reader.onerror = () => {
+                reject(new Error('Failed to read file'));
+            };
+            
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+    // ========== FORMAT-SPECIFIC PROCESSORS ==========
+
+    async processImage(buffer, operation, data, method, options = {}) {
         const imageData = new Uint8Array(buffer);
         
         switch (method) {
@@ -407,115 +425,97 @@ class SteganographyEngine {
                     this.embedImageDistributed(imageData, data, options) :
                     this.extractImageDistributed(imageData, options);
                     
+            case 'alpha-channel':
+                return operation === 'embed' ?
+                    this.embedImageAlpha(imageData, data, options) :
+                    this.extractImageAlpha(imageData, options);
+                    
             default:
                 throw new Error(`Unsupported image method: ${method}`);
         }
     }
 
+    async processAudio(buffer, operation, data, method, options = {}) {
+        const audioData = new Uint8Array(buffer);
+        
+        switch (method) {
+            case 'lsb':
+                return operation === 'embed' ? 
+                    this.embedAudioLSB(audioData, data, options) :
+                    this.extractAudioLSB(audioData, options);
+                    
+            case 'metadata':
+                return this.processAudioMetadata(audioData, operation, data);
+                
+            case 'echo-hiding':
+                return operation === 'embed' ?
+                    this.embedAudioEcho(audioData, data, options) :
+                    this.extractAudioEcho(audioData, options);
+                    
+            default:
+                // Fallback to LSB for audio
+                return operation === 'embed' ? 
+                    this.embedAudioLSB(audioData, data, options) :
+                    this.extractAudioLSB(audioData, options);
+        }
+    }
+
+    async processVideo(buffer, operation, data, method, options = {}) {
+        // For now, treat video like images for LSB
+        return this.processImage(buffer, operation, data, method, options);
+    }
+
+    async processDocument(buffer, operation, data, method, options = {}) {
+        const docData = new Uint8Array(buffer);
+        
+        switch (method) {
+            case 'metadata':
+                return this.processDocumentMetadata(docData, operation, data);
+                
+            case 'whitespace':
+                return operation === 'embed' ?
+                    this.embedDocumentWhitespace(docData, data, options) :
+                    this.extractDocumentWhitespace(docData, options);
+                    
+            default:
+                // Fallback to basic embedding
+                return operation === 'embed' ? 
+                    this.embedBasic(docData, data, options) :
+                    this.extractBasic(docData, options);
+        }
+    }
+
+    async processText(buffer, operation, data, method, options = {}) {
+        const textData = new Uint8Array(buffer);
+        
+        switch (method) {
+            case 'whitespace':
+                return operation === 'embed' ?
+                    this.embedTextWhitespace(textData, data, options) :
+                    this.extractTextWhitespace(textData, options);
+                    
+            case 'unicode':
+                return operation === 'embed' ?
+                    this.embedTextUnicode(textData, data, options) :
+                    this.extractTextUnicode(textData, options);
+                    
+            default:
+                return operation === 'embed' ?
+                    this.embedTextWhitespace(textData, data, options) :
+                    this.extractTextWhitespace(textData, options);
+        }
+    }
+
+    async processArchive(buffer, operation, data, method, options = {}) {
+        // For now, use basic embedding for archives
+        return operation === 'embed' ? 
+            this.embedBasic(new Uint8Array(buffer), data, options) :
+            this.extractBasic(new Uint8Array(buffer), options);
+    }
+
+    // ========== LSB IMPLEMENTATION ==========
+
     embedImageLSB(imageData, secretData, options) {
-        const { stealth = false } = options;
-        const result = new Uint8Array(imageData);
-        
-        // Create header with length information
-        const header = this.createDataHeader(secretData.length);
-        const allData = new Uint8Array(header.length + secretData.length);
-        allData.set(header, 0);
-        allData.set(secretData, header.length);
-        
-        // Convert to bits
-        const bits = this.bytesToBits(allData);
-        
-        if (bits.length > imageData.length) {
-            throw new Error('Secret data too large for carrier image');
-        }
-        
-        // Generate embedding positions
-        const positions = stealth ? 
-            this.generateStealthPositions(bits.length, imageData.length) :
-            this.generateSequentialPositions(bits.length);
-        
-        // Embed bits
-        for (let i = 0; i < bits.length; i++) {
-            const pos = positions[i];
-            result[pos] = (result[pos] & 0xFE) | bits[i];
-        }
-        
-        // Apply anti-analysis obfuscation
-        if (stealth) {
-            return this.obfuscateEmbeddingPattern(result, 'lsb');
-        }
-        
-        return result.buffer;
-    }
-
-    extractImageLSB(imageData, options) {
-        const { stealth = false } = options;
-        
-        // Read header first (32 bits for length)
-        const headerPositions = stealth ?
-            this.generateStealthPositions(32, imageData.length) :
-            this.generateSequentialPositions(32);
-        
-        const headerBits = [];
-        for (const pos of headerPositions) {
-            headerBits.push(imageData[pos] & 1);
-        }
-        
-        const dataLength = this.bitsToNumber(headerBits);
-        
-        if (dataLength <= 0 || dataLength > imageData.length / 8) {
-            return null; // Invalid data length
-        }
-        
-        // Extract data bits
-        const dataBitCount = dataLength * 8;
-        const dataPositions = stealth ?
-            this.generateStealthPositions(dataBitCount, imageData.length, 32) :
-            this.generateSequentialPositions(dataBitCount, 32);
-        
-        const dataBits = [];
-        for (const pos of dataPositions) {
-            dataBits.push(imageData[pos] & 1);
-        }
-        
-        return this.bitsToBytes(dataBits);
-    }
-
-    // ========== UTILITIES ==========
-
-    detectFormat(file) {
-        const mimeType = file.type;
-        return this.supportedFormats.get(mimeType) || null;
-    }
-
-    selectBestMethod(format) {
-        if (!format) return 'lsb';
-        return format.methods[0];
-    }
-
-    getSupportedMethods(format) {
-        if (!format) return ['lsb'];
-        return format.methods;
-    }
-
-    createDataHeader(length) {
-        const header = new ArrayBuffer(4);
-        new DataView(header).setUint32(0, length, true);
-        return new Uint8Array(header);
-    }
-
-    bytesToBits(bytes) {
-        const bits = [];
-        for (const byte of bytes) {
-            for (let i = 0; i < 8; i++) {
-                bits.push((byte >> i) & 1);
-            }
-        }
-        return bits;
-    }
-
-    bitsToBytes(bits) {
-        const bytes = [];
         for (let i = 0; i < bits.length; i += 8) {
             let byte = 0;
             for (let j = 0; j < 8; j++) {
