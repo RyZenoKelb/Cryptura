@@ -710,24 +710,6 @@ class ObscuraApp {
         // Mise à jour des informations contextuelles
         this.updateFileInfo(type, file);
     }
-        }
-
-        // Stockage et mise à jour de l'interface
-        this.currentFiles[type] = file;
-        this.updateUploadZone(type + '-upload', file);
-
-        // Actions spécifiques selon le type
-        if (type === 'secret') {
-            // Effacer le texte secret si un fichier est sélectionné
-            const secretTextarea = document.getElementById('secret-text');
-            if (secretTextarea) {
-                secretTextarea.value = '';
-            }
-        }
-
-        // Mise à jour des informations contextuelles
-        this.updateFileInfo(type, file);
-    }
 
     validateFileType(file, usage) {
         // Méthode simplifiée pour éviter l'erreur
@@ -740,6 +722,24 @@ class ObscuraApp {
         };
 
         // Détection du type de fichier basique
+        let fileType = 'unknown';
+        for (const [type, extensions] of Object.entries(supportedExtensions)) {
+            if (extensions.includes(extension)) {
+                fileType = type;
+                break;
+            }
+        }
+
+        // Types supportés selon l'usage
+        const supportedTypes = {
+            carrier: ['image', 'audio', 'video', 'document'],
+            secret: ['any'], // Tout type de fichier peut être caché
+            decode: ['any'], // Tout fichier peut potentiellement contenir des données
+            ultra: ['any'] // UltraCrypte peut chiffrer tout type de fichier
+        };
+
+        if (usage === 'carrier' && fileType === 'unknown') {
+            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
         let fileType = 'unknown';
         for (const [type, extensions] of Object.entries(supportedExtensions)) {
             if (extensions.includes(extension)) {
