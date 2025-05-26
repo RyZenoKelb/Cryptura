@@ -405,228 +405,110 @@ class I18nSystem {
             return number.toString();
         }
     }
-        
-        // Detect from browser
-        const browserLang = navigator.language.substring(0, 2);
-        if (this.translations[browserLang]) {
-            this.currentLanguage = browserLang;
-        } else {
-            this.currentLanguage = this.fallbackLanguage;
+
+    formatDate(date, options = {}) {
+        try {
+            return new Intl.DateTimeFormat(this.currentLanguage, options).format(date);
+        } catch (error) {
+            return date.toString();
         }
-        
-        localStorage.setItem('obscura_language', this.currentLanguage);
     }
-
-    // ========== TRANSLATION METHODS ==========
-
-    t(key, params = {}) {
-        const translation = this.getTranslation(key);
-        
-        if (!translation) {
-            console.warn(`Missing translation for key: ${key}`);
-            return key;
-        }
-        
-        return this.interpolate(translation, params);
-    }
-
-    getTranslation(key) {
-        const lang = this.translations[this.currentLanguage];
-        if (lang && lang[key]) {
-            return lang[key];
-        }
-        
-        // Fallback to default language
-        const fallback = this.translations[this.fallbackLanguage];
-        if (fallback && fallback[key]) {
-            return fallback[key];
-        }
-        
-        return null;
-    }
-
-    interpolate(text, params) {
-        return text.replace(/\{(\w+)\}/g, (match, key) => {
-            return params[key] !== undefined ? params[key] : match;
-        });
-    }
-
-    // ========== LANGUAGE SWITCHING ==========
-
-    switchLanguage(lang) {
-        if (!this.translations[lang]) {
-            console.error(`Language ${lang} not supported`);
-            return false;
-        }
-        
-        this.currentLanguage = lang;
-        localStorage.setItem('obscura_language', lang);
-        
-        this.updateUI();
-        this.updateLanguageToggle();
-        
-        // Dispatch event for other components
-        window.dispatchEvent(new CustomEvent('languageChanged', {
-            detail: { language: lang }
-        }));
-        
-        return true;
-    }
-
-    getCurrentLanguage() {
-        return this.currentLanguage;
-    }
-
-    // ========== UI UPDATE ==========
-
-    updateUI() {
-        // Update all elements with data-i18n attribute
-        document.querySelectorAll('[data-i18n]').forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            const translation = this.t(key);
-            
-            if (translation) {
-                if (element.tagName === 'INPUT' && element.type === 'text') {
-                    element.placeholder = translation;
-                } else if (element.tagName === 'TEXTAREA') {
-                    element.placeholder = translation;
-                } else {
-                    element.textContent = translation;
-                }
-            }
-        });
-        
-        // Update placeholders
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            const translation = this.t(key);
-            
-            if (translation) {
-                element.placeholder = translation;
-            }
-        });
-        
-        // Update titles and tooltips
-        document.querySelectorAll('[data-i18n-title]').forEach(element => {
-            const key = element.getAttribute('data-i18n-title');
-            const translation = this.t(key);
-            
-            if (translation) {
-                element.title = translation;
-            }
-        });
-    }
-
-    setupLanguageToggle() {
-        const toggle = document.getElementById('language-toggle');
-        const dropdown = document.getElementById('language-dropdown');
-        const currentLang = document.getElementById('current-language');
-        
-        if (!toggle || !dropdown) return;
-        
-        // Update current language display
-        this.updateLanguageToggle();
-        
-        // Toggle dropdown
-        toggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            dropdown.classList.toggle('active');
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', () => {
-            dropdown.classList.remove('active');
-        });
-        
-        // Language selection
-        dropdown.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const option = e.target.closest('.language-option');
-            if (option) {
-                const lang = option.getAttribute('data-lang');
-                if (lang && lang !== this.currentLanguage) {
-                    this.switchLanguage(lang);
-                }
-                dropdown.classList.remove('active');
-            }
-        });
-    }
-
-    updateLanguageToggle() {
-        const currentLang = document.getElementById('current-language');
-        const options = document.querySelectorAll('.language-option');
-        
-        if (currentLang) {
-            currentLang.textContent = this.currentLanguage.toUpperCase();
-        }
-        
-        // Update active state
-        options.forEach(option => {
-            const lang = option.getAttribute('data-lang');
-            option.classList.toggle('active', lang === this.currentLanguage);
-        });
-    }
-
-    // ========== FORMATTING HELPERS ==========
 
     formatFileSize(bytes) {
-        const units = this.currentLanguage === 'fr' ? 
-            ['octets', 'Ko', 'Mo', 'Go'] : 
-            ['bytes', 'KB', 'MB', 'GB'];
+        const sizes = this.currentLanguage === 'fr' ? 
+            ['octets', 'Ko', 'Mo', 'Go', 'To'] :
+            ['bytes', 'KB', 'MB', 'GB', 'TB'];
+
+        if (bytes === 0) return `0 ${sizes[0]}`;
+
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        const size = (bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1);
+
+        return `${size} ${sizes[i]}`;
+    }
+
+    // ========== PLURALISATION ==========
+
+    plural(count, key, params = {}) {
+        const pluralKey = count === 1 ? `${key}.singular` : `${key}.plural`;
+        return this.t(pluralKey, { ...params, count });
+    }
+
+    // ========== VALIDATION ==========
+
+    validateTranslations() {
+        const languages = this.getSupportedLanguages();
+        const baseKeys = new Set();
         
-        let size = bytes;
-        let unitIndex = 0;
-        
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
+        // Collecter toutes les clés de la langue de base
+        const baseTranslations = this.translations.get(this.fallbackLanguage);
+        Object.keys(baseTranslations).forEach(key => baseKeys.add(key));
+
+        const report = {
+            languages: languages.length,
+            keys: baseKeys.size,
+            missing: []
+        };
+
+        // Vérifier chaque langue
+        languages.forEach(lang => {
+            if (lang === this.fallbackLanguage) return;
+
+            const translations = this.translations.get(lang);
+            baseKeys.forEach(key => {
+                if (!translations[key]) {
+                    report.missing.push({ language: lang, key });
+                }
+            });
+        });
+
+        return report;
+    }
+
+    // ========== EXPORT/IMPORT ==========
+
+    exportTranslations(lang = null) {
+        if (lang) {
+            return this.translations.get(lang);
         }
         
-        return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
-    }
-
-    formatPercentage(value) {
-        return `${Math.round(value)}%`;
-    }
-
-    formatNumber(value) {
-        return new Intl.NumberFormat(this.currentLanguage).format(value);
-    }
-
-    // ========== UTILITIES ==========
-
-    addLanguage(lang, translations) {
-        if (!this.translations[lang]) {
-            this.translations[lang] = {};
-        }
+        const exported = {};
+        this.translations.forEach((translations, language) => {
+            exported[language] = translations;
+        });
         
-        Object.assign(this.translations[lang], translations);
-        this.loadedLanguages.add(lang);
+        return exported;
     }
 
-    getAvailableLanguages() {
-        return Array.from(this.loadedLanguages);
+    importTranslations(data, lang = null) {
+        if (lang) {
+            this.translations.set(lang, data);
+        } else {
+            Object.entries(data).forEach(([language, translations]) => {
+                this.translations.set(language, translations);
+            });
+        }
     }
 }
 
-// ========== GLOBAL INITIALIZATION ==========
+// ========== INITIALISATION GLOBALE ==========
 
-// Initialize the i18n system
+// Créer l'instance globale
 window.i18n = new I18nSystem();
 
-// Helper function for easy access
+// Fonction globale de traduction
 window.t = (key, params) => window.i18n.t(key, params);
 
-// Auto-update UI when DOM is ready
+// Auto-application quand le DOM est prêt
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        window.i18n.updateUI();
+        window.i18n.applyLanguage();
     });
 } else {
-    window.i18n.updateUI();
+    window.i18n.applyLanguage();
 }
 
-// Export for module systems
+// Export pour modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = I18nSystem;
 }
