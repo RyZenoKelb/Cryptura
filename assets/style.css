@@ -1018,10 +1018,10 @@ body::before {
     width: 100%;
     min-height: 120px;
     background: var(--bg-white);
-    font-size: 0.875rem;
-}
-
-.file-option input[type="file"] {
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    color: var(--text-primary);
     font-size: 0.875rem;
     color: var(--text-secondary);
 }
