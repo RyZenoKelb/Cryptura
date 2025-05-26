@@ -2113,85 +2113,85 @@ class ObscuraApp {
 
     updateMethodInfo(method) {
         // Mise à jour des informations contextuelles selon la méthode
-        // Masquage des résultats
-        document.getElementById('encode-result').style.display = 'none';
-        document.getElementById('encode-progress').style.display = 'none';
-
-        // Réinitialisation des options
-        document.getElementById('stego-method').selectedIndex = 0;
-        document.getElementById('crypto-level').selectedIndex = 0;
-        document.querySelectorAll('#encode-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
-
-        this.showMessage('Interface d\'encodage réinitialisée', 'info');
+        if (this.currentFiles.carrier) {
+            const capacity = this.steganography.getCapacity(this.currentFiles.carrier, method);
+            if (capacity > 0) {
+                this.showMessage(`💾 Capacité ${method.toUpperCase()}: ${this.formatFileSize(capacity)}`, 'info');
+            }
+        }
     }
 
-    resetUploadZone(zoneId, title, description, iconClass) {
-        const zone = document.getElementById(zoneId);
-        const icon = zone.querySelector('i');
-        const titleElement = zone.querySelector('h3');
-        const descElement = zone.querySelector('p');
-        const small = zone.querySelector('small');
+    updateCryptoInfo(level) {
+        const infoMessages = {
+            'none': 'Aucun chiffrement - Données en clair',
+            'aes': 'Chiffrement AES-256-GCM standard',
+            'ultra': 'UltraCrypte - Sécurité maximale post-quantique'
+        };
 
-        icon.className = iconClass;
-        icon.style.color = 'var(--primary-color)';
-        titleElement.textContent = title;
-        descElement.textContent = description;
+        if (infoMessages[level]) {
+            this.showMessage(`🔐 ${infoMessages[level]}`, 'info');
+        }
+    }
 
-        if (small) {
-            small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
+    updateOptionsInfo() {
+        // Informations sur les options avancées
+        const options = [];
+        if (document.getElementById('compress-data')?.checked) options.push('Compression');
+        if (document.getElementById('add-noise')?.checked) options.push('Bruit');
+        if (document.getElementById('multi-layer')?.checked) options.push('Multi-couches');
+
+        if (options.length > 0) {
+            this.showMessage(`⚙️ Options: ${options.join(', ')}`, 'info');
+        }
+    }
+
+    updateHelpStats() {
+        const statsElement = document.querySelector('#help-panel .help-content');
+        if (statsElement) {
+            const currentStats = `
+                <div class="stats-section">
+                    <h4>📊 Statistiques de session</h4>
+                    <ul>
+                        <li>Fichiers traités: ${this.filesProcessed}</li>
+                        <li>Session démarrée: ${new Date().toLocaleString()}</li>
+                        <li>Méthodes disponibles: ${Object.keys(this.steganography.methods).length}</li>
+                    </ul>
+                </div>
+            `;
+            // Ajout après le contenu existant si pas déjà présent
+            if (!statsElement.querySelector('.stats-section')) {
+                statsElement.insertAdjacentHTML('beforeend', currentStats);
+            }
+        }
+    }
+
+    getMethodName(method) {
+        const methods = {
+            'lsb': 'LSB (Least Significant Bit)',
+            'metadata': 'Métadonnées',
+            'audio-spread': 'Dispersion Audio',
+            'video-frame': 'Frames Vidéo',
+            'document-hidden': 'Document Caché',
+            'auto': 'Détection Automatique',
+            'brute': 'Force Brute'
+        };
+
+        return methods[method] || method.charAt(0).toUpperCase() + method.slice(1);
+    }
+
+    generateOutputFilename(originalFile, method) {
+        // Vérification de sécurité pour éviter les erreurs
+        if (!originalFile || !originalFile.name) {
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            return `obscura_encoded_${method}_${timestamp}.bin`;
         }
 
-        delete zone.dataset.file;
-        zone.classList.remove('fade-in');
-    }
-
-    cancelOperations() {
-        // Annulation des opérations en cours
-        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');
-        progressElements.forEach(progress => {
-            this.hideProgress(progress.id);
-        });
-
-        this.showMessage('Opérations annulées', 'warning');
-    }
-
-    // ========== CHIFFREMENT DE BASE ==========
-
-    async basicEncrypt(data, password) {
-        const encoder = new TextEncoder();
-        
-        const keyMaterial = await crypto.subtle.importKey(
-            'raw',
-            encoder.encode(password),
-            { name: 'PBKDF2' },
-            false,
-            ['deriveBits', 'deriveKey']
-        );
-        
-        const salt = crypto.getRandomValues(new Uint8Array(16));
-        const key = await crypto.subtle.deriveKey(
-            {
-                name: 'PBKDF2',
-                salt: salt,
-                iterations: 100000,
-                hash: 'SHA-256'
-            },
-            keyMaterial,
-            { name: 'AES-GCM', length: 256 },
-            false,
-            ['encrypt', 'decrypt']
-        );
-        
-        const iv = crypto.getRandomValues(new Uint8Array(12));
-        const dataToEncrypt = data instanceof Uint8Array ? data : encoder.encode(data);
-        
-        const encrypted = await crypto.subtle.encrypt(
-            { name: 'AES-GCM', iv: iv },
-            key,
-            dataToEncrypt
-        );
-        
-        const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+        try {
+            const baseName = originalFile.name.replace(/\.[^.]+$/, '');
+            const extension = originalFile.name.split('.').pop();
+            return `${baseName}_obscura_${method}.${extension}`;
+        } catch (error) {
+            console.warn('Erreur génération nom de fichier:', error);
         result.set(salt, 0);
         result.set(iv, salt.length);
         result.set(new Uint8Array(encrypted), salt.length + iv.length);
