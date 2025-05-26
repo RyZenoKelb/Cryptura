@@ -371,95 +371,6 @@ class ObscuraApp {
         if (secretUpload) {
             secretUpload.addEventListener('click', (e) => {
                 // Ne pas ouvrir le sélecteur si on clique sur la textarea
-            } else {
-                if (typeof window.adminMode.toggleVisibility === 'function') {
-                    window.adminMode.toggleVisibility();
-                } else {
-                    this.showMessage('Panel admin défaillant', 'error');
-                }
-            }
-        }, 500);
-    }
-
-    showAdminActivationEffect() {
-        const effect = document.createElement('div');
-        effect.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(45deg, #00ff00, #0080ff, #ff0080);
-            opacity: 0;
-            z-index: 10000;
-            pointer-events: none;
-            animation: adminActivation 1.5s ease-out;
-        `;
-        
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes adminActivation {
-                0% { opacity: 0; transform: scale(0); }
-                50% { opacity: 0.8; transform: scale(1.1); }
-                100% { opacity: 0; transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
-        document.body.appendChild(effect);
-        
-        setTimeout(() => {
-            if (effect.parentNode) effect.parentNode.removeChild(effect);
-            if (style.parentNode) style.parentNode.removeChild(style);
-        }, 1500);
-    }
-
-    setupNotificationSystem() {
-        // Création de la zone de notification si elle n'existe pas
-        if (!document.getElementById('notification-zone')) {
-            const notificationZone = document.createElement('div');
-            notificationZone.className = 'notification-zone';
-            notificationZone.id = 'notification-zone';
-            document.body.appendChild(notificationZone);
-        }
-    }
-
-    
-    setupEventListeners() {
-        // Upload zones
-        document.getElementById('carrier-upload').addEventListener('click', () => {
-            document.getElementById('carrier-file').click();
-        });
-        
-        // Suppression de l'événement pour secret-file-btn car il n'existe plus
-        
-        document.getElementById('decode-upload').addEventListener('click', () => {
-            document.getElementById('decode-file').click();
-        });
-
-        // Navigation entre panneaux
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabName = e.currentTarget.dataset.tab;
-                this.showPanel(tabName);
-            });
-        });
-
-        // Boutons d'upload de fichiers - CORRECTION
-        const carrierUpload = document.getElementById('carrier-upload');
-        const secretUpload = document.getElementById('secret-upload');
-        const decodeUpload = document.getElementById('decode-upload');
-        const ultraUpload = document.getElementById('ultra-file-upload');
-        const secretFileBtn = document.getElementById('secret-file-btn');
-
-        if (carrierUpload) {
-            carrierUpload.addEventListener('click', () => {
-                document.getElementById('carrier-file').click();
-            });
-        }
-
-        if (secretUpload) {
-            secretUpload.addEventListener('click', (e) => {
-                // Ne pas ouvrir le sélecteur si on clique sur la textarea
                 if (e.target.tagName === 'TEXTAREA') {
                     return;
                 }
@@ -554,6 +465,95 @@ class ObscuraApp {
         const decodeFileInput = document.getElementById('decode-file');
         const ultraFileInput = document.getElementById('ultra-file');
 
+        if (carrierFileInput) {
+            carrierFileInput.addEventListener('change', (e) => {
+                this.handleFileSelect(e.target, 'carrier');
+            });
+        }
+
+        // Suppression de l'événement pour secret-file car il n'existe plus
+
+        if (decodeFileInput) {
+            decodeFileInput.addEventListener('change', (e) => {
+                this.handleFileSelect(e.target, 'decode');
+            });
+        }
+
+        if (ultraFileInput) {
+            ultraFileInput.addEventListener('change', (e) => {
+                this.handleFileSelect(e.target, 'ultra');
+            });
+        }
+
+        // Surveillance des changements de méthode de stéganographie
+        document.getElementById('stego-method').addEventListener('change', (e) => {
+            this.updateMethodInfo(e.target.value);
+        });
+
+        // Surveillance du niveau de chiffrement
+        document.getElementById('crypto-level').addEventListener('change', (e) => {
+            this.updateCryptoInfo(e.target.value);
+        });
+
+        // Surveillance des options avancées
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                this.updateOptionsInfo();
+            });
+        });
+    }
+
+    setupDragAndDrop() {
+        const dropZones = document.querySelectorAll('.upload-zone');
+
+        dropZones.forEach(zone => {
+            // Prévention du comportement par défaut
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, this.preventDefaults, false);
+            });
+
+            // Highlight visuel lors du drag
+            ['dragenter', 'dragover'].forEach(eventName => {
+                zone.addEventListener(eventName, () => {
+                    zone.classList.add('dragover');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                zone.addEventListener(eventName, () => {
+                    zone.classList.remove('dragover');
+                }, false);
+            });
+
+            // Gestion du drop
+            zone.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const zoneId = zone.id;
+                    let type = '';
+
+                    if (zoneId === 'carrier-upload') type = 'carrier';
+                    else if (zoneId === 'secret-upload') type = 'secret';
+                    else if (zoneId === 'decode-upload') type = 'decode';
+
+                    if (type) {
+                        this.handleFileDrop(files[0], type);
+                    }
+                }
+            });
+        });
+    }
+
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+E : Encodage
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                this.showPanel('encode');
+            }
+            // Ctrl+D : Décodage  
+            else if (e.ctrlKey && e.key === 'd') {
+                e.preventDefault();
         if (carrierFileInput) {
             carrierFileInput.addEventListener('change', (e) => {
                 this.handleFileSelect(e.target, 'carrier');
