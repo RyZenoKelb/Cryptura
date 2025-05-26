@@ -1805,43 +1805,43 @@ class ObscuraApp {
             color = '#f59e0b';
         } else if (score < 75) {
             level = 'Correct';
+            color = '#3b82f6';
+        } else {
+            level = 'Excellent';
+            color = '#10b981';
+        }
 
-    updateProgress(progressId, message, percentage) {
-        const progressElement = document.getElementById(progressId);
-        const textElement = progressElement.querySelector('.progress-text');
-        const progressBar = progressElement.querySelector('.progress-fill');
-
-        if (progressElement.style.display === 'block') {
-            textElement.textContent = message;
-            
-            if (percentage !== undefined) {
-                progressBar.style.width = `${percentage}%`;
-                const percentageElement = progressElement.querySelector('.progress-percentage');
-                if (percentageElement) {
-                    percentageElement.textContent = `${percentage}%`;
-                }
-            }
+        strengthBar.style.background = color;
+        strengthText.textContent = level;
+        strengthText.title = feedback.join(', ');
+        
+        if (entropyElement) {
+            entropyElement.textContent = `${entropy} bits d'entropie`;
         }
     }
 
-    hideProgress(progressId, success = true) {
-        const progressElement = document.getElementById(progressId);
-        const interval = progressElement.dataset.interval;
-        const progressBar = progressElement.querySelector('.progress-fill');
-        const textElement = progressElement.querySelector('.progress-text');
+    getCharsetSize(password) {
+        let size = 0;
+        if (/[a-z]/.test(password)) size += 26;
+        if (/[A-Z]/.test(password)) size += 26;
+        if (/[0-9]/.test(password)) size += 10;
+        if (/[^a-zA-Z0-9]/.test(password)) size += 32;
+        return Math.max(size, 1);
+    }
 
-        if (interval) {
-            clearInterval(interval);
+    // Nouvelles méthodes pour UltraCrypte
+    async handleUltraEncrypt() {
+        const masterKey = document.getElementById('ultra-master-key').value;
+        const ultraFile = this.currentFiles.ultra;
+        const textInput = document.getElementById('ultra-text-input').value.trim();
+        const securityLevel = document.querySelector('input[name="security-level"]:checked')?.value || 'standard';
+        
+        if (!masterKey) {
+            this.showMessage('Veuillez saisir une clé maître', 'error');
+            return;
         }
 
-        // Compléter la barre avec le bon état
-        if (success) {
-            progressElement.classList.add('success');
-            textElement.textContent = 'Terminé avec succès!';
-        } else {
-            progressElement.classList.add('error');
-            textElement.textContent = 'Erreur lors du traitement';
-        }
+        if (!ultraFile && !textInput) {
         
         progressBar.style.width = '100%';
         textElement.classList.remove('active');
