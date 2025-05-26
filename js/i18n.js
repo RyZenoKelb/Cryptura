@@ -25,29 +25,29 @@ class I18nSystem {
 
             // Navigation
             'nav.encode': 'Encoder',
-                'theme.dark': 'Sombre',
-                'theme.light': 'Clair',
-                
-                // Navigation
-                'nav.encode': 'Encoder',
-                'nav.decode': 'Décoder',
-                'nav.ultracrypte': 'UltraCrypte',
-                'nav.help': 'Documentation',
-                
-                // Panel Titles
-                'panel.encode.title': 'Encodage Sécurisé',
-                'panel.encode.subtitle': 'Dissimulation avancée de messages dans vos fichiers multimédias avec chiffrement de niveau militaire',
-                'panel.decode.title': 'Extraction & Analyse',
-                'panel.decode.subtitle': 'Détection et extraction intelligente de données cachées avec déchiffrement automatique',
-                'panel.help.title': 'Documentation',
-                'panel.help.subtitle': 'Guide complet d\'utilisation d\'Obscura et meilleures pratiques de sécurité',
-                
-                // Upload Areas
-                'upload.carrier.title': 'Fichier Porteur',
-                'upload.carrier.desc': 'Glissez votre média ou cliquez pour sélectionner',
-                'upload.carrier.types': 'Images • Audio • Vidéo • Documents',
-                'upload.secret.title': 'Message Secret',
-                'upload.secret.desc': 'Saisissez votre message confidentiel',
+            'nav.decode': 'Décoder',
+            'nav.ultracrypte': 'UltraCrypte',
+            'nav.help': 'Documentation',
+
+            // Panels
+            'panel.encode.title': 'Encodage Sécurisé',
+            'panel.encode.subtitle': 'Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire',
+            'panel.decode.title': 'Extraction & Analyse',
+            'panel.decode.subtitle': 'Détection et extraction intelligente de données cachées avec déchiffrement automatique',
+            'panel.help.title': 'Documentation',
+            'panel.help.subtitle': 'Guide complet d\'utilisation d\'Obscura et meilleures pratiques de sécurité',
+
+            // Upload zones
+            'upload.carrier.title': 'Fichier Porteur',
+            'upload.carrier.desc': 'Glissez votre média ou cliquez pour sélectionner',
+            'upload.carrier.types': 'Images • Audio • Vidéo • Documents',
+            'upload.secret.title': 'Contenu Secret',
+            'upload.secret.placeholder': 'Votre message confidentiel...',
+            'upload.decode.title': 'Fichier à Analyser',
+            'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
+            'upload.decode.types': 'Tous formats supportés',
+
+            // Options
                 'upload.secret.placeholder': 'Votre message secret...',
                 'upload.decode.title': 'Fichier à Analyser',
                 'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
