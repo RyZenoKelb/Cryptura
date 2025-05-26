@@ -8,14 +8,14 @@ class SteganographyEngine {
         this.maxFileSize = 500 * 1024 * 1024; // 500MB
         this.antiAnalysisEnabled = true;
         
-        this.initSupportedFormats();
         this.setupAntiAnalysisProtection();
+        this.initSupportedFormats();
     }
 
-    // ========== SUPPORTED FORMATS ==========
+    // ========== ANTI-ANALYSIS PROTECTION ==========
 
-    initSupportedFormats() {
-        // Images
+    setupAntiAnalysisProtection() {
+        this.obfuscationPatterns = [
         this.supportedFormats.set('image/jpeg', {
             type: 'image',
             methods: ['lsb', 'metadata', 'distributed'],
