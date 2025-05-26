@@ -1978,24 +1978,6 @@ class ObscuraApp {
         try {
             let data;
             if (ultraFile) {
-        const securityLevel = document.querySelector('input[name="security-level"]:checked')?.value || 'standard';
-        
-        if (!masterKey) {
-            this.showMessage('Veuillez saisir une clé maître', 'error');
-            return;
-        }
-
-        if (!ultraFile && !textInput) {
-            this.showMessage('Veuillez sélectionner un fichier ou saisir un message', 'error');
-            return;
-        }
-
-        // Logique de chiffrement UltraCrypte
-        this.showMessage('Chiffrement UltraCrypte en cours...', 'info');
-        
-        try {
-            let data;
-            if (ultraFile) {
                 data = await this.fileToArrayBuffer(ultraFile);
             } else {
                 data = new TextEncoder().encode(textInput);
@@ -2100,49 +2082,35 @@ class ObscuraApp {
     // ========== GESTION DES RÉINITIALISATIONS ==========
 
     resetEncode() {
-        // Réinitialisation des fichiers
+        // Reset des fichiers
         this.currentFiles.carrier = null;
-        this.currentFiles.secret = null;
-
-        document.getElementById('carrier-file').value = '';
-        document.getElementById('secret-file').value = '';
-        document.getElementById('secret-text').value = '';
-        document.getElementById('encode-password').value = '';
-
-        // Réinitialisation des zones d'upload
-        this.resetUploadZone('carrier-upload', 'Fichier Porteur', 'Glissez-déposez ou cliquez pour sélectionner', 'fas fa-cloud-upload-alt');
-        this.resetUploadZone('secret-upload', 'Contenu Secret', 'Message texte ou fichier à cacher', 'fas fa-eye-slash');
-
-        // Masquage des résultats
-        document.getElementById('encode-result').style.display = 'none';
-        document.getElementById('encode-progress').style.display = 'none';
-
-        // Réinitialisation des options
-        document.getElementById('stego-method').selectedIndex = 0;
-        document.getElementById('crypto-level').selectedIndex = 0;
-        document.querySelectorAll('#encode-panel input[type="checkbox"]').forEach(cb => cb.checked = false);
-
-        this.showMessage('Interface d\'encodage réinitialisée', 'info');
-    }
-
-    resetUploadZone(zoneId, title, description, iconClass) {
-        const zone = document.getElementById(zoneId);
-        const icon = zone.querySelector('i');
-        const titleElement = zone.querySelector('h3');
-        const descElement = zone.querySelector('p');
-        const small = zone.querySelector('small');
-
-        icon.className = iconClass;
-        icon.style.color = 'var(--primary-color)';
-        titleElement.textContent = title;
-        descElement.textContent = description;
-
-        if (small) {
-            small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
+        
+        // Reset des zones d'upload
+        const carrierUpload = document.getElementById('carrier-upload');
+        const secretTextarea = document.getElementById('secret-text');
+        
+        if (carrierUpload) {
+            carrierUpload.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Fichier Porteur</h3>
+                <p>Glissez votre média ou cliquez pour sélectionner</p>
+                <small>Images • Audio • Vidéo • Documents</small>
+            `;
         }
-
-        delete zone.dataset.file;
-        zone.classList.remove('fade-in');
+        
+        if (secretTextarea) {
+            secretTextarea.value = '';
+        }
+        
+        // Reset des champs
+        document.getElementById('encode-password').value = '';
+        document.getElementById('crypto-level').value = 'none';
+        
+        // Masquer les résultats
+        const resultArea = document.getElementById('encode-result');
+        if (resultArea) resultArea.style.display = 'none';
+        
+        this.showMessage('Encodage réinitialisé', 'info');
     }
 
     cancelOperations() {
