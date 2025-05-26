@@ -1933,24 +1933,6 @@ class ObscuraApp {
             level = 'Correct';
             color = '#3b82f6';
         } else {
-
-        // Calcul de l'entropie approximative
-        const entropy = Math.floor(password.length * Math.log2(this.getCharsetSize(password)));
-
-        // Mise à jour visuelle
-        strengthBar.style.width = `${score}%`;
-
-        let level, color;
-        if (score < 30) {
-            level = 'Très faible';
-            color = '#ef4444';
-        } else if (score < 50) {
-            level = 'Faible';
-            color = '#f59e0b';
-        } else if (score < 75) {
-            level = 'Correct';
-            color = '#3b82f6';
-        } else {
             level = 'Excellent';
             color = '#10b981';
         }
@@ -1978,6 +1960,24 @@ class ObscuraApp {
         const masterKey = document.getElementById('ultra-master-key').value;
         const ultraFile = this.currentFiles.ultra;
         const textInput = document.getElementById('ultra-text-input').value.trim();
+        const securityLevel = document.querySelector('input[name="security-level"]:checked')?.value || 'standard';
+        
+        if (!masterKey) {
+            this.showMessage('Veuillez saisir une clé maître', 'error');
+            return;
+        }
+
+        if (!ultraFile && !textInput) {
+            this.showMessage('Veuillez sélectionner un fichier ou saisir un message', 'error');
+            return;
+        }
+
+        // Logique de chiffrement UltraCrypte
+        this.showMessage('Chiffrement UltraCrypte en cours...', 'info');
+        
+        try {
+            let data;
+            if (ultraFile) {
         const securityLevel = document.querySelector('input[name="security-level"]:checked')?.value || 'standard';
         
         if (!masterKey) {
