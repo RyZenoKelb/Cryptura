@@ -956,44 +956,44 @@ class ObscuraApp {
             let confidence = 0;
             
             if (mode === 'auto') {
+                // Tentative automatique avec le moteur de stéganographie
+                try {
+                    this.updateProgress('decode-progress', 'Détection automatique en cours...', 50);
+                    const result = await this.steganographyEngine.extractData(this.currentFiles.decode, 'auto');
+                    
+                    if (result && result.data && result.data.length > 0) {
+                        extractedData = result.data;
+                        usedMethod = result.method || 'lsb';
+                        confidence = result.confidence || 75;
+                    }
+                } catch (error) {
+                    console.log('Extraction automatique échouée:', error.message);
+                    throw new Error(`Aucune donnée cachée détectée: ${error.message}`);
+                }
+            } else {
+                // Méthode spécifique
+                this.updateProgress('decode-progress', `Extraction avec ${mode}...`, 50);
+                try {
+                    const result = await this.steganographyEngine.extractData(this.currentFiles.decode, mode);
+                    
+                    if (result && result.data) {
+                        extractedData = result.data;
+                        usedMethod = mode;
+                        confidence = result.confidence || 50;
+                    }
+                } catch (error) {
+                    throw new Error(`Extraction avec ${mode} échouée: ${error.message}`);
+                }
             }
-
-            // Vérification que le fichier est valide
-            if (!resultFile || typeof resultFile.size === 'undefined') {
-                throw new Error('Fichier résultat invalide');
-            }
-
-            // Finalisation
-            this.updateProgress('encode-progress', 'Finalisation...', 100);
             
-            setTimeout(() => {
-                this.hideProgress('encode-progress', true);
-                this.showEncodeResult(resultFile, options.method, cryptoLevel);
-            }, 500);
-
-        } catch (error) {
-            this.handleError(error, 'encodage');
-        }
-    }
-
-    // MÉTHODE MISE À JOUR - validation simplifiée
-    validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
-        this.clearMessages();
-
-        if (!carrierFile) {
-            this.showMessage('Veuillez sélectionner un fichier porteur', 'error');
-            return false;
-        }
-
-        // Validation pour texte seulement
-        if (!secretText) {
-            this.showMessage('Veuillez saisir un message secret', 'error');
-            return false;
-        }
-
-        if (secretText.length > 100000) {
-            this.showMessage('Le message est trop long (maximum 100 000 caractères)', 'error');
-            return false;
+            if (!extractedData || extractedData.length === 0) {
+                this.hideProgress('decode-progress', false);
+                this.showMessage('Aucune donnée cachée détectée avec les méthodes disponibles', 'warning');
+                return;
+            }
+            
+            this.updateProgress('decode-progress', 'Données extraites, traitement...', 75);
+            
         }
 
         if (cryptoLevel !== 'none' && !password) {
