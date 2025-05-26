@@ -740,24 +740,6 @@ class ObscuraApp {
 
         if (usage === 'carrier' && fileType === 'unknown') {
             this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
-        let fileType = 'unknown';
-        for (const [type, extensions] of Object.entries(supportedExtensions)) {
-            if (extensions.includes(extension)) {
-                fileType = type;
-                break;
-            }
-        }
-
-        // Types supportés selon l'usage
-        const supportedTypes = {
-            carrier: ['image', 'audio', 'video', 'document'],
-            secret: ['any'], // Tout type de fichier peut être caché
-            decode: ['any'], // Tout fichier peut potentiellement contenir des données
-            ultra: ['any'] // UltraCrypte peut chiffrer tout type de fichier
-        };
-
-        if (usage === 'carrier' && fileType === 'unknown') {
-            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
             this.showMessage('Types supportés: Images (jpg, png, gif), Audio (mp3, wav), Vidéo (mp4, avi), Documents (pdf, txt)', 'info');
             return false;
         }
@@ -1933,6 +1915,24 @@ class ObscuraApp {
 
         if (/(.)\1{2,}/.test(password)) score -= 10; // Répétitions
         if (password.toLowerCase().includes('password')) score -= 20;
+
+        // Calcul de l'entropie approximative
+        const entropy = Math.floor(password.length * Math.log2(this.getCharsetSize(password)));
+
+        // Mise à jour visuelle
+        strengthBar.style.width = `${score}%`;
+
+        let level, color;
+        if (score < 30) {
+            level = 'Très faible';
+            color = '#ef4444';
+        } else if (score < 50) {
+            level = 'Faible';
+            color = '#f59e0b';
+        } else if (score < 75) {
+            level = 'Correct';
+            color = '#3b82f6';
+        } else {
 
         // Calcul de l'entropie approximative
         const entropy = Math.floor(password.length * Math.log2(this.getCharsetSize(password)));
