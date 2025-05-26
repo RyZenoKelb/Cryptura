@@ -425,11 +425,20 @@ class ObscuraApp {
 
     
     setupEventListeners() {
+        // Upload zones
+        document.getElementById('carrier-upload').addEventListener('click', () => {
+            document.getElementById('carrier-file').click();
+        });
+        
+        document.getElementById('decode-upload').addEventListener('click', () => {
+            document.getElementById('decode-file').click();
+        });
+
         // Navigation entre panneaux
         document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const tabName = e.currentTarget.dataset.tab;
-                this.showPanel(tabName);
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                this.switchTab(tabName);
             });
         });
 
@@ -438,44 +447,24 @@ class ObscuraApp {
         const secretUpload = document.getElementById('secret-upload');
         const decodeUpload = document.getElementById('decode-upload');
         const ultraUpload = document.getElementById('ultra-file-upload');
-        const secretFileBtn = document.getElementById('secret-file-btn');
 
         if (carrierUpload) {
-            carrierUpload.addEventListener('click', () => {
-                document.getElementById('carrier-file').click();
-            });
+            carrierUpload.addEventListener('click', () => document.getElementById('carrier-file').click());
         }
 
         if (secretUpload) {
-            secretUpload.addEventListener('click', (e) => {
-                // Ne pas ouvrir le sélecteur si on clique sur la textarea
-                if (e.target.tagName === 'TEXTAREA') {
-                    return;
-                }
-                // Ne pas ouvrir si on clique sur le bouton de fichier
-                if (e.target.closest('.file-select-btn')) {
-                    return;
-                }
-            });
-        }
-
-        if (secretFileBtn) {
-            secretFileBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.getElementById('secret-file').click();
+            secretUpload.addEventListener('click', () => {
+                const textarea = document.getElementById('secret-text');
+                if (textarea) textarea.focus();
             });
         }
 
         if (decodeUpload) {
-            decodeUpload.addEventListener('click', () => {
-                document.getElementById('decode-file').click();
-            });
+            decodeUpload.addEventListener('click', () => document.getElementById('decode-file').click());
         }
 
         if (ultraUpload) {
-            ultraUpload.addEventListener('click', () => {
-                document.getElementById('ultra-file').click();
-            });
+            ultraUpload.addEventListener('click', () => document.getElementById('ultra-file').click());
         }
 
         // Boutons d'action principaux
@@ -539,12 +528,23 @@ class ObscuraApp {
 
         // Gestion des changements de fichiers - CORRECTION
         const carrierFileInput = document.getElementById('carrier-file');
-        const secretFileInput = document.getElementById('secret-file');
         const decodeFileInput = document.getElementById('decode-file');
         const ultraFileInput = document.getElementById('ultra-file');
 
         if (carrierFileInput) {
             carrierFileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'carrier');
+            });
+        }
+
+        if (decodeFileInput) {
+            decodeFileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'decode');
+            });
+        }
+
+        if (ultraFileInput) {
+            ultraFileInput.addEventListener('change', (e) => {
                 this.handleFileSelect(e.target, 'carrier');
             });
         }
