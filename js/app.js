@@ -101,50 +101,50 @@ class ObscuraApp {
 
     async useWorkerForCrypto(operation, data) {
         if (!this.cryptoWorker) {
-                        }
-                    };
-                `;
-
-                const blob = new Blob([workerCode], { type: 'application/javascript' });
-                this.cryptoWorker = new Worker(URL.createObjectURL(blob));
-
-                this.cryptoWorker.onmessage = (e) => {
-                    this.handleWorkerMessage(e.data);
-                };
-
-            } catch (error) {
-                console.warn('⚠️ Web Workers non supportés:', error);
-            }
-        }
-    }
-
-    handleWorkerMessage(data) {
-        const { taskId, success, result, error, progress } = data;
-
-        if (progress !== undefined) {
-            // Mise à jour du progrès si applicable
-            return;
-        }
-
-        if (success) {
-            // Traitement du résultat selon le type de tâche
-        } else {
-            console.error(`❌ Worker task ${taskId} failed:`, error);
-        }
-    }
-
-    async useWorkerForCrypto(operation, data) {
-        if (!this.cryptoWorker) {
             throw new Error('Worker crypto non disponible');
         }
 
         return new Promise((resolve, reject) => {
             const taskId = Date.now() + Math.random();
+            this.pendingTasks = this.pendingTasks || {};
+            this.pendingTasks[taskId] = { resolve, reject };
+            
+            this.cryptoWorker.postMessage({
+                taskId,
+                operation,
+                data
+            });
+        });
+    }
 
-            const timeout = setTimeout(() => {
-                reject(new Error('Timeout worker'));
-            }, 30000);
+    async handleLargeFileEncryption(data, password) {
+        if (data.length > 1024 * 1024) {
+            return await this.useWorkerForCrypto('encrypt', { data, password });
+        }
+        return await this.basicEncrypt(data, password);
+    }
 
+    setupPluginSystem() {
+        // Enregistrement des plugins de base
+        try {
+            this.pluginManager.registerSteganographyMethod('lsb-advanced', {
+                encode: (carrier, data) => this.steganography.encodeLSB(carrier, data),
+                decode: (file) => this.steganography.decodeLSB(file)
+            });
+        } catch (error) {
+            console.warn('Erreur initialisation plugins:', error);
+        }
+    }
+
+    setupLanguageSystem() {
+        // Initialisation simplifiée du système de langue
+        if (this.i18n) {
+            this.i18n.init();
+        }
+    }
+
+    setupThemeSystem() {
+        // Application du thème initial
             const messageHandler = (e) => {
                 const response = e.data;
                 if (response.taskId === taskId) {
