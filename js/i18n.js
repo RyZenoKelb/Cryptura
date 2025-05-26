@@ -181,29 +181,29 @@ class I18nSystem {
             'footer.processed': 'files processed',
 
             // Progress
-                'help.decode.title': 'Guide d\'Extraction',
-                'help.decode.desc': 'L\'extraction automatisée détecte et récupère les données cachées intelligemment.',
-                'help.ultra.title': 'UltraCrypte™ Advanced',
-                'help.ultra.desc': 'Notre technologie propriétaire offre une protection inégalée contre toutes formes d\'attaques.',
-                'help.practices.title': 'Meilleures Pratiques',
-                
-                // File Types
-                'file.type.image': 'Image',
-                'file.type.audio': 'Audio',
-                'file.type.video': 'Vidéo',
-                'file.type.document': 'Document',
-                'file.type.archive': 'Archive',
-                'file.type.unknown': 'Inconnu',
-                
-                // Analysis
-                'analysis.entropy': 'Entropie',
-                'analysis.signatures': 'Signatures',
-                'analysis.patterns': 'Motifs suspects',
-                'analysis.metadata': 'Métadonnées',
-                'analysis.likelihood': 'Probabilité de stéganographie',
-                'analysis.confidence.high': 'Élevée',
-                'analysis.confidence.medium': 'Moyenne',
-                'analysis.confidence.low': 'Faible'
+            'progress.encoding': 'Encoding in progress...',
+            'progress.decoding': 'Extraction in progress...',
+            'progress.analyzing': 'Analysis in progress...',
+            'progress.encrypting': 'Encryption in progress...',
+            'progress.complete': 'Complete',
+
+            // File types
+            'file.type.text': 'Text message',
+            'file.type.image': 'Image',
+            'file.type.audio': 'Audio',
+            'file.type.video': 'Video',
+            'file.type.document': 'Document',
+            'file.type.archive': 'Archive',
+            'file.type.unknown': 'Unknown type',
+
+            // Security levels
+            'security.standard': 'Standard',
+            'security.military': 'Military',
+            'security.quantum': 'Quantum',
+
+            // UltraCrypte
+            'ultra.master.key': 'Ultra-secure master key',
+            'ultra.security.level': 'Security level',
             },
             
             en: {
