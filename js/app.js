@@ -994,95 +994,6 @@ class ObscuraApp {
             
             this.updateProgress('decode-progress', 'Données extraites, traitement...', 75);
             
-        }
-
-        if (cryptoLevel !== 'none' && !password) {
-            this.showMessage('Un mot de passe est requis pour le chiffrement', 'error');
-            return false;
-        }
-
-        if (password && password.length < 6) {
-            this.showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
-            return false;
-        }
-
-        return true;
-    }
-
-    // MÉTHODE MANQUANTE - AJOUT CRITIQUE
-    mapCryptoComplexity(cryptoLevel) {
-        const mapping = {
-            'none': 'none',
-            'aes': 'standard',
-            'ultra': 'enhanced'
-        };
-        return mapping[cryptoLevel] || 'standard';
-    }
-
-    // ========== DÉCODAGE ==========
-
-    async handleDecode() {
-        const fileInput = document.getElementById('decode-file');
-        const passwordInput = document.getElementById('decode-password');
-        const detectionMode = document.getElementById('detection-mode');
-        
-        if (!this.currentFiles.decode) {
-            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
-            return;
-        }
-
-        const password = passwordInput.value;
-        const mode = detectionMode.value;
-        
-        this.showProgress('decode-progress', 'Analyse du fichier en cours...', 'decoding');
-        
-        try {
-            this.updateProgress('decode-progress', 'Tentative d\'extraction des données...', 25);
-            
-            // Utilisation directe du moteur de stéganographie
-            let extractedData = null;
-            let usedMethod = 'unknown';
-            let confidence = 0;
-            
-            if (mode === 'auto') {
-                // Tentative automatique avec le moteur de stéganographie
-                try {
-                    this.updateProgress('decode-progress', 'Détection automatique en cours...', 50);
-                    const result = await this.steganographyEngine.extractData(this.currentFiles.decode, 'auto');
-                    
-                    if (result && result.data && result.data.length > 0) {
-                        extractedData = result.data;
-                        usedMethod = result.method || 'lsb';
-                        confidence = result.confidence || 75;
-                    }
-                } catch (error) {
-                    console.log('Extraction automatique échouée:', error.message);
-                    throw new Error(`Aucune donnée cachée détectée: ${error.message}`);
-                }
-            } else {
-                // Méthode spécifique
-                this.updateProgress('decode-progress', `Extraction avec ${mode}...`, 50);
-                try {
-                    const result = await this.steganographyEngine.extractData(this.currentFiles.decode, mode);
-                    
-                    if (result && result.data) {
-                        extractedData = result.data;
-                        usedMethod = mode;
-                        confidence = result.confidence || 50;
-                    }
-                } catch (error) {
-                    throw new Error(`Extraction avec ${mode} échouée: ${error.message}`);
-                }
-            }
-            
-            if (!extractedData || extractedData.length === 0) {
-                this.hideProgress('decode-progress', false);
-                this.showMessage('Aucune donnée cachée détectée avec les méthodes disponibles', 'warning');
-                return;
-            }
-            
-            this.updateProgress('decode-progress', 'Données extraites, traitement...', 75);
-            
             // Tentative de déchiffrement si un mot de passe est fourni
             let finalData = extractedData;
             let cryptoType = 'Aucun';
@@ -1196,63 +1107,8 @@ class ObscuraApp {
         
         // Détection de patterns LSB
         let lsbPattern = 0;
-        for (let i = 0; i < Math.min(1000, data.length); i++) {
-            if ((data[i] & 1) !== (data[i] >> 1 & 1)) {
-                lsbPattern++;
-            }
-        }
-        
-        if (lsbPattern > 400) { // Plus de 40% de variation dans les LSB
-            signatures.push('LSB_PATTERN');
-        }
-        
-        return signatures;
-    }
-
-    detectSuspiciousPatterns(data) {
-        const patterns = [];
-        
-        // Recherche de données répétitives (indicateur de padding)
-        let repeatedBytes = 0;
-        for (let i = 1; i < Math.min(1000, data.length); i++) {
-            if (data[i] === data[i-1]) {
-                repeatedBytes++;
-            }
-        }
-        
-        if (repeatedBytes > 500) {
-            patterns.push('Repeated byte patterns detected');
-        }
-    calculateEntropy(data) {
-        const freq = new Array(256).fill(0);
-        for (let byte of data) {
-            freq[byte]++;
-        }
-        
-        let entropy = 0;
-        const len = data.length;
-        for (let count of freq) {
-            if (count > 0) {
-                const p = count / len;
-                entropy -= p * Math.log2(p);
-            }
-        }
-        
-        return entropy;
-    }
-
-    detectSignatures(data) {
-        const signatures = [];
-        const dataStr = new TextDecoder('utf-8', { fatal: false }).decode(data);
-        
-        if (dataStr.includes('OBSCURA')) {
-            signatures.push('METADATA_MARKER');
-        }
-        
-        // Détection de patterns LSB
-        let lsbPattern = 0;
-        for (let i = 0; i < Math.min(1000, data.length); i++) {
-            if ((data[i] & 1) !== (data[i] >> 1 & 1)) {
+        for (let i = 0; i <= data.length - 3; i++) {
+            if ((data[i] & 1) !== (data[i + 1] & 1)) {
                 lsbPattern++;
             }
         }
@@ -1620,6 +1476,150 @@ class ObscuraApp {
         preview.innerHTML = '';
         preview.appendChild(typeIndicator);
         preview.appendChild(textDisplay);
+        preview.appendChild(actions);
+
+        // Masquer le bouton de sauvegarde par défaut
+        saveBtn.style.display = 'none';
+    }
+
+    displayFileContent(preview, data, analysis, saveBtn) {
+        // Indicateur de type de contenu
+        const typeIndicator = document.createElement('div');
+        typeIndicator.className = 'content-type-indicator file';
+        typeIndicator.innerHTML = `<i class="fas fa-file"></i> Fichier ${analysis.fileType} Extrait`;
+
+        // Informations sur le fichier
+        const fileInfo = document.createElement('div');
+        fileInfo.className = 'file-info-display';
+
+        const infoGrid = document.createElement('div');
+        infoGrid.className = 'file-preview-info';
+
+        // Carte Type
+        const typeCard = document.createElement('div');
+        typeCard.className = 'info-card';
+        typeCard.innerHTML = `
+            <h4>Type de Fichier</h4>
+            <p>${analysis.fileType}</p>
+        `;
+
+        // Carte Taille
+        const sizeCard = document.createElement('div');
+        sizeCard.className = 'info-card';
+        sizeCard.innerHTML = `
+            <h4>Taille</h4>
+            <p>${this.formatFileSize(analysis.size)}</p>
+        `;
+
+        // Carte Aperçu
+        const previewCard = document.createElement('div');
+        previewCard.className = 'info-card';
+        
+        let previewContent = 'Données binaires';
+        if (analysis.fileType === 'Binary') {
+            // Affichage hexadécimal limité
+            const bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
+            const hexPreview = Array.from(bytes.slice(0, 16))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join(' ').toUpperCase();
+            previewContent = `${hexPreview}${bytes.length > 16 ? '...' : ''}`;
+        }
+
+        previewCard.innerHTML = `
+            <h4>Aperçu</h4>
+            <p style="font-family: monospace; font-size: 0.8rem;">${previewContent}</p>
+        `;
+
+        infoGrid.appendChild(typeCard);
+        infoGrid.appendChild(sizeCard);
+        infoGrid.appendChild(previewCard);
+        fileInfo.appendChild(infoGrid);
+
+        // Remplacement du contenu
+        preview.innerHTML = '';
+        preview.appendChild(typeIndicator);
+        preview.appendChild(fileInfo);
+
+        // Configuration du bouton de téléchargement
+        saveBtn.style.display = 'inline-flex';
+        saveBtn.onclick = () => {
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
+            let filename = `fichier_extrait_${timestamp}`;
+            
+            // Extension basée sur le type détecté
+            const extensions = {
+                'PNG': '.png',
+                'JPEG': '.jpg',
+                'GIF': '.gif',
+                'PDF': '.pdf',
+                'ZIP/Office': '.zip',
+                'WAV/AVI': '.wav',
+                'MP3': '.mp3',
+                'FLAC': '.flac',
+                'OGG': '.ogg',
+                'MPEG': '.mpg',
+                'MP4/MOV': '.mp4'
+            };
+
+            filename += extensions[analysis.fileType] || '.bin';
+
+            let blob;
+            if (data instanceof Uint8Array) {
+                blob = new Blob([data]);
+            } else if (data instanceof ArrayBuffer) {
+                blob = new Blob([data]);
+            } else {
+                blob = new Blob([new Uint8Array(data)]);
+            }
+
+            this.downloadFile(blob, filename);
+            this.showMessage(`Fichier téléchargé: ${filename}`, 'success');
+        };
+    }
+
+    prepareContentPreview(data) {
+        let displayText = '';
+        let isText = true;
+
+        try {
+            // Tentative de décodage en UTF-8
+            displayText = new TextDecoder('utf-8').decode(data);
+
+            // Vérification si c'est du texte lisible
+            if (displayText.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/)) {
+                isText = false;
+            }
+        } catch (error) {
+            isText = false;
+        }
+
+        if (!isText) {
+            // Affichage hexadécimal pour les données binaires
+            const maxBytes = 256; // Limite d'affichage
+            const bytesToShow = Math.min(data.length, maxBytes);
+            const hexLines = [];
+
+            for (let i = 0; i < bytesToShow; i += 16) {
+                const chunk = data.slice(i, i + 16);
+                const hex = Array.from(chunk).map(b => b.toString(16).padStart(2, '0')).join(' ');
+                const ascii = Array.from(chunk).map(b => b >= 32 && b <= 126 ? String.fromCharCode(b) : '.').join('');
+                hexLines.push(`${i.toString(16).padStart(4, '0')}: ${hex.padEnd(48)} | ${ascii}`);
+            }
+
+            if (data.length > 16) {
+                hexLines.push(`... et ${data.length - 16} octets supplémentaires`);
+            }
+
+            displayText = hexLines.join('\n');
+        }
+
+        // Limitation de la taille d'affichage
+        if (displayText.length > 5000) {
+            displayText = displayText.substring(0, 5000) + '\n... [contenu tronqué]';
+        }
+
+        return {
+            html: `<pre>${this.escapeHtml(displayText)}</pre>`,
         preview.appendChild(actions);
 
         // Masquer le bouton de sauvegarde par défaut
