@@ -276,16 +276,16 @@ class ObscuraApp {
                         }
                     };
                     
-    setupAdminAccess() {
-        this.logoClicks = 0;
-
-        const logo = document.querySelector('.logo-container');
-        if (logo) {
-            logo.addEventListener('click', (e) => {
-                this.logoClicks++;
-                
-                if (this.logoClicks === 3) {
-                    this.promptForAdminCode();
+                    setTimeout(checkAdmin, 100);
+                };
+                script.onerror = (error) => {
+                    this.showMessage('Erreur de chargement du mode admin', 'error');
+                };
+                document.head.appendChild(script);
+            } else {
+                if (typeof window.adminMode.toggleVisibility === 'function') {
+                    window.adminMode.toggleVisibility();
+                } else {
                     this.logoClicks = 0;
                 }
                 
