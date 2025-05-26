@@ -227,8 +227,8 @@ class I18nSystem {
     // ========== DÉTECTION DE LANGUE ==========
 
     detectLanguage() {
-                // Upload Areas
-                'upload.carrier.title': 'Carrier File',
+        // Priorité : localStorage > URL > navigateur > défaut
+        let detectedLang = this.fallbackLanguage;
                 'upload.carrier.desc': 'Drag your media or click to select',
                 'upload.carrier.types': 'Images • Audio • Video • Documents',
                 'upload.secret.title': 'Secret Message',
