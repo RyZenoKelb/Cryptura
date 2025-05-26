@@ -136,12 +136,12 @@ class SteganographyEngine {
             processor: this.processArchive.bind(this)
         });
         
-        
-        this.timingVariation = {
-            minDelay: 10,
-            maxDelay: 100,
-            jitterRange: 20
-        };
+        this.supportedFormats.set('application/x-rar-compressed', {
+            type: 'archive',
+            methods: ['comment', 'recovery-data'],
+            capacity: 0.05,
+            processor: this.processArchive.bind(this)
+        });
     }
 
     async addAntiAnalysisDelay() {
@@ -370,17 +370,17 @@ class SteganographyEngine {
         }
     }
 
-    // ========== FILE PROCESSING ==========
+    // ========== EMBEDDING/EXTRACTION LOGIC ==========
 
-    async readFileInChunks(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            
-            reader.onload = (e) => {
-                resolve(e.target.result);
-            };
-            
-            reader.onerror = () => {
+    async performEmbedding(carrierBuffer, secretData, method, format, options) {
+        if (!format || !format.processor) {
+            return this.embedImageLSB(new Uint8Array(carrierBuffer), secretData, options);
+        }
+        
+        return await format.processor(carrierBuffer, 'embed', secretData, method, options);
+    }
+
+    async performExtraction(fileBuffer, method, format) {
                 reject(new Error('Failed to read file'));
             };
             
