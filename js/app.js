@@ -1842,49 +1842,49 @@ class ObscuraApp {
         }
 
         if (!ultraFile && !textInput) {
+            this.showMessage('Veuillez sélectionner un fichier ou saisir un message', 'error');
+            return;
+        }
+
+        // Logique de chiffrement UltraCrypte
+        this.showMessage('Chiffrement UltraCrypte en cours...', 'info');
         
-        progressBar.style.width = '100%';
-        textElement.classList.remove('active');
-
-        setTimeout(() => {
-            progressElement.style.display = 'none';
-            progressBar.style.width = '0%';
-            progressElement.className = 'progress-container';
-        }, success ? 1500 : 3000);
-    }
-
-    showMessage(message, type = 'info') {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}`;
-
-        const icon = type === 'error' ? 'exclamation-triangle' : 
-                    type === 'success' ? 'check-circle' : 
-                    type === 'warning' ? 'exclamation-triangle' : 'info-circle';
-
-        messageDiv.innerHTML = `
-            <i class="fas fa-${icon}"></i>
-            <span>${message}</span>
-        `;
-
-        // Insertion au début du contenu principal
-        const mainContent = document.querySelector('.main-content');
-        mainContent.insertBefore(messageDiv, mainContent.firstChild);
-
-        // Suppression automatique
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
+        try {
+            let data;
+            if (ultraFile) {
+                data = await this.fileToArrayBuffer(ultraFile);
+            } else {
+                data = new TextEncoder().encode(textInput);
             }
-        }, type === 'error' ? 8000 : 5000);
 
-        // Animation d'entrée
-        messageDiv.classList.add('fade-in');
+            // Options de chiffrement
+            const options = {
+                level: securityLevel,
+                compress: document.getElementById('ultra-compress')?.checked || false,
+                stealth: document.getElementById('ultra-stealth')?.checked || false,
+                deniable: document.getElementById('ultra-deniable')?.checked || false
+            };
+
+            const encrypted = await this.ultraCrypte.encrypt(data, masterKey, options);
+            
+            const filename = ultraFile ? 
+                `${ultraFile.name.split('.')[0]}_ultra.ucrypt` : 
+                `message_ultra_${Date.now()}.ucrypt`;
+            
+            this.downloadFile(new Blob([encrypted]), filename);
+            this.showMessage('Chiffrement UltraCrypte terminé avec succès!', 'success');
+            
+        } catch (error) {
+            this.showMessage(`Erreur de chiffrement: ${error.message}`, 'error');
+        }
     }
 
-    clearMessages() {
-        const messages = document.querySelectorAll('.message');
-        messages.forEach(msg => {
-            if (msg.parentNode) {
+    async handleUltraDecrypt() {
+        const masterKey = document.getElementById('ultra-master-key').value;
+        const ultraFile = this.currentFiles.ultra;
+        
+        if (!masterKey) {
+            this.showMessage('Veuillez saisir la clé maître', 'error');
                 msg.parentNode.removeChild(msg);
             }
         });
