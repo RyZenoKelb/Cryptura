@@ -160,85 +160,85 @@ class ObscuraApp {
     setTheme(theme) {
         if (theme === 'dark' || theme === 'light') {
             this.currentTheme = theme;
-            this.cryptoWorker.postMessage({ taskId, operation, data });
-        });
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('obscura_theme', theme);
+            this.updateThemeToggle();
+        }
     }
 
-        // Dans app.js - Méthode à ajouter
-    async handleLargeFileEncryption(data, password) {
-        if (data.length > 1024 * 1024) { // > 1MB
-            try {
-                const result = await this.useWorkerForCrypto('encrypt', {
-                    data: data,
-                    password: password,
-                    algorithm: 'aes-gcm'
-                });
-                return result;
-            } catch (error) {
-                // Fallback vers méthode synchrone
-                return await this.basicEncrypt(data, password);
+    toggleTheme() {
+        const newTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
+        this.setTheme(newTheme);
+    }
+
+    updateThemeToggle() {
+        const toggle = document.getElementById('theme-toggle');
+        const icon = toggle?.querySelector('i');
+        const text = toggle?.querySelector('.toggle-text');
+        
+        if (icon && text) {
+            if (this.currentTheme === 'dark') {
+                icon.className = 'fas fa-sun';
+                text.textContent = this.i18n ? this.i18n.translate('theme.light') : 'Light';
+            } else {
+                icon.className = 'fas fa-moon';
+                text.textContent = this.i18n ? this.i18n.translate('theme.dark') : 'Dark';
             }
         }
-        return await this.basicEncrypt(data, password);
     }
 
-    setupPluginSystem() {
-        // Enregistrement des plugins de base
-        try {
-            // Plugin d'exemple de stéganographie
-            this.pluginManager.registerSteganographyMethod('example', {
-                displayName: 'Exemple Plugin',
-                hide: async (carrierFile, secretData) => {
-                    // Implémentation basique
-                    const carrierData = await this.fileToArrayBuffer(carrierFile);
-                    const combined = new Uint8Array(carrierData.byteLength + secretData.length + 16);
-                    combined.set(new Uint8Array(carrierData));
-                    combined.set(new TextEncoder().encode('PLUGIN_START'), carrierData.byteLength);
-                    combined.set(secretData, carrierData.byteLength + 12);
-                    combined.set(new TextEncoder().encode('END'), carrierData.byteLength + secretData.length + 12);
+    setupAdminAccess() {
+        this.logoClicks = 0;
 
-                    return new Blob([combined], { type: carrierFile.type });
-                },
-                extract: async (carrierFile) => {
-                    const data = await this.fileToArrayBuffer(carrierFile);
-                    const uint8Data = new Uint8Array(data);
-                    const marker = new TextEncoder().encode('PLUGIN_START');
-
-                    for (let i = 0; i <= uint8Data.length - marker.length; i++) {
-                        if (this.arrayEqual(uint8Data.slice(i, i + marker.length), marker)) {
-                            const endMarker = new TextEncoder().encode('END');
-                            for (let j = i + marker.length; j <= uint8Data.length - endMarker.length; j++) {
-                                if (this.arrayEqual(uint8Data.slice(j, j + endMarker.length), endMarker)) {
-                                    return uint8Data.slice(i + marker.length, j);
-                                }
-                            }
-                        }
-                    }
-                    throw new Error('Données plugin non trouvées');
+        const logo = document.querySelector('.logo-container');
+        if (logo) {
+            logo.addEventListener('click', (e) => {
+                this.logoClicks++;
+                
+                if (this.logoClicks === 3) {
+                    this.promptForAdminCode();
+                    this.logoClicks = 0;
                 }
+                
+                // Reset après 2 secondes
+                setTimeout(() => {
+                    if (this.logoClicks < 3) this.logoClicks = 0;
+                }, 2000);
             });
-
-        } catch (error) {
-            console.error('❌ Erreur chargement plugins:', error);
         }
     }
 
-    setupLanguageSystem() {
-        // Initialisation simplifiée du système de langue
-        if (this.i18n) {
-            this.i18n.applyLanguage(this.i18n.getCurrentLanguage());
-        }
+    promptForAdminCode() {
+        // Effet visuel pour indiquer l'activation
+        this.showAdminPromptHint();
+        
+        setTimeout(() => {
+            const code = prompt('🔑 Code d\'accès administrateur:');
+            
+            if (code === 'OBSCURA') {
+                this.activateAdminMode();
+            } else if (code !== null) { // Si pas annulé
+                this.showMessage('Code d\'accès incorrect', 'error');
+            }
+        }, 500);
     }
 
-    setupThemeSystem() {
-        // Application du thème initial
-        document.documentElement.setAttribute('data-theme', this.currentTheme);
-        
-        // Mise à jour de l'icône du bouton
-        this.updateThemeToggle();
-        
-        // Event listener pour le toggle
-        const themeToggle = document.getElementById('theme-toggle');
+    showAdminPromptHint() {
+        const hint = document.createElement('div');
+        hint.className = 'admin-hint';
+        hint.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            color: #00ff00;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            z-index: 9999;
+            animation: pulse 1s ease-in-out 3;
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
                 this.toggleTheme();
