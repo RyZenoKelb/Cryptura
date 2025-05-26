@@ -361,50 +361,50 @@ class I18nSystem {
     addObserver(callback) {
         this.observers.push(callback);
     }
-                'footer.processed': 'files processed',
-                
-                // Help Content
-                'help.encode.title': 'Encoding Guide',
-                'help.encode.desc': 'Steganography allows hiding sensitive information in ordinary files.',
-                'help.decode.title': 'Extraction Guide',
-                'help.decode.desc': 'Automated extraction intelligently detects and recovers hidden data.',
-                'help.ultra.title': 'UltraCrypte™ Advanced',
-                'help.ultra.desc': 'Our proprietary technology offers unmatched protection against all forms of attacks.',
-                'help.practices.title': 'Best Practices',
-                
-                // File Types
-                'file.type.image': 'Image',
-                'file.type.audio': 'Audio',
-                'file.type.video': 'Video',
-                'file.type.document': 'Document',
-                'file.type.archive': 'Archive',
-                'file.type.unknown': 'Unknown',
-                
-                // Analysis
-                'analysis.entropy': 'Entropy',
-                'analysis.signatures': 'Signatures',
-                'analysis.patterns': 'Suspicious patterns',
-                'analysis.metadata': 'Metadata',
-                'analysis.likelihood': 'Steganography likelihood',
-                'analysis.confidence.high': 'High',
-                'analysis.confidence.medium': 'Medium',
-                'analysis.confidence.low': 'Low'
-            }
-        };
-        
-        this.loadedLanguages.add('fr');
-        this.loadedLanguages.add('en');
+
+    removeObserver(callback) {
+        const index = this.observers.indexOf(callback);
+        if (index > -1) {
+            this.observers.splice(index, 1);
+        }
     }
 
-    // ========== LANGUAGE DETECTION ==========
+    notifyObservers(oldLang, newLang) {
+        this.observers.forEach(callback => {
+            try {
+                callback(oldLang, newLang);
+            } catch (error) {
+                console.error('Error in i18n observer:', error);
+            }
+        });
+    }
 
-    detectLanguage() {
-        // Try to get language from storage first
-        const stored = localStorage.getItem('obscura_language');
-        if (stored && this.translations[stored]) {
-            this.currentLanguage = stored;
-            return;
+    // ========== UTILITAIRES ==========
+
+    getLanguageInfo(lang) {
+        const info = {
+            'fr': {
+                name: 'Français',
+                nativeName: 'Français',
+                flag: 'fr'
+            },
+            'en': {
+                name: 'English',
+                nativeName: 'English',
+                flag: 'us'
+            }
+        };
+
+        return info[lang] || info[this.fallbackLanguage];
+    }
+
+    formatNumber(number, options = {}) {
+        try {
+            return new Intl.NumberFormat(this.currentLanguage, options).format(number);
+        } catch (error) {
+            return number.toString();
         }
+    }
         
         // Detect from browser
         const browserLang = navigator.language.substring(0, 2);
