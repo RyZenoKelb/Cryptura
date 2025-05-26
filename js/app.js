@@ -1983,45 +1983,45 @@ class ObscuraApp {
 
     resetUploadZone(zoneId, title, description, iconClass) {
         const zone = document.getElementById(zoneId);
+        const icon = zone.querySelector('i');
+        const titleElement = zone.querySelector('h3');
+        const descElement = zone.querySelector('p');
+        const small = zone.querySelector('small');
+
+        icon.className = iconClass;
+        icon.style.color = 'var(--primary-color)';
+        titleElement.textContent = title;
+        descElement.textContent = description;
+
+        if (small) {
+            small.textContent = zoneId === 'carrier-upload' ? 'Images, Audio, Vidéo, Documents' : '';
         }
 
-        if (!ultraFile && !textInput) {
-            this.showMessage('Veuillez sélectionner un fichier ou saisir un message', 'error');
-            return;
-        }
-
-        // Logique de chiffrement UltraCrypte
-        this.showMessage('Chiffrement UltraCrypte en cours...', 'info');
-        
-        try {
-            let data;
-            if (ultraFile) {
-                data = await this.fileToArrayBuffer(ultraFile);
-            } else {
-                data = new TextEncoder().encode(textInput);
-            }
-
-            // Options de chiffrement
-            const options = {
-                level: securityLevel,
-                compress: document.getElementById('ultra-compress')?.checked || false,
-                stealth: document.getElementById('ultra-stealth')?.checked || false,
-                deniable: document.getElementById('ultra-deniable')?.checked || false
-            };
-
-            const encrypted = await this.ultraCrypte.encrypt(data, masterKey, options);
-            
-            const filename = ultraFile ? 
-                `${ultraFile.name.split('.')[0]}_ultra.ucrypt` : 
-                `message_ultra_${Date.now()}.ucrypt`;
-            
-            this.downloadFile(new Blob([encrypted]), filename);
-            this.showMessage('Chiffrement UltraCrypte terminé avec succès!', 'success');
-            
-        } catch (error) {
-            this.showMessage(`Erreur de chiffrement: ${error.message}`, 'error');
-        }
+        delete zone.dataset.file;
+        zone.classList.remove('fade-in');
     }
+
+    cancelOperations() {
+        // Annulation des opérations en cours
+        const progressElements = document.querySelectorAll('.progress-container[style*="block"]');
+        progressElements.forEach(progress => {
+            this.hideProgress(progress.id);
+        });
+
+        this.showMessage('Opérations annulées', 'warning');
+    }
+
+    // ========== CHIFFREMENT DE BASE ==========
+
+    async basicEncrypt(data, password) {
+        const encoder = new TextEncoder();
+        
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            encoder.encode(password),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveBits', 'deriveKey']
 
     async handleUltraDecrypt() {
         const masterKey = document.getElementById('ultra-master-key').value;
