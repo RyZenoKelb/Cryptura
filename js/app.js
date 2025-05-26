@@ -545,25 +545,7 @@ class ObscuraApp {
 
         if (ultraFileInput) {
             ultraFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'carrier');
-            });
-        }
-
-        if (secretFileInput) {
-            secretFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'secret');
-            });
-        }
-
-        if (decodeFileInput) {
-            decodeFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'decode');
-            });
-        }
-
-        if (ultraFileInput) {
-            ultraFileInput.addEventListener('change', (e) => {
-                this.handleFileSelect(e.target, 'ultra');
+                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'ultra');
             });
         }
 
@@ -611,6 +593,24 @@ class ObscuraApp {
             zone.addEventListener('drop', (e) => {
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
+                    const zoneId = zone.id;
+                    let type = '';
+
+                    if (zoneId === 'carrier-upload') type = 'carrier';
+                    else if (zoneId === 'secret-upload') type = 'secret';
+                    else if (zoneId === 'decode-upload') type = 'decode';
+
+                    if (type) {
+                        this.handleFileDrop(files[0], type);
+                    }
+                }
+            });
+        });
+    }
+
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+E : Encodage
                     const zoneId = zone.id;
                     let type = '';
 
