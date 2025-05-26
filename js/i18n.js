@@ -329,7 +329,126 @@ class I18nSystem {
                 'ultra.compress.desc': 'Reduces data size',
                 'ultra.compress.tooltip': 'Advanced LZMA compression to reduce file size before encryption.',
                 'ultra.stealth.title': 'Stealth Mode',
-}
+                'ultra.stealth.desc': 'Masks signatures',
+                'ultra.stealth.tooltip': 'Adds random noise to mask cryptographic signatures and make detection more difficult.',
+                'ultra.deniable.title': 'Plausible Deniability',
+                'ultra.deniable.desc': 'Double encryption',
+                'ultra.deniable.tooltip': 'Creates two encryption levels with different keys to allow plausible deniability of real content.',
+                'ultra.btn.encrypt': 'Encrypt with UltraCrypte™',
+                'ultra.btn.decrypt': 'Decrypt',
+                
+                // Key Strength
+                'key.strength.weak': 'Weak',
+                'key.strength.fair': 'Fair',
+                'key.strength.good': 'Good',
+                'key.strength.strong': 'Strong',
+                'key.strength.excellent': 'Excellent',
+                'key.entropy': '{bits} bits of entropy',
+                
+                // Messages
+                'message.file.required': 'Please select a carrier file',
+                'message.secret.required': 'Please enter a secret message',
+                'message.password.required': 'A password is required for this encryption level',
+                'message.file.too.large': 'File is too large (max {max})',
+                'message.unsupported.format': 'Unsupported file format',
+                'message.invalid.password': 'Incorrect password',
+                'message.extraction.failed': 'No hidden data detected',
+                'message.processing.error': 'Processing error',
+                'message.success.copy': 'Text copied to clipboard',
+                'message.success.save': 'File saved successfully',
+                
+                // Footer
+                'footer.copyright': '© 2025 Obscura',
+                'footer.tagline': 'Professional Steganography',
+                'footer.mode': 'Offline Mode',
+                'footer.processed': 'files processed',
+                
+                // Help Content
+                'help.encode.title': 'Encoding Guide',
+                'help.encode.desc': 'Steganography allows hiding sensitive information in ordinary files.',
+                'help.decode.title': 'Extraction Guide',
+                'help.decode.desc': 'Automated extraction intelligently detects and recovers hidden data.',
+                'help.ultra.title': 'UltraCrypte™ Advanced',
+                'help.ultra.desc': 'Our proprietary technology offers unmatched protection against all forms of attacks.',
+                'help.practices.title': 'Best Practices',
+                
+                // File Types
+                'file.type.image': 'Image',
+                'file.type.audio': 'Audio',
+                'file.type.video': 'Video',
+                'file.type.document': 'Document',
+                'file.type.archive': 'Archive',
+                'file.type.unknown': 'Unknown',
+                
+                // Analysis
+                'analysis.entropy': 'Entropy',
+                'analysis.signatures': 'Signatures',
+                'analysis.patterns': 'Suspicious patterns',
+                'analysis.metadata': 'Metadata',
+                'analysis.likelihood': 'Steganography likelihood',
+                'analysis.confidence.high': 'High',
+                'analysis.confidence.medium': 'Medium',
+                'analysis.confidence.low': 'Low'
+            }
+        };
+        
+        this.loadedLanguages.add('fr');
+        this.loadedLanguages.add('en');
+    }
 
-// Suppression du console.log final
-// console.log('🌍 Système I18n chargé');
+    // ========== LANGUAGE DETECTION ==========
+
+    detectLanguage() {
+        // Try to get language from storage first
+        const stored = localStorage.getItem('obscura_language');
+        if (stored && this.translations[stored]) {
+            this.currentLanguage = stored;
+            return;
+        }
+        
+        // Detect from browser
+        const browserLang = navigator.language.substring(0, 2);
+        if (this.translations[browserLang]) {
+            this.currentLanguage = browserLang;
+        } else {
+            this.currentLanguage = this.fallbackLanguage;
+        }
+        
+        localStorage.setItem('obscura_language', this.currentLanguage);
+    }
+
+    // ========== TRANSLATION METHODS ==========
+
+    t(key, params = {}) {
+        const translation = this.getTranslation(key);
+        
+        if (!translation) {
+            console.warn(`Missing translation for key: ${key}`);
+            return key;
+        }
+        
+        return this.interpolate(translation, params);
+    }
+
+    getTranslation(key) {
+        const lang = this.translations[this.currentLanguage];
+        if (lang && lang[key]) {
+            return lang[key];
+        }
+        
+        // Fallback to default language
+        const fallback = this.translations[this.fallbackLanguage];
+        if (fallback && fallback[key]) {
+            return fallback[key];
+        }
+        
+        return null;
+    }
+
+    interpolate(text, params) {
+        return text.replace(/\{(\w+)\}/g, (match, key) => {
+            return params[key] !== undefined ? params[key] : match;
+        });
+    }
+
+    // ========== LANGUAGE SWITCHING ==========

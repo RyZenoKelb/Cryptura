@@ -1,129 +1,129 @@
-// ============= STEGANOGRAPHY.JS - Moteur de stéganographie =============
-// Implémentation des algorithmes de dissimulation de données
+// ============= STEGANOGRAPHY.JS - Moteur de Stéganographie Avancé =============
+// Dissimulation intelligente avec protection anti-analyse
 
 class SteganographyEngine {
     constructor() {
-        this.methods = {
-            lsb: this.lsbMethod.bind(this),
-            metadata: this.metadataMethod.bind(this),
-            'audio-spread': this.audioSpreadMethod.bind(this),
-            'video-frame': this.videoFrameMethod.bind(this),
-            'document-hidden': this.documentHiddenMethod.bind(this)
-        };
-        this.supportedTypes = ['image', 'audio', 'video', 'document'];
-    }
-
-    // Détection du type de fichier
-    detectFileType(file) {
-        const extension = file.name.split('.').pop().toLowerCase();
-        const typeMapping = {
-            // Images
-            'jpg': 'image', 'jpeg': 'image', 'png': 'image', 'gif': 'image', 
-            'bmp': 'image', 'webp': 'image', 'tiff': 'image',
-            
-            // Audio
-            'mp3': 'audio', 'wav': 'audio', 'flac': 'audio', 'ogg': 'audio', 
-            'm4a': 'audio', 'aac': 'audio', 'wma': 'audio',
-            
-            // Vidéo
-            'mp4': 'video', 'avi': 'video', 'mkv': 'video', 'mov': 'video', 
-            'wmv': 'video', 'flv': 'video', 'webm': 'video',
-            
-            // Documents
-            'pdf': 'document', 'txt': 'document', 'doc': 'document', 
-            'docx': 'document', 'rtf': 'document', 'odt': 'document'
-        };
+        this.supportedFormats = new Map();
+        this.chunkSize = 32 * 1024; // 32KB chunks for streaming
+        this.maxFileSize = 500 * 1024 * 1024; // 500MB
+        this.antiAnalysisEnabled = true;
         
-        return typeMapping[extension] || 'unknown';
+        this.initSupportedFormats();
+        this.setupAntiAnalysisProtection();
     }
 
-    // Estimation de capacité
-    getCapacity(file, method = 'lsb') {
-        const fileType = this.detectFileType(file);
-        const baseSize = file.size;
+    // ========== SUPPORTED FORMATS ==========
+
+    initSupportedFormats() {
+        // Images
+        this.supportedFormats.set('image/jpeg', {
+            type: 'image',
+            methods: ['lsb', 'metadata', 'distributed'],
+            capacity: 0.125, // 1 bit per 8 bits
+            processor: this.processImage.bind(this)
+        });
         
-        const capacityRatios = {
-            image: { lsb: 0.125, metadata: 0.02 }, // 12.5% pour LSB, 2% pour métadonnées
-            audio: { 'audio-spread': 0.05, metadata: 0.01 }, // 5% pour spread, 1% pour métadonnées
-            video: { 'video-frame': 0.02, metadata: 0.005 }, // 2% pour frames, 0.5% pour métadonnées
-            document: { 'document-hidden': 0.1, metadata: 0.05 } // 10% pour caché, 5% pour métadonnées
-        };
+        this.supportedFormats.set('image/png', {
+            type: 'image',
+            methods: ['lsb', 'metadata', 'alpha-channel'],
+            capacity: 0.25,
+            processor: this.processImage.bind(this)
+        });
         
-        const ratio = capacityRatios[fileType]?.[method] || 0.01;
-        return Math.floor(baseSize * ratio);
-    }
-
-    // Dissimulation de données - CORRECTION
-    async hideData(carrierFile, secretData, method = 'auto', options = {}) {
-        try {
-            // Validation des entrées
-            if (!carrierFile) {
-                throw new Error('Fichier porteur requis');
-            }
-            if (!secretData || secretData.length === 0) {
-                throw new Error('Données secrètes requises');
-            }
-
-            if (method === 'auto') {
-                method = this.selectBestMethod(carrierFile, secretData.length);
-            }
-            
-            const fileType = this.detectFileType(carrierFile);
-            
-            // Pour l'instant, on se concentre sur LSB qui fonctionne
-            if (method === 'lsb' || fileType === 'image') {
-                const result = await this.lsbMethod(carrierFile, secretData, 'hide', options);
-                
-                // Validation du résultat
-                if (!result || !result.file) {
-                    throw new Error('Résultat d\'encodage invalide');
-                }
-                
-                return result;
-            }
-            
-            throw new Error(`Méthode ${method} non supportée pour le type ${fileType}`);
-            
-        } catch (error) {
-            throw new Error(`Erreur hideData: ${error.message}`);
-        }
-    }
-
-    // Extraction de données - CORRECTION  
-    async extractData(carrierFile, method = 'auto', options = {}) {
-        try {
-            // Validation d'entrée
-            if (!carrierFile) {
-                throw new Error('Fichier requis pour extraction');
-            }
-
-            if (method === 'auto') {
-                // Tentative avec LSB en premier
-                try {
-                    const result = await this.lsbMethod(carrierFile, null, 'extract', options);
-                    return result;
-                } catch (error) {
-                    throw new Error(`Auto-détection échouée: ${error.message}`);
-                }
-            }
-            
-            const methodFunction = this.methods[method];
-            
-            if (!methodFunction) {
-                throw new Error(`Méthode inconnue: ${method}`);
-            }
-            
-            return await methodFunction(carrierFile, null, 'extract', options);
-            
-        } catch (error) {
-            throw new Error(`Erreur extractData: ${error.message}`);
-        }
-    }
-
-    // Auto-détection et extraction
-    async autoDetectAndExtract(carrierFile) {
-        const detectedMethods = await this.detectHiddenData(carrierFile);
+        this.supportedFormats.set('image/bmp', {
+            type: 'image',
+            methods: ['lsb', 'distributed'],
+            capacity: 0.375,
+            processor: this.processImage.bind(this)
+        });
         
+        this.supportedFormats.set('image/gif', {
+            type: 'image',
+            methods: ['metadata', 'palette'],
+            capacity: 0.1,
+            processor: this.processImage.bind(this)
+        });
+        
+        // Audio
+        this.supportedFormats.set('audio/wav', {
+            type: 'audio',
+            methods: ['lsb', 'echo-hiding', 'phase-coding'],
+            capacity: 0.5,
+            processor: this.processAudio.bind(this)
+        });
+        
+        this.supportedFormats.set('audio/mp3', {
+            type: 'audio',
+            methods: ['metadata', 'unused-bits'],
+            capacity: 0.05,
+            processor: this.processAudio.bind(this)
+        });
+        
+        this.supportedFormats.set('audio/flac', {
+            type: 'audio',
+            methods: ['lsb', 'metadata'],
+            capacity: 0.25,
+            processor: this.processAudio.bind(this)
+        });
+        
+        // Video
+        this.supportedFormats.set('video/mp4', {
+            type: 'video',
+            methods: ['metadata', 'frame-lsb'],
+            capacity: 0.01,
+            processor: this.processVideo.bind(this)
+        });
+        
+        this.supportedFormats.set('video/avi', {
+            type: 'video',
+            methods: ['metadata', 'frame-lsb'],
+            capacity: 0.02,
+            processor: this.processVideo.bind(this)
+        });
+        
+        // Documents
+        this.supportedFormats.set('application/pdf', {
+            type: 'document',
+            methods: ['metadata', 'whitespace', 'font-variation'],
+            capacity: 0.1,
+            processor: this.processDocument.bind(this)
+        });
+        
+        this.supportedFormats.set('application/msword', {
+            type: 'document',
+            methods: ['metadata', 'formatting'],
+            capacity: 0.05,
+            processor: this.processDocument.bind(this)
+        });
+        
+        this.supportedFormats.set('application/vnd.openxmlformats-officedocument.wordprocessingml.document', {
+            type: 'document',
+            methods: ['metadata', 'xml-injection'],
+            capacity: 0.1,
+            processor: this.processDocument.bind(this)
+        });
+        
+        // Text
+        this.supportedFormats.set('text/plain', {
+            type: 'text',
+            methods: ['whitespace', 'unicode'],
+            capacity: 0.2,
+            processor: this.processText.bind(this)
+        });
+        
+        // Archives
+        this.supportedFormats.set('application/zip', {
+            type: 'archive',
+            methods: ['comment', 'extra-field', 'dummy-files'],
+            capacity: 0.1,
+            processor: this.processArchive.bind(this)
+        });
+        
+        this.supportedFormats.set('application/x-rar-compressed', {
+            type: 'archive',
+            methods: ['comment', 'recovery-data'],
+            capacity: 0.05,
+            processor: this.processArchive.bind(this)
         for (const method of detectedMethods) {
             try {
                 const result = await this.extractData(carrierFile, method.name);
