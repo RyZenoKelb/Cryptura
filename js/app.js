@@ -1946,22 +1946,22 @@ class ObscuraApp {
         if (localStorage.getItem('obscura_debug') === 'true') {
             console.group('🔍 Debug Error Details');
             console.log('Context:', context);
-            color = '#f59e0b';
-        } else if (score < 75) {
-            level = 'Correct';
-            color = '#3b82f6';
-        } else {
-            level = 'Excellent';
-            color = '#10b981';
+            console.log('Error Object:', error);
+            console.log('Error Type:', typeof error);
+            console.log('Stack Trace:', error?.stack);
+            console.groupEnd();
         }
+    }
 
-        strengthBar.style.background = color;
-        strengthText.textContent = level;
-        strengthText.title = feedback.join(', ');
-        
-        if (entropyElement) {
-            entropyElement.textContent = `${entropy} bits d'entropie`;
-        }
+    // ========== GESTION DES RÉINITIALISATIONS ==========
+
+    resetEncode() {
+        // Réinitialisation des fichiers
+        this.currentFiles.carrier = null;
+        this.currentFiles.secret = null;
+
+        document.getElementById('carrier-file').value = '';
+        document.getElementById('secret-file').value = '';
     }
 
     getCharsetSize(password) {
