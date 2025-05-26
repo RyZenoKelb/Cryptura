@@ -76,6 +76,24 @@ class I18nManager {
                 },
                 
                 // Options
+                'options.stego.method': 'Méthode de Stéganographie',
+                'options.crypto.level': 'Niveau de Chiffrement',
+                'options.password': 'Mot de passe de chiffrement',
+                'options.advanced': 'Options Avancées',
+                
+                // Buttons
+                'btn.encode': 'Lancer l\'encodage',
+                'btn.decode': 'Extraire les données',
+                'btn.analyze': 'Analyse forensique',
+                'btn.reset': 'Réinitialiser',
+                'btn.download': 'Télécharger le résultat',
+                'btn.save': 'Sauvegarder l\'extraction',
+                
+                // Footer
+                'footer.copyright': '© 2025 Obscura',
+                'footer.tagline': 'Stéganographie Professionnelle',
+                'footer.mode': 'Mode Hors-ligne',
+                'footer.processed': 'fichiers traités',
                 
                 // Messages
                 'message.welcome': 'Bienvenue dans Obscura - Stéganographie professionnelle'
@@ -113,46 +131,28 @@ class I18nManager {
                 'upload.decode.desc': 'Select the suspicious or encoded file',
                 'upload.decode.types': 'All supported formats',
                 
+                upload: {
+                    carrier: {
+                        title: "Carrier File",
+                        desc: "Drop your media or click to select",
+                        types: "Images • Audio • Video • Documents"
+                    },
+                    secret: {
+                        title: "Secret Message",
+                        desc: "Enter your confidential message",
+                        placeholder: "Your confidential message..."
+                    },
+                    decode: {
+                        title: "File to Analyze",
+                        desc: "Select the suspicious or encoded file",
+                        types: "All formats supported"
+                    }
+                },
+                
                 // Options
                 'options.stego.method': 'Steganography Method',
                 'options.crypto.level': 'Encryption Level',
                 'options.password': 'Encryption password',
-                'options.advanced': 'Advanced Options',
-                
-                // Buttons
-                'btn.encode': 'Start encoding',
-                'btn.decode': 'Extract data',
-                'btn.analyze': 'Forensic analysis',
-                'btn.reset': 'Reset',
-                'btn.download': 'Download result',
-                'btn.save': 'Save extraction',
-                
-                // Footer
-                'footer.copyright': '© 2025 Obscura',
-                'footer.tagline': 'Professional Steganography',
-                'footer.mode': 'Offline Mode',
-                'footer.processed': 'files processed',
-                
-                // Messages
-                'message.welcome': 'Welcome to Obscura - Professional Steganography'
-            }
-        };
-    }
-
-    detectBrowserLanguage() {
-        const browserLang = navigator.language || navigator.userLanguage;
-        const langCode = browserLang.split('-')[0].toLowerCase();
-        
-        if (this.translations[langCode]) {
-            this.currentLanguage = langCode;
-        }
-        
-        // Vérifier le localStorage
-        const savedLang = localStorage.getItem('obscura_language');
-        if (savedLang && this.translations[savedLang]) {
-            this.currentLanguage = savedLang;
-        }
-    }
 
     setLanguage(language) {
         if (this.translations[language]) {

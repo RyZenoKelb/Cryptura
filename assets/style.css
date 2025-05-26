@@ -1071,9 +1071,9 @@ body::before {
     border: 1px solid var(--border-medium);
     border-radius: var(--radius-md);
     padding: 0.75rem;
-
-.password-input input {
-    padding-right: 2.5rem; /* Espace pour l'icône */
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: var(--transition-base);
 }
 
 .toggle-password {
