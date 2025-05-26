@@ -1076,17 +1076,17 @@ body::before {
     transition: var(--transition-base);
 }
 
-.toggle-password {
-    position: absolute;
-    right: 0.5rem; /* Réduit la distance */
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 0.375rem; /* Augmente la zone cliquable */
-    border-radius: var(--radius-sm);
+.option-group select:focus,
+.option-group input:focus {
+    outline: none;
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Password Input */
+.password-input {
+    position: relative;
+    display: flex;
     transition: var(--transition-base);
     display: flex;
     align-items: center;

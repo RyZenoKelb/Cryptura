@@ -153,6 +153,42 @@ class I18nManager {
                 'options.stego.method': 'Steganography Method',
                 'options.crypto.level': 'Encryption Level',
                 'options.password': 'Encryption password',
+                'options.advanced': 'Advanced Options',
+                
+                // Buttons
+                'btn.encode': 'Start encoding',
+                'btn.decode': 'Extract data',
+                'btn.analyze': 'Forensic analysis',
+                'btn.reset': 'Reset',
+                'btn.download': 'Download result',
+                'btn.save': 'Save extraction',
+                
+                // Footer
+                'footer.copyright': '© 2025 Obscura',
+                'footer.tagline': 'Professional Steganography',
+                'footer.mode': 'Offline Mode',
+                'footer.processed': 'files processed',
+                
+                // Messages
+                'message.welcome': 'Welcome to Obscura - Professional Steganography'
+            }
+        };
+    }
+
+    detectBrowserLanguage() {
+        const browserLang = navigator.language || navigator.userLanguage;
+        const langCode = browserLang.split('-')[0].toLowerCase();
+        
+        if (this.translations[langCode]) {
+            this.currentLanguage = langCode;
+        }
+        
+        // Vérifier le localStorage
+        const savedLang = localStorage.getItem('obscura_language');
+        if (savedLang && this.translations[savedLang]) {
+            this.currentLanguage = savedLang;
+        }
+    }
 
     setLanguage(language) {
         if (this.translations[language]) {
@@ -186,42 +222,6 @@ class I18nManager {
         const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
         placeholderElements.forEach(element => {
             const key = element.getAttribute('data-i18n-placeholder');
-            const translation = this.translate(key, language);
-            
-            if (translation) {
-                element.placeholder = translation;
-            }
-        });
-        
-        // Mise à jour de l'attribut lang du document
-        document.documentElement.lang = language;
-    }
-
-    translate(key, language = null) {
-        const lang = language || this.currentLanguage;
-        const translations = this.translations[lang] || this.translations[this.fallbackLanguage];
-        
-        return translations[key] || key;
-    }
-
-    getCurrentLanguage() {
-        return this.currentLanguage;
-    }
-
-    getAvailableLanguages() {
-        return Object.keys(this.translations);
-    }
-
-    updateLanguageSelector() {
-        const currentLangEl = document.getElementById('current-language');
-        const dropdown = document.getElementById('language-dropdown');
-        
-        if (currentLangEl) {
-            currentLangEl.textContent = this.currentLanguage.toUpperCase();
-        }
-        
-        if (dropdown) {
-            const options = dropdown.querySelectorAll('.language-option');
             options.forEach(option => {
                 const lang = option.getAttribute('data-lang');
                 option.classList.toggle('active', lang === this.currentLanguage);
