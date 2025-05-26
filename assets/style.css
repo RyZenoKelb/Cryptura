@@ -1007,14 +1007,14 @@ body::before {
 }
 
 #secret-upload textarea:focus {
-#secret-upload textarea:focus {
     outline: none;
     border-color: var(--primary-500);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.file-option {
-    display: flex;
+/* Options Grid */
+.options-grid {
+    display: grid;
     align-items: center;
     gap: 0.5rem;
     color: var(--text-secondary);
