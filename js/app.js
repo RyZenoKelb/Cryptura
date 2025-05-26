@@ -672,10 +672,10 @@ class ObscuraApp {
             secret: ['any'], // Tout type de fichier peut être caché
             decode: ['any'], // Tout fichier peut potentiellement contenir des données
             ultra: ['any'] // UltraCrypte peut chiffrer tout type de fichier
-            progress.classList.remove('active');
-            progress.style.display = 'none';
-        });
-        
+        };
+
+        if (usage === 'carrier' && fileType === 'unknown') {
+            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
         // Désactiver tous les onglets
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.classList.remove('active');
