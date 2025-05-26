@@ -519,44 +519,44 @@ class SteganographyEngine {
         for (let i = 0; i < bits.length; i += 8) {
             let byte = 0;
             for (let j = 0; j < 8; j++) {
-                let byte = 0;
-                for (let bit = 0; bit < 8; bit++) {
-                    const carrierIndex = actualDataStartBit + i * 8 + bit;
-                    if (carrierIndex < carrier.length) {
-                        byte |= (carrier[carrierIndex] & 1) << bit;
-                    }
-                }
-                extractedData.push(byte);
+                byte |= (bits[i + j] << j);
             }
-            
-            return new Uint8Array(extractedData);
-            
-        } catch (error) {
-            throw new Error(`Erreur extraction LSB: ${error.message}`);
+            bytes.push(byte);
         }
+        return new Uint8Array(bytes);
     }
 
-    async encodeMetadata(carrierData, secretData, fileType, options = {}) {
-        try {
-            const carrier = new Uint8Array(carrierData);
-            const secret = new Uint8Array(secretData);
-            
-            switch (fileType.toLowerCase()) {
-                case 'jpg':
-                case 'jpeg':
-                    return await this.encodeJPEGMetadata(carrier, secret, options);
-                case 'png':
-                    return await this.encodePNGMetadata(carrier, secret, options);
-                default:
-                    throw new Error(`Type de fichier non supporté pour métadonnées: ${fileType}`);
-            }
-        } catch (error) {
-            throw new Error(`Erreur encodage métadonnées: ${error.message}`);
+    bitsToNumber(bits) {
+        let number = 0;
+        for (let i = 0; i < bits.length; i++) {
+            number |= (bits[i] << i);
         }
+        return number;
     }
 
-    async encodeJPEGMetadata(carrier, secret, options = {}) {
-        // Création d'un marqueur EXIF personnalisé
+    generateSequentialPositions(length, offset = 0) {
+        const positions = [];
+        for (let i = 0; i < length; i++) {
+            positions.push(i + offset);
+        }
+        return positions;
+    }
+
+    generateStealthPositions(length, max, offset = 0) {
+        const positions = [];
+        const step = Math.floor(max / length);
+        for (let i = 0; i < length; i++) {
+            positions.push((i * step) + offset);
+        }
+        return positions;
+    }
+
+    async compressData(data) {
+        // Implement compression logic here
+        return data;
+    }
+
+    async encryptData(data, password, algorithm) {
         const marker = new TextEncoder().encode('OBSCURA:');
         const sizeBuffer = new ArrayBuffer(4);
         new DataView(sizeBuffer).setUint32(0, secret.length, false);
