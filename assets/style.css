@@ -1015,20 +1015,6 @@ body::before {
 /* Options Grid */
 .options-grid {
     display: grid;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-}
-
-.file-option input[type="file"] {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-}
-
-/* Options Grid */
-.options-grid {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
@@ -1824,6 +1810,20 @@ body::before {
 }
 
 /* Print Styles */
+@media print {
+    .header, .nav-container, .footer, .action-buttons {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 0;
+        max-width: none;
+    }
+    
+    .panel {
+        display: block !important;
+    }
+}
 @media print {
     .header, .nav-container, .footer, .action-buttons {
         display: none;
