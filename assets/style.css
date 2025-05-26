@@ -1828,71 +1828,6 @@ body::before {
 /* Interface UltraCrypte complètement revue */
 .trademark {
     font-size: 0.6em;
-    
-    .main-content {
-        padding: 0;
-        max-width: none;
-    }
-    
-    .panel {
-        display: block !important;
-    }
-}
-
-/* Bouton de sélection de fichier stylé */
-.file-select-btn {
-    background: var(--primary-500);
-    color: var(--text-white);
-    border: none;
-    border-radius: var(--radius-md);
-    padding: 0.375rem 0.75rem;
-    font-size: 0.75rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-base);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-    text-decoration: none;
-    min-height: auto;
-    line-height: 1.2;
-}
-
-.file-select-btn:hover {
-    background: var(--primary-600);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-/* Correction : icône toujours visible */
-.file-select-btn i {
-    font-size: 0.75rem;
-    opacity: 1;
-    transition: var(--transition-base);
-}
-
-.file-select-btn:hover i {
-    transform: scale(1.1);
-}
-
-.file-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 0.75rem;
-    margin-top: 0.75rem;
-}
-
-.file-option span {
-    font-style: italic;
-    opacity: 0.8;
-}
-
-/* Interface UltraCrypte complètement revue */
-.trademark {
-    font-size: 0.6em;
     color: var(--orange-500);
     font-weight: 400;
     vertical-align: super;
@@ -2806,6 +2741,71 @@ body::before {
     word-wrap: break-word;
     max-height: 400px;
     overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.file-info-display {
+    background: var(--bg-gray);
+    border: 1px solid var(--border-light);
+    border-radius: var (--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.file-preview-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.file-preview-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    text-align: center;
+}
+
+.info-card h4 {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.info-card p {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Boutons d'action pour les résultats */
+.result-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.copy-text-btn {
+    background: var(--emerald-500);
+    color: var(--text-white);
+    border: 1px solid var(--emerald-600);
+}
+
+.copy-text-btn:hover:not(:disabled) {
+    background: var(--emerald-600);
+    transform: translateY(-1px);
     margin-bottom: 1rem;
 }
 
