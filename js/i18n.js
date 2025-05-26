@@ -204,29 +204,29 @@ class I18nSystem {
             // UltraCrypte
             'ultra.master.key': 'Ultra-secure master key',
             'ultra.security.level': 'Security level',
-            },
-            
-            en: {
-                // Header
-                'header.tagline': 'Advanced Steganography',
-                'header.status': 'System Active',
-                'theme.dark': 'Dark',
-                'theme.light': 'Light',
-                
-                // Navigation
-                'nav.encode': 'Encode',
-                'nav.decode': 'Decode',
-                'nav.ultracrypte': 'UltraCrypte',
-                'nav.help': 'Documentation',
-                
-                // Panel Titles
-                'panel.encode.title': 'Secure Encoding',
-                'panel.encode.subtitle': 'Advanced message concealment in your multimedia files with military-grade encryption',
-                'panel.decode.title': 'Extraction & Analysis',
-                'panel.decode.subtitle': 'Intelligent detection and extraction of hidden data with automatic decryption',
-                'panel.help.title': 'Documentation',
-                'panel.help.subtitle': 'Complete Obscura usage guide and security best practices',
-                
+            'ultra.advanced.options': 'Advanced options',
+            'ultra.encrypt': 'Encrypt with UltraCrypt™',
+            'ultra.decrypt': 'Decrypt',
+
+            // Errors
+            'error.generic': 'An error occurred',
+            'error.file.read': 'Unable to read file',
+            'error.encoding.failed': 'Encoding failed',
+            'error.decoding.failed': 'Decoding failed',
+            'error.encryption.failed': 'Encryption failed',
+            'error.decryption.failed': 'Decryption failed',
+
+            // Admin
+            'admin.panel.title': 'Administrator Panel',
+            'admin.crack.title': 'Advanced Cracking',
+            'admin.analysis.title': 'Forensic Analysis',
+            'admin.tools.title': 'System Tools'
+        });
+    }
+
+    // ========== DÉTECTION DE LANGUE ==========
+
+    detectLanguage() {
                 // Upload Areas
                 'upload.carrier.title': 'Carrier File',
                 'upload.carrier.desc': 'Drag your media or click to select',
