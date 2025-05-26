@@ -16,6 +16,23 @@ class SteganographyEngine {
 
     setupAntiAnalysisProtection() {
         this.obfuscationPatterns = [
+            'randomizePositions',
+            'addDecoyData',
+            'mimicNaturalPatterns',
+            'disperseAcrossChannels'
+        ];
+        
+        this.timingVariation = {
+            minDelay: 10,
+            maxDelay: 100,
+            jitterRange: 20
+        };
+    }
+
+    // ========== SUPPORTED FORMATS ==========
+
+    initSupportedFormats() {
+        // Images
         this.supportedFormats.set('image/jpeg', {
             type: 'image',
             methods: ['lsb', 'metadata', 'distributed'],
@@ -119,23 +136,6 @@ class SteganographyEngine {
             processor: this.processArchive.bind(this)
         });
         
-        this.supportedFormats.set('application/x-rar-compressed', {
-            type: 'archive',
-            methods: ['comment', 'recovery-data'],
-            capacity: 0.05,
-            processor: this.processArchive.bind(this)
-        });
-    }
-
-    // ========== ANTI-ANALYSIS PROTECTION ==========
-
-    setupAntiAnalysisProtection() {
-        this.obfuscationPatterns = [
-            'randomizePositions',
-            'addDecoyData',
-            'mimicNaturalPatterns',
-            'disperseAcrossChannels'
-        ];
         
         this.timingVariation = {
             minDelay: 10,
