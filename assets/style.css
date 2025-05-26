@@ -1032,6 +1032,24 @@ body::before {
 #secret-upload textarea:focus {
     outline: none;
     border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Suppression des styles pour l'option fichier */
+.file-option {
+    display: none;
+}
+
+.file-select-btn {
+    display: none;
+}
+
+/* Options Grid */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .option-group {
@@ -1053,24 +1071,6 @@ body::before {
     border: 1px solid var(--border-medium);
     border-radius: var(--radius-md);
     padding: 0.75rem;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: var(--transition-base);
-}
-
-.option-group select:focus,
-.option-group input:focus {
-    outline: none;
-    border-color: var(--primary-500);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Password Input */
-.password-input {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
 
 .password-input input {
     padding-right: 2.5rem; /* Espace pour l'icône */
