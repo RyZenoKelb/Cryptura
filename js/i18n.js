@@ -149,38 +149,38 @@ class I18nSystem {
             'upload.secret.placeholder': 'Your confidential message...',
             'upload.decode.title': 'File to Analyze',
             'upload.decode.desc': 'Select the suspect or encoded file',
-                'ultra.btn.encrypt': 'Chiffrer avec UltraCrypte™',
-                'ultra.btn.decrypt': 'Déchiffrer',
-                
-                // Key Strength
-                'key.strength.weak': 'Faible',
-                'key.strength.fair': 'Correct',
-                'key.strength.good': 'Bon',
-                'key.strength.strong': 'Fort',
-                'key.strength.excellent': 'Excellent',
-                'key.entropy': '{bits} bits d\'entropie',
-                
-                // Messages
-                'message.file.required': 'Veuillez sélectionner un fichier porteur',
-                'message.secret.required': 'Veuillez saisir un message secret',
-                'message.password.required': 'Un mot de passe est requis pour ce niveau de chiffrement',
-                'message.file.too.large': 'Le fichier est trop volumineux (max {max})',
-                'message.unsupported.format': 'Format de fichier non supporté',
-                'message.invalid.password': 'Mot de passe incorrect',
-                'message.extraction.failed': 'Aucune donnée cachée détectée',
-                'message.processing.error': 'Erreur lors du traitement',
-                'message.success.copy': 'Texte copié dans le presse-papiers',
-                'message.success.save': 'Fichier sauvegardé avec succès',
-                
-                // Footer
-                'footer.copyright': '© 2025 Obscura',
-                'footer.tagline': 'Stéganographie Professionnelle',
-                'footer.mode': 'Mode Hors-ligne',
-                'footer.processed': 'fichiers traités',
-                
-                // Help Content
-                'help.encode.title': 'Guide d\'Encodage',
-                'help.encode.desc': 'La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.',
+            'upload.decode.types': 'All supported formats',
+
+            // Options
+            'options.stego.method': 'Steganography Method',
+            'options.crypto.level': 'Encryption Level',
+            'options.password': 'Encryption password',
+            'options.advanced': 'Advanced Options',
+
+            // Buttons
+            'btn.encode': 'Start encoding',
+            'btn.decode': 'Extract data',
+            'btn.analyze': 'Forensic analysis',
+            'btn.download': 'Download result',
+            'btn.reset': 'Reset',
+
+            // Messages
+            'message.file.required': 'A file is required',
+            'message.secret.required': 'Secret content cannot be empty',
+            'message.file.too.large': 'File too large (max: {max})',
+            'message.encoding.success': 'Encoding completed successfully',
+            'message.decoding.success': 'Data extracted successfully',
+            'message.extraction.failed': 'No hidden data detected',
+            'message.invalid.password': 'Incorrect password',
+            'message.analysis.complete': 'Forensic analysis completed',
+
+            // Footer
+            'footer.copyright': '© 2025 Obscura',
+            'footer.tagline': 'Professional Steganography',
+            'footer.mode': 'Offline Mode',
+            'footer.processed': 'files processed',
+
+            // Progress
                 'help.decode.title': 'Guide d\'Extraction',
                 'help.decode.desc': 'L\'extraction automatisée détecte et récupère les données cachées intelligemment.',
                 'help.ultra.title': 'UltraCrypte™ Advanced',
