@@ -2022,60 +2022,60 @@ class ObscuraApp {
             { name: 'PBKDF2' },
             false,
             ['deriveBits', 'deriveKey']
-
-    async handleUltraDecrypt() {
-        const masterKey = document.getElementById('ultra-master-key').value;
-        const ultraFile = this.currentFiles.ultra;
+        );
         
-        if (!masterKey) {
-            this.showMessage('Veuillez saisir la clé maître', 'error');
-            return;
-        }
-
-        if (!ultraFile) {
-            this.showMessage('Veuillez sélectionner un fichier chiffré', 'error');
-            return;
-        }
-
-        this.showMessage('Déchiffrement UltraCrypte en cours...', 'info');
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const key = await crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
         
-        try {
-            const encryptedData = await this.fileToArrayBuffer(ultraFile);
-            const decrypted = await this.ultraCrypte.decrypt(encryptedData, masterKey);
-            
-            const filename = ultraFile.name.replace('.ucrypt', '_decrypted');
-            this.downloadFile(new Blob([decrypted]), filename);
-            this.showMessage('Déchiffrement UltraCrypte terminé avec succès!', 'success');
-            
-        } catch (error) {
-            this.showMessage(`Erreur de déchiffrement: ${error.message}`, 'error');
-        }
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const dataToEncrypt = data instanceof Uint8Array ? data : encoder.encode(data);
+        
+        const encrypted = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            dataToEncrypt
+        );
+        
+        const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+        result.set(salt, 0);
+        result.set(iv, salt.length);
+        result.set(new Uint8Array(encrypted), salt.length + iv.length);
+        
+        return result;
     }
 
-    // Méthode handleError améliorée
-    handleError(error, context = 'application') {
-        console.error(`❌ Erreur dans ${context}:`, error);
+    async basicDecrypt(encryptedData, password) {
+        const encoder = new TextEncoder();
+        const decoder = new TextDecoder();
         
-        let message = 'Une erreur inattendue s\'est produite';
-        
-        // Gestion des erreurs null/undefined - CORRECTION
-        if (!error) {
-            message = 'Erreur inconnue - objet d\'erreur null';
-            console.warn('handleError appelé avec error null/undefined');
-        } else if (error && error.message) {
-            if (error.message.includes('network') || error.message.includes('fetch')) {
-                message = 'Erreur de connexion réseau';
-            } else if (error.message.includes('permission') || error.message.includes('denied')) {
-                message = 'Erreur de permissions';
-            } else if (error.message.includes('memory') || error.message.includes('size')) {
-                message = 'Erreur de mémoire - fichier trop volumineux';
-            } else if (error.message.includes('Cannot read properties')) {
-                message = 'Erreur de données - fichier corrompu ou manquant';
-            } else if (error.message.includes('undefined')) {
-                message = 'Erreur de données - propriété manquante';
-            } else {
-                message = error.message;
+        let dataToDecrypt = encryptedData;
+        if (typeof encryptedData === 'string') {
+            // Si c'est une string, on essaie de la décoder
+            try {
+                dataToDecrypt = new Uint8Array(encryptedData.split(',').map(x => parseInt(x)));
+            } catch (e) {
+                dataToDecrypt = encoder.encode(encryptedData);
             }
+        } else if (!(encryptedData instanceof Uint8Array)) {
+            dataToDecrypt = new Uint8Array(encryptedData);
+        }
+        
+        if (dataToDecrypt.length < 28) {
+            throw new Error('Données chiffrées trop courtes');
+        }
+        
+        const salt = dataToDecrypt.slice(0, 16);
         } else if (typeof error === 'string') {
             message = error;
         } else {
