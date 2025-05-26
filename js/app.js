@@ -2076,43 +2076,43 @@ class ObscuraApp {
         }
         
         const salt = dataToDecrypt.slice(0, 16);
-        } else if (typeof error === 'string') {
-            message = error;
-        } else {
-            // Erreur d'un type inattendu
-            message = 'Erreur de type inattendu';
-            console.warn('Erreur non-standard:', typeof error, error);
-        }
+        const iv = dataToDecrypt.slice(16, 28);
+        const encrypted = dataToDecrypt.slice(28);
         
-        this.showMessage(`${message} (${context})`, 'error');
+        const keyMaterial = await crypto.subtle.importKey(
+            'raw',
+            encoder.encode(password),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveBits', 'deriveKey']
+        );
         
-        // Log détaillé pour le debug
-        if (localStorage.getItem('obscura_debug') === 'true') {
-            console.group('🔍 Debug Error Details');
-            console.log('Context:', context);
-            console.log('Error Object:', error);
-            console.log('Error Type:', typeof error);
-            console.log('Stack Trace:', error?.stack);
-            console.groupEnd();
-        }
+        const key = await crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: salt,
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
+        
+        const decrypted = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: iv },
+            key,
+            encrypted
+        );
+        
+        return decoder.decode(decrypted);
     }
 
-    // ========== GESTION DES RÉINITIALISATIONS ==========
+    // ========== UTILITAIRES ==========
 
-    resetEncode() {
-        // Réinitialisation des fichiers
-        this.currentFiles.carrier = null;
-        this.currentFiles.secret = null;
-
-        document.getElementById('carrier-file').value = '';
-        document.getElementById('secret-file').value = '';
-        document.getElementById('secret-text').value = '';
-        document.getElementById('encode-password').value = '';
-
-        // Réinitialisation des zones d'upload
-        this.resetUploadZone('carrier-upload', 'Fichier Porteur', 'Glissez-déposez ou cliquez pour sélectionner', 'fas fa-cloud-upload-alt');
-        this.resetUploadZone('secret-upload', 'Contenu Secret', 'Message texte ou fichier à cacher', 'fas fa-eye-slash');
-
+    updateMethodInfo(method) {
+        // Mise à jour des informations contextuelles selon la méthode
         // Masquage des résultats
         document.getElementById('encode-result').style.display = 'none';
         document.getElementById('encode-progress').style.display = 'none';
