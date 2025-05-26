@@ -48,107 +48,107 @@ class I18nSystem {
             'upload.decode.types': 'Tous formats supportés',
 
             // Options
-                'upload.secret.placeholder': 'Votre message secret...',
-                'upload.decode.title': 'Fichier à Analyser',
-                'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
-                'upload.decode.types': 'Tous formats supportés',
-                
-                // Options
-                'options.stego.method': 'Méthode de Stéganographie',
-                'options.crypto.level': 'Niveau de Chiffrement',
-                'options.password': 'Mot de passe de chiffrement',
-                'options.advanced': 'Options Avancées',
-                'options.detection.mode': 'Mode de détection',
-                'options.decode.password': 'Mot de passe de déchiffrement',
-                
-                // Buttons
-                'btn.encode': 'Lancer l\'encodage',
-                'btn.decode': 'Extraire les données',
-                'btn.analyze': 'Analyse forensique',
-                'btn.reset': 'Réinitialiser',
-                'btn.download': 'Télécharger le résultat',
-                'btn.copy': 'Copier le texte',
-                'btn.save.file': 'Télécharger le fichier',
-                
-                // Progress Messages
-                'progress.encoding': 'Encodage en cours...',
-                'progress.decoding': 'Décodage en cours...',
-                'progress.analyzing': 'Analyse en cours...',
-                'progress.encrypting': 'Chiffrement en cours...',
-                'progress.decrypting': 'Déchiffrement en cours...',
-                'progress.processing': 'Traitement en cours...',
-                'progress.loading': 'Chargement...',
-                'progress.chunk': 'Traitement du bloc {current}/{total}',
-                
-                // Results
-                'result.encode.success': 'Encodage Réussi',
-                'result.decode.success': 'Données Extraites',
-                'result.file.generated': 'Fichier généré :',
-                'result.file.size': 'Taille finale :',
-                'result.method.used': 'Méthode utilisée :',
-                'result.method.detected': 'Méthode détectée :',
-                'result.size.extracted': 'Taille extraite :',
-                'result.encryption': 'Chiffrement :',
-                'result.confidence': 'Confiance :',
-                
-                // Methods
-                'method.auto': 'Auto-détection',
-                'method.lsb': 'LSB (Bit de Poids Faible)',
-                'method.metadata': 'Métadonnées',
-                'method.audio.spread': 'Dispersion Audio',
-                'method.document.hidden': 'Document Caché',
-                'method.distributed': 'Distribution Avancée',
-                
-                // Crypto Levels
-                'crypto.none': 'Aucun chiffrement',
-                'crypto.aes': 'AES-256-GCM',
-                'crypto.ultra': 'UltraCrypte™',
-                'crypto.detected.none': 'Non chiffré',
-                'crypto.detected.basic': 'Chiffrement basique',
-                'crypto.detected.advanced': 'Chiffrement avancé',
-                
-                // Detection Modes
-                'detection.auto': 'Détection automatique',
-                'detection.lsb.only': 'LSB uniquement',
-                'detection.metadata.only': 'Métadonnées uniquement',
-                'detection.brute': 'Force brute',
-                
-                // Advanced Options
-                'advanced.compress': 'Compression des données',
-                'advanced.noise': 'Ajout de bruit',
-                'advanced.multilayer': 'Multi-couches',
-                'advanced.stealth': 'Mode furtif',
-                'advanced.deniable': 'Déni plausible',
-                
-                // UltraCrypte
-                'ultra.title': 'UltraCrypte™',
-                'ultra.subtitle': 'Chiffrement post-quantique de niveau militaire pour vos données ultra-sensibles',
-                'ultra.file.title': 'Sélectionner le fichier à chiffrer',
-                'ultra.file.desc': 'Glissez-déposez ou cliquez pour sélectionner',
-                'ultra.file.types': 'Tous types de fichiers • Max 500MB',
-                'ultra.text.label': 'Message texte à chiffrer',
-                'ultra.text.placeholder': 'Votre message ultra-confidentiel...',
-                'ultra.key.label': 'Clé Maître UltraCrypte',
-                'ultra.key.placeholder': 'Clé maître ultra-sécurisée...',
-                'ultra.key.tooltip': 'Clé principale de dérivation cryptographique. Minimum 12 caractères recommandés pour une sécurité optimale.',
-                'ultra.security.label': 'Niveau de Sécurité',
-                'ultra.security.tooltip': 'Standard: Rapide, sécurisé pour usage général. Militaire: Chiffrement renforcé. Post-Quantique: Résistant aux ordinateurs quantiques.',
-                'ultra.security.standard': 'Standard',
-                'ultra.security.standard.desc': 'AES-256 + ChaCha20',
-                'ultra.security.military': 'Militaire',
-                'ultra.security.military.desc': 'Triple cascade + OTP',
-                'ultra.security.quantum': 'Post-Quantique',
-                'ultra.security.quantum.desc': 'Lattice + Hash chains',
-                'ultra.options.label': 'Options Avancées',
-                'ultra.compress.title': 'Compression LZMA',
-                'ultra.compress.desc': 'Réduit la taille des données',
-                'ultra.compress.tooltip': 'Compression avancée LZMA pour réduire la taille des fichiers avant chiffrement.',
-                'ultra.stealth.title': 'Mode Furtif',
-                'ultra.stealth.desc': 'Masque les signatures',
-                'ultra.stealth.tooltip': 'Ajoute du bruit aléatoire pour masquer les signatures cryptographiques et rendre la détection plus difficile.',
-                'ultra.deniable.title': 'Déni Plausible',
-                'ultra.deniable.desc': 'Double chiffrement',
-                'ultra.deniable.tooltip': 'Crée deux niveaux de chiffrement avec des clés différentes pour permettre un déni plausible du contenu réel.',
+            'options.stego.method': 'Méthode de Stéganographie',
+            'options.crypto.level': 'Niveau de Chiffrement',
+            'options.password': 'Mot de passe de chiffrement',
+            'options.advanced': 'Options Avancées',
+
+            // Buttons
+            'btn.encode': 'Lancer l\'encodage',
+            'btn.decode': 'Extraire les données',
+            'btn.analyze': 'Analyse forensique',
+            'btn.download': 'Télécharger le résultat',
+            'btn.reset': 'Réinitialiser',
+
+            // Messages
+            'message.file.required': 'Un fichier est requis',
+            'message.secret.required': 'Le contenu secret ne peut pas être vide',
+            'message.file.too.large': 'Fichier trop volumineux (max: {max})',
+            'message.encoding.success': 'Encodage réussi avec succès',
+            'message.decoding.success': 'Données extraites avec succès',
+            'message.extraction.failed': 'Aucune donnée cachée détectée',
+            'message.invalid.password': 'Mot de passe incorrect',
+            'message.analysis.complete': 'Analyse forensique terminée',
+
+            // Footer
+            'footer.copyright': '© 2025 Obscura',
+            'footer.tagline': 'Stéganographie Professionnelle',
+            'footer.mode': 'Mode Hors-ligne',
+            'footer.processed': 'fichiers traités',
+
+            // Progress
+            'progress.encoding': 'Encodage en cours...',
+            'progress.decoding': 'Extraction en cours...',
+            'progress.analyzing': 'Analyse en cours...',
+            'progress.encrypting': 'Chiffrement en cours...',
+            'progress.complete': 'Terminé',
+
+            // File types
+            'file.type.text': 'Message texte',
+            'file.type.image': 'Image',
+            'file.type.audio': 'Audio',
+            'file.type.video': 'Vidéo',
+            'file.type.document': 'Document',
+            'file.type.archive': 'Archive',
+            'file.type.unknown': 'Type inconnu',
+
+            // Security levels
+            'security.standard': 'Standard',
+            'security.military': 'Militaire',
+            'security.quantum': 'Quantique',
+
+            // UltraCrypte
+            'ultra.master.key': 'Clé maître ultra-sécurisée',
+            'ultra.security.level': 'Niveau de sécurité',
+            'ultra.advanced.options': 'Options avancées',
+            'ultra.encrypt': 'Chiffrer avec UltraCrypte™',
+            'ultra.decrypt': 'Déchiffrer',
+
+            // Errors
+            'error.generic': 'Une erreur est survenue',
+            'error.file.read': 'Impossible de lire le fichier',
+            'error.encoding.failed': 'Échec de l\'encodage',
+            'error.decoding.failed': 'Échec du décodage',
+            'error.encryption.failed': 'Échec du chiffrement',
+            'error.decryption.failed': 'Échec du déchiffrement',
+
+            // Admin
+            'admin.panel.title': 'Panneau Administrateur',
+            'admin.crack.title': 'Crackage Avancé',
+            'admin.analysis.title': 'Analyse Forensique',
+            'admin.tools.title': 'Outils Système'
+        });
+
+        // Traductions anglaises
+        this.translations.set('en', {
+            // Header
+            'header.tagline': 'Advanced Steganography',
+            'header.status': 'System active',
+            'theme.dark': 'Dark',
+            'theme.light': 'Light',
+
+            // Navigation
+            'nav.encode': 'Encode',
+            'nav.decode': 'Decode',
+            'nav.ultracrypte': 'UltraCrypt',
+            'nav.help': 'Documentation',
+
+            // Panels
+            'panel.encode.title': 'Secure Encoding',
+            'panel.encode.subtitle': 'Advanced data concealment in multimedia files with military-grade encryption',
+            'panel.decode.title': 'Extraction & Analysis',
+            'panel.decode.subtitle': 'Intelligent detection and extraction of hidden data with automatic decryption',
+            'panel.help.title': 'Documentation',
+            'panel.help.subtitle': 'Complete Obscura usage guide and security best practices',
+
+            // Upload zones
+            'upload.carrier.title': 'Carrier File',
+            'upload.carrier.desc': 'Drag your media or click to select',
+            'upload.carrier.types': 'Images • Audio • Video • Documents',
+            'upload.secret.title': 'Secret Content',
+            'upload.secret.placeholder': 'Your confidential message...',
+            'upload.decode.title': 'File to Analyze',
+            'upload.decode.desc': 'Select the suspect or encoded file',
                 'ultra.btn.encrypt': 'Chiffrer avec UltraCrypte™',
                 'ultra.btn.decrypt': 'Déchiffrer',
                 
