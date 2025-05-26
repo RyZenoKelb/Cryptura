@@ -38,6 +38,7 @@ class ObscuraApp {
     // ========== INITIALISATION ==========
 
     init() {
+        this.setupWebWorkers();
         this.setupEventListeners();
         this.setupDragAndDrop();
         this.setupKeyboardShortcuts();
@@ -62,45 +63,44 @@ class ObscuraApp {
         // Initialisation du worker crypto si supporté
         if (typeof Worker !== 'undefined') {
             try {
-                // Création du worker crypto inline
-                const workerCode = `
-                    // Code simplifié du crypto worker
-                    self.onmessage = async function(e) {
-                        const { taskId, operation, data } = e.data;
-                        
-                        try {
-                            let result;
-                            
-                            if (operation === 'hash') {
-                                const hash = await crypto.subtle.digest('SHA-256', data.data);
-                                result = { hash: Array.from(new Uint8Array(hash)) };
-                            } else if (operation === 'encrypt') {
-                                // Chiffrement simple pour le worker
-                                const key = await crypto.subtle.importKey(
-                                    'raw',
-                                    new TextEncoder().encode(data.password.padEnd(32, '0').slice(0, 32)),
-                                    'AES-GCM',
-                                    false,
-                                    ['encrypt']
-                                );
-                                
-                                const iv = crypto.getRandomValues(new Uint8Array(12));
-                                const encrypted = await crypto.subtle.encrypt(
-                                    { name: 'AES-GCM', iv: iv },
-                                    key,
-                                    data.data
-                                );
-                                
-                                const combined = new Uint8Array(iv.length + encrypted.byteLength);
-                                combined.set(iv);
-                                combined.set(new Uint8Array(encrypted), iv.length);
-                                
-                                result = { data: combined };
-                            }
-                            
-                            self.postMessage({ taskId, success: true, result });
-                        } catch (error) {
-                            self.postMessage({ taskId, success: false, error: error.message });
+                this.cryptoWorker = new Worker('js/crypto-worker.js');
+                this.cryptoWorker.onmessage = (e) => this.handleWorkerMessage(e.data);
+                this.cryptoWorker.onerror = (error) => {
+                    console.warn('Worker crypto non disponible:', error);
+                    this.cryptoWorker = null;
+                };
+            } catch (error) {
+                console.warn('Workers non supportés:', error);
+                this.cryptoWorker = null;
+            }
+        }
+    }
+
+    handleWorkerMessage(data) {
+        const { taskId, success, result, error, progress } = data;
+
+        if (progress !== undefined) {
+            this.updateProgress(progress, 'Traitement en cours...');
+            return;
+        }
+
+        if (success) {
+            this.pendingTasks = this.pendingTasks || {};
+            if (this.pendingTasks[taskId]) {
+                this.pendingTasks[taskId].resolve(result);
+                delete this.pendingTasks[taskId];
+            }
+        } else {
+            this.pendingTasks = this.pendingTasks || {};
+            if (this.pendingTasks[taskId]) {
+                this.pendingTasks[taskId].reject(new Error(error));
+                delete this.pendingTasks[taskId];
+            }
+        }
+    }
+
+    async useWorkerForCrypto(operation, data) {
+        if (!this.cryptoWorker) {
                         }
                     };
                 `;
