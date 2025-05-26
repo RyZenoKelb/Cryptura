@@ -692,13 +692,6 @@
                 setTimeout(() => {
                     if (!window.adminMode) {
                         const script = document.createElement('script');
-        // Admin mode activation sequence - Version simplifiée
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-activation si paramètre debug
-            if (window.location.hash === '#admin' || localStorage.getItem('obscura_debug') === 'true') {
-                setTimeout(() => {
-                    if (!window.adminMode) {
-                        const script = document.createElement('script');
                         script.src = 'js/admin.js';
                         script.onload = () => {
                             setTimeout(() => {
@@ -708,6 +701,13 @@
                             }, 500);
                         };
                         document.head.appendChild(script);
+                    }
+                }, 1000);
+            }
+        });
+        
+        // Raccourci clavier alternatif: Ctrl+Shift+A (3 fois)
+        let adminKeySequence = 0;
                     }
                 }, 1000);
             }
