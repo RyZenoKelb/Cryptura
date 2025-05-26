@@ -620,32 +620,32 @@ class ObscuraApp {
         const maxSize = 100 * 1024 * 1024; // 100MB
 
         // Validation de la taille
+        if (file.size > maxSize) {
+            this.showMessage(`Fichier trop volumineux: ${this.formatFileSize(file.size)} (max 100MB)`, 'error');
+            return;
+        }
 
-                    if (zoneId === 'carrier-upload') type = 'carrier';
-                    else if (zoneId === 'secret-upload') type = 'secret';
-                    else if (zoneId === 'decode-upload') type = 'decode';
+        // Validation du type selon l'usage
+        if (!this.validateFileType(file, type)) {
+            return;
+        }
 
-                    if (type) {
-                        this.handleFileDrop(files[0], type);
-                    }
-                }
-            });
-        });
+        // Stockage et mise à jour de l'interface
+        this.currentFiles[type] = file;
+        this.updateUploadZone(type + '-upload', file);
+
+        // Actions spécifiques selon le type
+        if (type === 'secret') {
+            // Effacer le texte secret si un fichier est sélectionné
+            const secretTextarea = document.getElementById('secret-text');
+            if (secretTextarea) {
+                secretTextarea.value = '';
+            }
+        }
+
+        // Mise à jour des informations contextuelles
+        this.updateFileInfo(type, file);
     }
-
-    setupKeyboardShortcuts() {
-        document.addEventListener('keydown', (e) => {
-            // Ctrl+E : Encodage
-            if (e.ctrlKey && e.key === 'e') {
-                e.preventDefault();
-                this.showPanel('encode');
-            }
-            // Ctrl+D : Décodage  
-            else if (e.ctrlKey && e.key === 'd') {
-                e.preventDefault();
-                this.showPanel('decode');
-            }
-            // Ctrl+U : UltraCrypte
             else if (e.ctrlKey && e.key === 'u') {
                 e.preventDefault();
                 this.showPanel('ultracrypte');
