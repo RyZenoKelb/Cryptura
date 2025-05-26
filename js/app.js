@@ -676,95 +676,6 @@ class ObscuraApp {
 
         if (usage === 'carrier' && fileType === 'unknown') {
             this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
-        // Désactiver tous les onglets
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        
-        // Activer l'onglet et le panel correspondants
-        const targetPanel = document.getElementById(`${tabName}-panel`);
-        const targetTab = document.querySelector(`[data-tab="${tabName}"]`);
-        
-        if (targetPanel && targetTab) {
-            targetPanel.classList.add('active');
-            targetTab.classList.add('active');
-            this.currentTab = tabName;
-        }
-    }
-
-    // ========== GESTION DES FICHIERS ==========
-
-    preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    handleFileSelect(input, type) {
-        if (input.files && input.files.length > 0) {
-            this.handleFileDrop(input.files[0], type);
-        }
-    }
-
-    handleFileDrop(file, type) {
-        const maxSize = 100 * 1024 * 1024; // 100MB
-
-        // Validation de la taille
-        if (file.size > maxSize) {
-            this.showMessage(`Fichier trop volumineux: ${this.formatFileSize(file.size)} (max 100MB)`, 'error');
-            return;
-        }
-
-        // Validation du type selon l'usage
-        if (!this.validateFileType(file, type)) {
-            return;
-        }
-
-        // Stockage et mise à jour de l'interface
-        this.currentFiles[type] = file;
-        this.updateUploadZone(type + '-upload', file);
-
-        // Actions spécifiques selon le type
-        if (type === 'secret') {
-            // Effacer le texte secret si un fichier est sélectionné
-            const secretTextarea = document.getElementById('secret-text');
-            if (secretTextarea) {
-                secretTextarea.value = '';
-            }
-        }
-
-        // Mise à jour des informations contextuelles
-        this.updateFileInfo(type, file);
-    }
-
-    validateFileType(file, usage) {
-        // Méthode simplifiée pour éviter l'erreur
-        const extension = file.name.split('.').pop().toLowerCase();
-        const supportedExtensions = {
-            image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'],
-            audio: ['mp3', 'wav', 'flac', 'ogg', 'm4a'],
-            video: ['mp4', 'avi', 'mkv', 'mov', 'wmv'],
-            document: ['pdf', 'txt', 'doc', 'docx', 'rtf']
-        };
-
-        // Détection du type de fichier basique
-        let fileType = 'unknown';
-        for (const [type, extensions] of Object.entries(supportedExtensions)) {
-            if (extensions.includes(extension)) {
-                fileType = type;
-                break;
-            }
-        }
-
-        // Types supportés selon l'usage
-        const supportedTypes = {
-            carrier: ['image', 'audio', 'video', 'document'],
-            secret: ['any'], // Tout type de fichier peut être caché
-            decode: ['any'], // Tout fichier peut potentiellement contenir des données
-            ultra: ['any'] // UltraCrypte peut chiffrer tout type de fichier
-        };
-
-        if (usage === 'carrier' && fileType === 'unknown') {
-            this.showMessage(`Type de fichier non supporté pour porteur: .${extension}`, 'warning');
             this.showMessage('Types supportés: Images (jpg, png, gif), Audio (mp3, wav), Vidéo (mp4, avi), Documents (pdf, txt)', 'info');
             return false;
         }
@@ -956,6 +867,95 @@ class ObscuraApp {
                 resultFile = result;
             } else {
                 throw new Error('Format de résultat d\'encodage invalide');
+            }
+
+            // Vérification que le fichier est valide
+            if (!resultFile || typeof resultFile.size === 'undefined') {
+                throw new Error('Fichier résultat invalide');
+            }
+
+            // Finalisation
+            this.updateProgress('encode-progress', 'Finalisation...', 100);
+            
+            setTimeout(() => {
+                this.hideProgress('encode-progress', true);
+                this.showEncodeResult(resultFile, options.method, cryptoLevel);
+            }, 500);
+
+        } catch (error) {
+            this.handleError(error, 'encodage');
+        }
+    }
+
+    // MÉTHODE MISE À JOUR - validation simplifiée
+    validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
+        this.clearMessages();
+
+        if (!carrierFile) {
+            this.showMessage('Veuillez sélectionner un fichier porteur', 'error');
+            return false;
+        }
+
+        // Validation pour texte seulement
+        if (!secretText) {
+            this.showMessage('Veuillez saisir un message secret', 'error');
+            return false;
+        }
+
+        if (secretText.length > 100000) {
+            this.showMessage('Le message est trop long (maximum 100 000 caractères)', 'error');
+            return false;
+        }
+
+        if (cryptoLevel !== 'none' && !password) {
+            this.showMessage('Un mot de passe est requis pour le chiffrement', 'error');
+            return false;
+        }
+
+        if (password && password.length < 6) {
+            this.showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    // MÉTHODE MANQUANTE - AJOUT CRITIQUE
+    mapCryptoComplexity(cryptoLevel) {
+        const mapping = {
+            'none': 'none',
+            'aes': 'standard',
+            'ultra': 'enhanced'
+        };
+        return mapping[cryptoLevel] || 'standard';
+    }
+
+    // ========== DÉCODAGE ==========
+
+    async handleDecode() {
+        const fileInput = document.getElementById('decode-file');
+        const passwordInput = document.getElementById('decode-password');
+        const detectionMode = document.getElementById('detection-mode');
+        
+        if (!this.currentFiles.decode) {
+            this.showMessage('Veuillez sélectionner un fichier à décoder', 'error');
+            return;
+        }
+
+        const password = passwordInput.value;
+        const mode = detectionMode.value;
+        
+        this.showProgress('decode-progress', 'Analyse du fichier en cours...', 'decoding');
+        
+        try {
+            this.updateProgress('decode-progress', 'Tentative d\'extraction des données...', 25);
+            
+            // Utilisation directe du moteur de stéganographie
+            let extractedData = null;
+            let usedMethod = 'unknown';
+            let confidence = 0;
+            
+            if (mode === 'auto') {
             }
 
             // Vérification que le fichier est valide
