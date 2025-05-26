@@ -187,12 +187,6 @@
                     
                     <div class="options-grid">
                         <div class="option-group">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="options-grid">
-                        <div class="option-group">
                             <label data-i18n="options.stego.method">Méthode de Stéganographie</label>
                             <select id="stego-method">
                                 <option value="auto">Auto-détection</option>
@@ -674,7 +668,6 @@
 
     <!-- Fichiers input cachés -->
     <input type="file" id="carrier-file" style="display: none;" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx">
-    <input type="file" id="secret-file" style="display: none;">
     <input type="file" id="decode-file" style="display: none;">
     <input type="file" id="ultra-file" style="display: none;">
 
@@ -690,6 +683,13 @@
     <script src="js/admin.js"></script> 
     <script src="js/plugin-system.js"></script>
     <script src="js/crypto-worker.js"></script>
+    
+    <script>
+        // Admin mode activation sequence - Version simplifiée
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-activation si paramètre debug
+            if (window.location.hash === '#admin' || localStorage.getItem('obscura_debug') === 'true') {
+                setTimeout(() => {
     
     <script>
         // Admin mode activation sequence - Version simplifiée
