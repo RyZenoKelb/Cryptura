@@ -640,3 +640,24 @@ class SteganographyEngine {
     }
 
     embedTextWhitespace(textData, secretData, options) {
+        return this.embedImageLSB(textData, secretData, options);
+    }
+
+    extractTextWhitespace(textData, options) {
+        return this.extractImageLSB(textData, options);
+    }
+
+    embedTextUnicode(textData, secretData, options) {
+        return this.embedImageLSB(textData, secretData, options);
+    }
+
+    extractTextUnicode(textData, options) {
+        return this.extractImageLSB(textData, options);
+    }
+
+    processImageMetadata(imageData, operation, data) {
+        // Placeholder for metadata processing
+        if (operation === 'embed') {
+            return this.embedImageLSB(imageData, data, {});
+        } else {
+            return this.extractImageLSB(imageData, {});
