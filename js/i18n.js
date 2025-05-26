@@ -63,19 +63,19 @@ class I18nManager {
                         desc: "Glissez votre média ou cliquez pour sélectionner",
                         types: "Images • Audio • Vidéo • Documents"
                     },
-                // Buttons
-                'btn.encode': 'Lancer l\'encodage',
-                'btn.decode': 'Extraire les données',
-                'btn.analyze': 'Analyse forensique',
-                'btn.reset': 'Réinitialiser',
-                'btn.download': 'Télécharger le résultat',
-                'btn.save': 'Sauvegarder l\'extraction',
+                    secret: {
+                        title: "Message Secret",
+                        desc: "Saisissez votre message confidentiel",
+                        placeholder: "Votre message confidentiel..."
+                    },
+                    decode: {
+                        title: "Fichier à Analyser",
+                        desc: "Sélectionnez le fichier suspect ou encodé",
+                        types: "Tous formats supportés"
+                    }
+                },
                 
-                // Footer
-                'footer.copyright': '© 2025 Obscura',
-                'footer.tagline': 'Stéganographie Professionnelle',
-                'footer.mode': 'Mode Hors-ligne',
-                'footer.processed': 'fichiers traités',
+                // Options
                 
                 // Messages
                 'message.welcome': 'Bienvenue dans Obscura - Stéganographie professionnelle'
