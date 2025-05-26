@@ -50,10 +50,6 @@ class I18nSystem {
                 'upload.secret.desc': 'Saisissez votre message confidentiel',
                 'upload.secret.placeholder': 'Votre message secret...',
                 'upload.decode.title': 'Fichier à Analyser',
-                'upload.secret.title': 'Contenu Secret',
-                'upload.secret.desc': 'Message ou fichier à dissimuler',
-                'upload.secret.placeholder': 'Votre message confidentiel...',
-                'upload.decode.title': 'Fichier à Analyser',
                 'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
                 'upload.decode.types': 'Tous formats supportés',
                 
@@ -62,6 +58,8 @@ class I18nSystem {
                 'options.crypto.level': 'Niveau de Chiffrement',
                 'options.password': 'Mot de passe de chiffrement',
                 'options.advanced': 'Options Avancées',
+                'options.detection.mode': 'Mode de détection',
+                'options.decode.password': 'Mot de passe de déchiffrement',
                 
                 // Buttons
                 'btn.encode': 'Lancer l\'encodage',
@@ -69,7 +67,110 @@ class I18nSystem {
                 'btn.analyze': 'Analyse forensique',
                 'btn.reset': 'Réinitialiser',
                 'btn.download': 'Télécharger le résultat',
-                'btn.save': 'Sauvegarder l\'extraction',
+                'btn.copy': 'Copier le texte',
+                'btn.save.file': 'Télécharger le fichier',
+                
+                // Progress Messages
+                'progress.encoding': 'Encodage en cours...',
+                'progress.decoding': 'Décodage en cours...',
+                'progress.analyzing': 'Analyse en cours...',
+                'progress.encrypting': 'Chiffrement en cours...',
+                'progress.decrypting': 'Déchiffrement en cours...',
+                'progress.processing': 'Traitement en cours...',
+                'progress.loading': 'Chargement...',
+                'progress.chunk': 'Traitement du bloc {current}/{total}',
+                
+                // Results
+                'result.encode.success': 'Encodage Réussi',
+                'result.decode.success': 'Données Extraites',
+                'result.file.generated': 'Fichier généré :',
+                'result.file.size': 'Taille finale :',
+                'result.method.used': 'Méthode utilisée :',
+                'result.method.detected': 'Méthode détectée :',
+                'result.size.extracted': 'Taille extraite :',
+                'result.encryption': 'Chiffrement :',
+                'result.confidence': 'Confiance :',
+                
+                // Methods
+                'method.auto': 'Auto-détection',
+                'method.lsb': 'LSB (Bit de Poids Faible)',
+                'method.metadata': 'Métadonnées',
+                'method.audio.spread': 'Dispersion Audio',
+                'method.document.hidden': 'Document Caché',
+                'method.distributed': 'Distribution Avancée',
+                
+                // Crypto Levels
+                'crypto.none': 'Aucun chiffrement',
+                'crypto.aes': 'AES-256-GCM',
+                'crypto.ultra': 'UltraCrypte™',
+                'crypto.detected.none': 'Non chiffré',
+                'crypto.detected.basic': 'Chiffrement basique',
+                'crypto.detected.advanced': 'Chiffrement avancé',
+                
+                // Detection Modes
+                'detection.auto': 'Détection automatique',
+                'detection.lsb.only': 'LSB uniquement',
+                'detection.metadata.only': 'Métadonnées uniquement',
+                'detection.brute': 'Force brute',
+                
+                // Advanced Options
+                'advanced.compress': 'Compression des données',
+                'advanced.noise': 'Ajout de bruit',
+                'advanced.multilayer': 'Multi-couches',
+                'advanced.stealth': 'Mode furtif',
+                'advanced.deniable': 'Déni plausible',
+                
+                // UltraCrypte
+                'ultra.title': 'UltraCrypte™',
+                'ultra.subtitle': 'Chiffrement post-quantique de niveau militaire pour vos données ultra-sensibles',
+                'ultra.file.title': 'Sélectionner le fichier à chiffrer',
+                'ultra.file.desc': 'Glissez-déposez ou cliquez pour sélectionner',
+                'ultra.file.types': 'Tous types de fichiers • Max 500MB',
+                'ultra.text.label': 'Message texte à chiffrer',
+                'ultra.text.placeholder': 'Votre message ultra-confidentiel...',
+                'ultra.key.label': 'Clé Maître UltraCrypte',
+                'ultra.key.placeholder': 'Clé maître ultra-sécurisée...',
+                'ultra.key.tooltip': 'Clé principale de dérivation cryptographique. Minimum 12 caractères recommandés pour une sécurité optimale.',
+                'ultra.security.label': 'Niveau de Sécurité',
+                'ultra.security.tooltip': 'Standard: Rapide, sécurisé pour usage général. Militaire: Chiffrement renforcé. Post-Quantique: Résistant aux ordinateurs quantiques.',
+                'ultra.security.standard': 'Standard',
+                'ultra.security.standard.desc': 'AES-256 + ChaCha20',
+                'ultra.security.military': 'Militaire',
+                'ultra.security.military.desc': 'Triple cascade + OTP',
+                'ultra.security.quantum': 'Post-Quantique',
+                'ultra.security.quantum.desc': 'Lattice + Hash chains',
+                'ultra.options.label': 'Options Avancées',
+                'ultra.compress.title': 'Compression LZMA',
+                'ultra.compress.desc': 'Réduit la taille des données',
+                'ultra.compress.tooltip': 'Compression avancée LZMA pour réduire la taille des fichiers avant chiffrement.',
+                'ultra.stealth.title': 'Mode Furtif',
+                'ultra.stealth.desc': 'Masque les signatures',
+                'ultra.stealth.tooltip': 'Ajoute du bruit aléatoire pour masquer les signatures cryptographiques et rendre la détection plus difficile.',
+                'ultra.deniable.title': 'Déni Plausible',
+                'ultra.deniable.desc': 'Double chiffrement',
+                'ultra.deniable.tooltip': 'Crée deux niveaux de chiffrement avec des clés différentes pour permettre un déni plausible du contenu réel.',
+                'ultra.btn.encrypt': 'Chiffrer avec UltraCrypte™',
+                'ultra.btn.decrypt': 'Déchiffrer',
+                
+                // Key Strength
+                'key.strength.weak': 'Faible',
+                'key.strength.fair': 'Correct',
+                'key.strength.good': 'Bon',
+                'key.strength.strong': 'Fort',
+                'key.strength.excellent': 'Excellent',
+                'key.entropy': '{bits} bits d\'entropie',
+                
+                // Messages
+                'message.file.required': 'Veuillez sélectionner un fichier porteur',
+                'message.secret.required': 'Veuillez saisir un message secret',
+                'message.password.required': 'Un mot de passe est requis pour ce niveau de chiffrement',
+                'message.file.too.large': 'Le fichier est trop volumineux (max {max})',
+                'message.unsupported.format': 'Format de fichier non supporté',
+                'message.invalid.password': 'Mot de passe incorrect',
+                'message.extraction.failed': 'Aucune donnée cachée détectée',
+                'message.processing.error': 'Erreur lors du traitement',
+                'message.success.copy': 'Texte copié dans le presse-papiers',
+                'message.success.save': 'Fichier sauvegardé avec succès',
                 
                 // Footer
                 'footer.copyright': '© 2025 Obscura',
@@ -77,8 +178,32 @@ class I18nSystem {
                 'footer.mode': 'Mode Hors-ligne',
                 'footer.processed': 'fichiers traités',
                 
-                // Messages
-                'message.welcome': 'Bienvenue dans Obscura - Stéganographie professionnelle'
+                // Help Content
+                'help.encode.title': 'Guide d\'Encodage',
+                'help.encode.desc': 'La stéganographie permet de dissimuler des informations sensibles dans des fichiers ordinaires.',
+                'help.decode.title': 'Guide d\'Extraction',
+                'help.decode.desc': 'L\'extraction automatisée détecte et récupère les données cachées intelligemment.',
+                'help.ultra.title': 'UltraCrypte™ Advanced',
+                'help.ultra.desc': 'Notre technologie propriétaire offre une protection inégalée contre toutes formes d\'attaques.',
+                'help.practices.title': 'Meilleures Pratiques',
+                
+                // File Types
+                'file.type.image': 'Image',
+                'file.type.audio': 'Audio',
+                'file.type.video': 'Vidéo',
+                'file.type.document': 'Document',
+                'file.type.archive': 'Archive',
+                'file.type.unknown': 'Inconnu',
+                
+                // Analysis
+                'analysis.entropy': 'Entropie',
+                'analysis.signatures': 'Signatures',
+                'analysis.patterns': 'Motifs suspects',
+                'analysis.metadata': 'Métadonnées',
+                'analysis.likelihood': 'Probabilité de stéganographie',
+                'analysis.confidence.high': 'Élevée',
+                'analysis.confidence.medium': 'Moyenne',
+                'analysis.confidence.low': 'Faible'
             },
             
             en: {
@@ -91,24 +216,24 @@ class I18nSystem {
                 // Navigation
                 'nav.encode': 'Encode',
                 'nav.decode': 'Decode',
-                'nav.ultracrypte': 'UltraCrypt',
+                'nav.ultracrypte': 'UltraCrypte',
                 'nav.help': 'Documentation',
                 
-                // Panels
+                // Panel Titles
                 'panel.encode.title': 'Secure Encoding',
-                'panel.encode.subtitle': 'Advanced data concealment in your multimedia files with military-grade encryption',
+                'panel.encode.subtitle': 'Advanced message concealment in your multimedia files with military-grade encryption',
                 'panel.decode.title': 'Extraction & Analysis',
                 'panel.decode.subtitle': 'Intelligent detection and extraction of hidden data with automatic decryption',
                 'panel.help.title': 'Documentation',
-                'panel.help.subtitle': 'Complete guide to using Obscura and security best practices',
+                'panel.help.subtitle': 'Complete Obscura usage guide and security best practices',
                 
-                // Upload zones
+                // Upload Areas
                 'upload.carrier.title': 'Carrier File',
                 'upload.carrier.desc': 'Drag your media or click to select',
                 'upload.carrier.types': 'Images • Audio • Video • Documents',
-                'upload.secret.title': 'Secret Content',
-                'upload.secret.desc': 'Message or file to hide',
-                'upload.secret.placeholder': 'Your confidential message...',
+                'upload.secret.title': 'Secret Message',
+                'upload.secret.desc': 'Enter your confidential message',
+                'upload.secret.placeholder': 'Your secret message...',
                 'upload.decode.title': 'File to Analyze',
                 'upload.decode.desc': 'Select the suspicious or encoded file',
                 'upload.decode.types': 'All supported formats',
@@ -118,6 +243,8 @@ class I18nSystem {
                 'options.crypto.level': 'Encryption Level',
                 'options.password': 'Encryption password',
                 'options.advanced': 'Advanced Options',
+                'options.detection.mode': 'Detection mode',
+                'options.decode.password': 'Decryption password',
                 
                 // Buttons
                 'btn.encode': 'Start encoding',
@@ -125,210 +252,83 @@ class I18nSystem {
                 'btn.analyze': 'Forensic analysis',
                 'btn.reset': 'Reset',
                 'btn.download': 'Download result',
-                'btn.save': 'Save extraction',
+                'btn.copy': 'Copy text',
+                'btn.save.file': 'Download file',
                 
-                // Footer
-                'footer.copyright': '© 2025 Obscura',
-                'footer.tagline': 'Professional Steganography',
-                'footer.mode': 'Offline Mode',
-                'footer.processed': 'files processed',
+                // Progress Messages
+                'progress.encoding': 'Encoding in progress...',
+                'progress.decoding': 'Decoding in progress...',
+                'progress.analyzing': 'Analysis in progress...',
+                'progress.encrypting': 'Encrypting in progress...',
+                'progress.decrypting': 'Decrypting in progress...',
+                'progress.processing': 'Processing in progress...',
+                'progress.loading': 'Loading...',
+                'progress.chunk': 'Processing chunk {current}/{total}',
                 
-                // Messages
-                'message.welcome': 'Welcome to Obscura - Professional Steganography'
-            }
-        };
-    }
-
-    detectBrowserLanguage() {
-        const browserLang = navigator.language || navigator.userLanguage;
-        const langCode = browserLang.split('-')[0].toLowerCase();
-        
-        if (this.translations[langCode]) {
-            this.currentLanguage = langCode;
-        }
-        
-        // Vérifier le localStorage
-        const savedLang = localStorage.getItem('obscura_language');
-        if (savedLang && this.translations[savedLang]) {
-            this.currentLanguage = savedLang;
-        }
-    }
-
-    setLanguage(language) {
-        if (this.translations[language]) {
-            this.currentLanguage = language;
-            localStorage.setItem('obscura_language', language);
-            this.applyLanguage(language);
-            
-            // Mise à jour du sélecteur de langue
-            this.updateLanguageSelector();
-            
-            // Suppression du console.log
-            // console.log(`🌍 Langue changée: ${language}`);
-            return true;
-        }
-        return false;
-    }
-
-    applyLanguage(language) {
-        const elements = document.querySelectorAll('[data-i18n]');
-        
-        elements.forEach(element => {
-            const key = element.getAttribute('data-i18n');
-            const translation = this.translate(key, language);
-            
-            if (translation) {
-                element.textContent = translation;
-            }
-        });
-        
-        // Gestion des placeholders
-        const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-        placeholderElements.forEach(element => {
-            const key = element.getAttribute('data-i18n-placeholder');
-            const translation = this.translate(key, language);
-            
-            if (translation) {
-                element.placeholder = translation;
-            }
-        });
-        
-        // Mise à jour de l'attribut lang du document
-        document.documentElement.lang = language;
-    }
-
-    translate(key, language = null) {
-        const lang = language || this.currentLanguage;
-        const translations = this.translations[lang] || this.translations[this.fallbackLanguage];
-        
-        return translations[key] || key;
-    }
-
-    getCurrentLanguage() {
-        return this.currentLanguage;
-    }
-
-    getAvailableLanguages() {
-        return Object.keys(this.translations);
-    }
-
-    updateLanguageSelector() {
-        const currentLangEl = document.getElementById('current-language');
-        const dropdown = document.getElementById('language-dropdown');
-        
-        if (currentLangEl) {
-            currentLangEl.textContent = this.currentLanguage.toUpperCase();
-        }
-        
-        if (dropdown) {
-            const options = dropdown.querySelectorAll('.language-option');
-            options.forEach(option => {
-                const lang = option.getAttribute('data-lang');
-                option.classList.toggle('active', lang === this.currentLanguage);
-            });
-        }
-    }
-
-    // Formatage de nombres avec localisation
-    formatNumber(number) {
-        try {
-            return new Intl.NumberFormat(this.currentLanguage).format(number);
-        } catch {
-            return number.toString();
-        }
-    }
-
-    // Formatage de dates avec localisation
-    formatDate(date) {
-        try {
-            return new Intl.DateTimeFormat(this.currentLanguage, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }).format(date);
-        } catch {
-            return date.toString();
-        }
-    }
-
-    // Formatage de taille de fichier avec localisation
-    formatFileSize(bytes) {
-        const units = this.currentLanguage === 'fr' ? 
-            ['o', 'Ko', 'Mo', 'Go'] : 
-            ['B', 'KB', 'MB', 'GB'];
-        
-        let size = bytes;
-        let unitIndex = 0;
-        
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        
-        return `${size.toFixed(1)} ${units[unitIndex]}`;
-    }
-
-    // Méthode manquante ajoutée
-    updateInterface() {
-        this.applyLanguage(this.currentLanguage);
-    }
-
-    // Méthode de traduction simplifiée (alias pour translate)
-    t(key, language = null) {
-        return this.translate(key, language);
-    }
-}
-
-// Initialisation automatique
-let i18n;
-
-if (typeof window !== 'undefined') {
-    i18n = new I18nManager();
-    
-    // Export global
-    window.i18n = i18n;
-    
-    // Event listeners pour le sélecteur de langue
-    document.addEventListener('DOMContentLoaded', () => {
-        const languageToggle = document.getElementById('language-toggle');
-        const languageDropdown = document.getElementById('language-dropdown');
-        const languageOptions = document.querySelectorAll('.language-option');
-        
-        // Toggle dropdown
-        if (languageToggle && languageDropdown) {
-            languageToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                languageDropdown.classList.toggle('active');
-            });
-            
-            // Fermer dropdown en cliquant ailleurs
-            document.addEventListener('click', () => {
-                languageDropdown.classList.remove('active');
-            });
-        }
-        
-        // Changement de langue
-        languageOptions.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const lang = option.getAttribute('data-lang');
+                // Results
+                'result.encode.success': 'Encoding Successful',
+                'result.decode.success': 'Data Extracted',
+                'result.file.generated': 'Generated file:',
+                'result.file.size': 'Final size:',
+                'result.method.used': 'Method used:',
+                'result.method.detected': 'Detected method:',
+                'result.size.extracted': 'Extracted size:',
+                'result.encryption': 'Encryption:',
+                'result.confidence': 'Confidence:',
                 
-                if (i18n.setLanguage(lang)) {
-                    languageDropdown.classList.remove('active');
-                }
-            });
-        });
-        
-        // Application initiale de la langue
-        i18n.applyLanguage(i18n.getCurrentLanguage());
-    });
-}
-
-// Export pour modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = I18nManager;
+                // Methods
+                'method.auto': 'Auto-detection',
+                'method.lsb': 'LSB (Least Significant Bit)',
+                'method.metadata': 'Metadata',
+                'method.audio.spread': 'Audio Spread',
+                'method.document.hidden': 'Hidden Document',
+                'method.distributed': 'Advanced Distribution',
+                
+                // Crypto Levels
+                'crypto.none': 'No encryption',
+                'crypto.aes': 'AES-256-GCM',
+                'crypto.ultra': 'UltraCrypte™',
+                'crypto.detected.none': 'Not encrypted',
+                'crypto.detected.basic': 'Basic encryption',
+                'crypto.detected.advanced': 'Advanced encryption',
+                
+                // Detection Modes
+                'detection.auto': 'Automatic detection',
+                'detection.lsb.only': 'LSB only',
+                'detection.metadata.only': 'Metadata only',
+                'detection.brute': 'Brute force',
+                
+                // Advanced Options
+                'advanced.compress': 'Data compression',
+                'advanced.noise': 'Add noise',
+                'advanced.multilayer': 'Multi-layer',
+                'advanced.stealth': 'Stealth mode',
+                'advanced.deniable': 'Plausible deniability',
+                
+                // UltraCrypte
+                'ultra.title': 'UltraCrypte™',
+                'ultra.subtitle': 'Military-grade post-quantum encryption for your ultra-sensitive data',
+                'ultra.file.title': 'Select file to encrypt',
+                'ultra.file.desc': 'Drag and drop or click to select',
+                'ultra.file.types': 'All file types • Max 500MB',
+                'ultra.text.label': 'Text message to encrypt',
+                'ultra.text.placeholder': 'Your ultra-confidential message...',
+                'ultra.key.label': 'UltraCrypte Master Key',
+                'ultra.key.placeholder': 'Ultra-secure master key...',
+                'ultra.key.tooltip': 'Main cryptographic derivation key. Minimum 12 characters recommended for optimal security.',
+                'ultra.security.label': 'Security Level',
+                'ultra.security.tooltip': 'Standard: Fast, secure for general use. Military: Enhanced encryption. Post-Quantum: Resistant to quantum computers.',
+                'ultra.security.standard': 'Standard',
+                'ultra.security.standard.desc': 'AES-256 + ChaCha20',
+                'ultra.security.military': 'Military',
+                'ultra.security.military.desc': 'Triple cascade + OTP',
+                'ultra.security.quantum': 'Post-Quantum',
+                'ultra.security.quantum.desc': 'Lattice + Hash chains',
+                'ultra.options.label': 'Advanced Options',
+                'ultra.compress.title': 'LZMA Compression',
+                'ultra.compress.desc': 'Reduces data size',
+                'ultra.compress.tooltip': 'Advanced LZMA compression to reduce file size before encryption.',
+                'ultra.stealth.title': 'Stealth Mode',
 }
 
 // Suppression du console.log final
