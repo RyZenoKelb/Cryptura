@@ -28,6 +28,7 @@ class ObscuraApp {
             methods: {},
             registerSteganographyMethod: (name, implementation) => {
                 this.pluginManager.methods[name] = implementation;
+                console.log(`Plugin ${name} enregistré`);
             }
         };
         
@@ -37,7 +38,6 @@ class ObscuraApp {
     // ========== INITIALISATION ==========
 
     init() {
-        this.setupWebWorkers();
         this.setupEventListeners();
         this.setupDragAndDrop();
         this.setupKeyboardShortcuts();
