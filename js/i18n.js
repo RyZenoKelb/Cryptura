@@ -57,24 +57,6 @@ class I18nManager {
                 'upload.decode.desc': 'Sélectionnez le fichier suspect ou encodé',
                 'upload.decode.types': 'Tous formats supportés',
                 
-                upload: {
-                    carrier: {
-                        title: "Fichier Porteur",
-                        desc: "Glissez votre média ou cliquez pour sélectionner",
-                        types: "Images • Audio • Vidéo • Documents"
-                    },
-                    secret: {
-                        title: "Message Secret",
-                        desc: "Saisissez votre message confidentiel",
-                        placeholder: "Votre message confidentiel..."
-                    },
-                    decode: {
-                        title: "Fichier à Analyser",
-                        desc: "Sélectionnez le fichier suspect ou encodé",
-                        types: "Tous formats supportés"
-                    }
-                },
-                
                 // Options
                 'options.stego.method': 'Méthode de Stéganographie',
                 'options.crypto.level': 'Niveau de Chiffrement',
@@ -130,24 +112,6 @@ class I18nManager {
                 'upload.decode.title': 'File to Analyze',
                 'upload.decode.desc': 'Select the suspicious or encoded file',
                 'upload.decode.types': 'All supported formats',
-                
-                upload: {
-                    carrier: {
-                        title: "Carrier File",
-                        desc: "Drop your media or click to select",
-                        types: "Images • Audio • Video • Documents"
-                    },
-                    secret: {
-                        title: "Secret Message",
-                        desc: "Enter your confidential message",
-                        placeholder: "Your confidential message..."
-                    },
-                    decode: {
-                        title: "File to Analyze",
-                        desc: "Select the suspicious or encoded file",
-                        types: "All formats supported"
-                    }
-                },
                 
                 // Options
                 'options.stego.method': 'Steganography Method',

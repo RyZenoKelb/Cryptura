@@ -28,7 +28,6 @@ class ObscuraApp {
             methods: {},
             registerSteganographyMethod: (name, implementation) => {
                 this.pluginManager.methods[name] = implementation;
-                console.log(`Plugin ${name} enregistré`);
             }
         };
         
@@ -63,15 +62,58 @@ class ObscuraApp {
         // Initialisation du worker crypto si supporté
         if (typeof Worker !== 'undefined') {
             try {
-                this.cryptoWorker = new Worker('js/crypto-worker.js');
-                this.cryptoWorker.onmessage = (e) => this.handleWorkerMessage(e.data);
-                this.cryptoWorker.onerror = (error) => {
-                    console.warn('Worker crypto non disponible:', error);
-                    this.cryptoWorker = null;
+                // Création du worker crypto inline
+                const workerCode = `
+                    // Code simplifié du crypto worker
+                    self.onmessage = async function(e) {
+                        const { taskId, operation, data } = e.data;
+                        
+                        try {
+                            let result;
+                            
+                            if (operation === 'hash') {
+                                const hash = await crypto.subtle.digest('SHA-256', data.data);
+                                result = { hash: Array.from(new Uint8Array(hash)) };
+                            } else if (operation === 'encrypt') {
+                                // Chiffrement simple pour le worker
+                                const key = await crypto.subtle.importKey(
+                                    'raw',
+                                    new TextEncoder().encode(data.password.padEnd(32, '0').slice(0, 32)),
+                                    'AES-GCM',
+                                    false,
+                                    ['encrypt']
+                                );
+                                
+                                const iv = crypto.getRandomValues(new Uint8Array(12));
+                                const encrypted = await crypto.subtle.encrypt(
+                                    { name: 'AES-GCM', iv: iv },
+                                    key,
+                                    data.data
+                                );
+                                
+                                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                                combined.set(iv);
+                                combined.set(new Uint8Array(encrypted), iv.length);
+                                
+                                result = { data: combined };
+                            }
+                            
+                            self.postMessage({ taskId, success: true, result });
+                        } catch (error) {
+                            self.postMessage({ taskId, success: false, error: error.message });
+                        }
+                    };
+                `;
+
+                const blob = new Blob([workerCode], { type: 'application/javascript' });
+                this.cryptoWorker = new Worker(URL.createObjectURL(blob));
+
+                this.cryptoWorker.onmessage = (e) => {
+                    this.handleWorkerMessage(e.data);
                 };
+
             } catch (error) {
-                console.warn('Workers non supportés:', error);
-                this.cryptoWorker = null;
+                console.warn('⚠️ Web Workers non supportés:', error);
             }
         }
     }
@@ -80,22 +122,14 @@ class ObscuraApp {
         const { taskId, success, result, error, progress } = data;
 
         if (progress !== undefined) {
-            this.updateProgress(progress, 'Traitement en cours...');
+            // Mise à jour du progrès si applicable
             return;
         }
 
         if (success) {
-            this.pendingTasks = this.pendingTasks || {};
-            if (this.pendingTasks[taskId]) {
-                this.pendingTasks[taskId].resolve(result);
-                delete this.pendingTasks[taskId];
-            }
+            // Traitement du résultat selon le type de tâche
         } else {
-            this.pendingTasks = this.pendingTasks || {};
-            if (this.pendingTasks[taskId]) {
-                this.pendingTasks[taskId].reject(new Error(error));
-                delete this.pendingTasks[taskId];
-            }
+            console.error(`❌ Worker task ${taskId} failed:`, error);
         }
     }
 
@@ -106,20 +140,44 @@ class ObscuraApp {
 
         return new Promise((resolve, reject) => {
             const taskId = Date.now() + Math.random();
-            this.pendingTasks = this.pendingTasks || {};
-            this.pendingTasks[taskId] = { resolve, reject };
-            
-            this.cryptoWorker.postMessage({
-                taskId,
-                operation,
-                data
-            });
+
+            const timeout = setTimeout(() => {
+                reject(new Error('Timeout worker'));
+            }, 30000);
+
+            const messageHandler = (e) => {
+                const response = e.data;
+                if (response.taskId === taskId) {
+                    clearTimeout(timeout);
+                    this.cryptoWorker.removeEventListener('message', messageHandler);
+
+                    if (response.success) {
+                        resolve(response.result);
+                    } else {
+                        reject(new Error(response.error));
+                    }
+                }
+            };
+
+            this.cryptoWorker.addEventListener('message', messageHandler);
+            this.cryptoWorker.postMessage({ taskId, operation, data });
         });
     }
 
+        // Dans app.js - Méthode à ajouter
     async handleLargeFileEncryption(data, password) {
-        if (data.length > 1024 * 1024) {
-            return await this.useWorkerForCrypto('encrypt', { data, password });
+        if (data.length > 1024 * 1024) { // > 1MB
+            try {
+                const result = await this.useWorkerForCrypto('encrypt', {
+                    data: data,
+                    password: password,
+                    algorithm: 'aes-gcm'
+                });
+                return result;
+            } catch (error) {
+                // Fallback vers méthode synchrone
+                return await this.basicEncrypt(data, password);
+            }
         }
         return await this.basicEncrypt(data, password);
     }
@@ -127,19 +185,48 @@ class ObscuraApp {
     setupPluginSystem() {
         // Enregistrement des plugins de base
         try {
-            this.pluginManager.registerSteganographyMethod('lsb-advanced', {
-                encode: (carrier, data) => this.steganography.encodeLSB(carrier, data),
-                decode: (file) => this.steganography.decodeLSB(file)
+            // Plugin d'exemple de stéganographie
+            this.pluginManager.registerSteganographyMethod('example', {
+                displayName: 'Exemple Plugin',
+                hide: async (carrierFile, secretData) => {
+                    // Implémentation basique
+                    const carrierData = await this.fileToArrayBuffer(carrierFile);
+                    const combined = new Uint8Array(carrierData.byteLength + secretData.length + 16);
+                    combined.set(new Uint8Array(carrierData));
+                    combined.set(new TextEncoder().encode('PLUGIN_START'), carrierData.byteLength);
+                    combined.set(secretData, carrierData.byteLength + 12);
+                    combined.set(new TextEncoder().encode('END'), carrierData.byteLength + secretData.length + 12);
+
+                    return new Blob([combined], { type: carrierFile.type });
+                },
+                extract: async (carrierFile) => {
+                    const data = await this.fileToArrayBuffer(carrierFile);
+                    const uint8Data = new Uint8Array(data);
+                    const marker = new TextEncoder().encode('PLUGIN_START');
+
+                    for (let i = 0; i <= uint8Data.length - marker.length; i++) {
+                        if (this.arrayEqual(uint8Data.slice(i, i + marker.length), marker)) {
+                            const endMarker = new TextEncoder().encode('END');
+                            for (let j = i + marker.length; j <= uint8Data.length - endMarker.length; j++) {
+                                if (this.arrayEqual(uint8Data.slice(j, j + endMarker.length), endMarker)) {
+                                    return uint8Data.slice(i + marker.length, j);
+                                }
+                            }
+                        }
+                    }
+                    throw new Error('Données plugin non trouvées');
+                }
             });
+
         } catch (error) {
-            console.warn('Erreur initialisation plugins:', error);
+            console.error('❌ Erreur chargement plugins:', error);
         }
     }
 
     setupLanguageSystem() {
         // Initialisation simplifiée du système de langue
         if (this.i18n) {
-            this.i18n.init();
+            this.i18n.applyLanguage(this.i18n.getCurrentLanguage());
         }
     }
 
@@ -153,7 +240,9 @@ class ObscuraApp {
         // Event listener pour le toggle
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
-            themeToggle.addEventListener('click', () => this.toggleTheme());
+            themeToggle.addEventListener('click', () => {
+                this.toggleTheme();
+            });
         }
     }
 
@@ -336,17 +425,6 @@ class ObscuraApp {
 
     
     setupEventListeners() {
-        // Upload zones
-        document.getElementById('carrier-upload').addEventListener('click', () => {
-            document.getElementById('carrier-file').click();
-        });
-        
-        // Suppression de l'événement pour secret-file-btn car il n'existe plus
-        
-        document.getElementById('decode-upload').addEventListener('click', () => {
-            document.getElementById('decode-file').click();
-        });
-
         // Navigation entre panneaux
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
@@ -471,7 +549,11 @@ class ObscuraApp {
             });
         }
 
-        // Suppression de l'événement pour secret-file car il n'existe plus
+        if (secretFileInput) {
+            secretFileInput.addEventListener('change', (e) => {
+                this.handleFileSelect(e.target, 'secret');
+            });
+        }
 
         if (decodeFileInput) {
             decodeFileInput.addEventListener('change', (e) => {
@@ -792,30 +874,35 @@ class ObscuraApp {
     // ========== ENCODAGE ==========
 
     async handleEncode() {
+        // Récupération des paramètres
+        const carrierFile = this.currentFiles.carrier;
+        const secretText = document.getElementById('secret-text').value.trim();
+        const secretFile = this.currentFiles.secret;
+        const stegoMethod = document.getElementById('stego-method').value;
+        const cryptoLevel = document.getElementById('crypto-level').value;
+        const password = document.getElementById('encode-password').value;
+
+        // Validation des entrées
+        const validation = this.validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password);
+        if (!validation.valid) {
+            this.showMessage(validation.message, 'error');
+            return;
+        }
+
         try {
-            const carrierFile = document.getElementById('carrier-file').files[0];
-            const secretText = document.getElementById('secret-text').value.trim();
-            const cryptoLevel = document.getElementById('crypto-level').value;
-            const password = document.getElementById('encode-password').value;
-
-            // Validation - seulement texte maintenant
-            if (!this.validateEncodeInputs(carrierFile, secretText, null, cryptoLevel, password)) {
-                return;
-            }
-
             this.showProgress('encode-progress', 'Préparation de l\'encodage...', 'encoding');
 
-            // Préparation des données secrètes (seulement texte)
-            const secretData = new TextEncoder().encode(secretText);
-            
-            // Configuration des options
-            const options = {
-                method: document.getElementById('stego-method').value,
-                compress: document.getElementById('compress-data').checked,
-                noise: document.getElementById('add-noise').checked,
-                multiLayer: document.getElementById('multi-layer').checked,
-                cryptoComplexity: this.mapCryptoComplexity(cryptoLevel)
-            };
+            // Préparation des données secrètes
+            let secretData;
+            if (secretFile) {
+                this.updateProgress('encode-progress', 'Lecture du fichier secret...', 15);
+                secretData = await this.fileToArrayBuffer(secretFile);
+                secretData = new Uint8Array(secretData);
+            } else {
+                secretData = new TextEncoder().encode(secretText);
+            }
+
+            this.updateProgress('encode-progress', 'Données préparées...', 25);
 
             // Chiffrement si nécessaire
             if (cryptoLevel !== 'none' && password) {
@@ -845,11 +932,11 @@ class ObscuraApp {
             }
 
             // Stéganographie avec le moteur principal
-            this.updateProgress('encode-progress', `Dissimulation via ${options.method}...`, 75);
+            this.updateProgress('encode-progress', `Dissimulation via ${stegoMethod}...`, 75);
 
-            const result = await this.steganographyEngine.hideData(carrierFile, secretData, options.method, {
+            const result = await this.steganographyEngine.hideData(carrierFile, secretData, stegoMethod, {
                 quality: 'high',
-                method: options.method
+                method: stegoMethod
             });
 
             // Vérification du résultat
@@ -879,45 +966,102 @@ class ObscuraApp {
             
             setTimeout(() => {
                 this.hideProgress('encode-progress', true);
-                this.showEncodeResult(resultFile, options.method, cryptoLevel);
+                this.showEncodeResult(resultFile, stegoMethod, cryptoLevel);
             }, 500);
 
         } catch (error) {
+            this.hideProgress('encode-progress', false);
             this.handleError(error, 'encodage');
         }
     }
 
-    // MÉTHODE MISE À JOUR - validation simplifiée
+    // MÉTHODE MANQUANTE - AJOUT CRITIQUE
     validateEncodeInputs(carrierFile, secretText, secretFile, cryptoLevel, password) {
-        this.clearMessages();
-
+        // Validation du fichier porteur
         if (!carrierFile) {
-            this.showMessage('Veuillez sélectionner un fichier porteur', 'error');
-            return false;
+            return { 
+                valid: false, 
+                message: '❌ Veuillez sélectionner un fichier porteur (image, audio, vidéo ou document)' 
+            };
         }
 
-        // Validation pour texte seulement
-        if (!secretText) {
-            this.showMessage('Veuillez saisir un message secret', 'error');
-            return false;
+        // Validation du contenu secret
+        if (!secretText && !secretFile) {
+            return { 
+                valid: false, 
+                message: '❌ Veuillez entrer un message texte ou sélectionner un fichier à cacher' 
+            };
         }
 
-        if (secretText.length > 100000) {
-            this.showMessage('Le message est trop long (maximum 100 000 caractères)', 'error');
-            return false;
+        // Si les deux sont fournis, privilégier le fichier
+        if (secretText && secretFile) {
+            this.showMessage('ℹ️ Fichier secret sélectionné, le texte sera ignoré', 'info');
         }
 
-        if (cryptoLevel !== 'none' && !password) {
-            this.showMessage('Un mot de passe est requis pour le chiffrement', 'error');
-            return false;
+        // Validation du chiffrement
+        if (cryptoLevel && cryptoLevel !== 'none') {
+            if (!password || password.length === 0) {
+                return { 
+                    valid: false, 
+                    message: '❌ Un mot de passe est requis pour le chiffrement' 
+                };
+            }
+
+            // Validation spécifique pour UltraCrypte
+            if (cryptoLevel === 'ultra' && password.length < 8) {
+                return { 
+                    valid: false, 
+                    message: '❌ UltraCrypte nécessite un mot de passe d\'au moins 8 caractères' 
+                };
+            }
+
+            // Validation pour AES
+            if (cryptoLevel === 'aes' && password.length < 6) {
+                return { 
+                    valid: false, 
+                    message: '❌ Le chiffrement AES nécessite un mot de passe d\'au moins 6 caractères' 
+                };
+            }
         }
 
-        if (password && password.length < 6) {
-            this.showMessage('Le mot de passe doit contenir au moins 6 caractères', 'error');
-            return false;
+        // Validation de la taille du fichier secret
+        if (secretFile && secretFile.size > 50 * 1024 * 1024) { // 50MB max
+            return { 
+                valid: false, 
+                message: '❌ Le fichier secret est trop volumineux (max 50MB)' 
+            };
         }
 
-        return true;
+        // Validation de la taille du message texte
+        if (secretText && secretText.length > 1000000) { // 1M caractères max
+            return { 
+                valid: false, 
+                message: '❌ Le message texte est trop long (max 1M caractères)' 
+            };
+        }
+
+        // Estimation de capacité basique
+        if (secretFile) {
+            const estimatedCapacity = carrierFile.size * 0.1; // 10% approximatif
+            if (secretFile.size > estimatedCapacity) {
+                return { 
+                    valid: false, 
+                    message: `❌ Fichier secret trop volumineux pour ce porteur. Capacité estimée: ${this.formatFileSize(estimatedCapacity)}` 
+                };
+            }
+        } else if (secretText) {
+            const textSize = new TextEncoder().encode(secretText).length;
+            const estimatedCapacity = carrierFile.size * 0.1;
+            if (textSize > estimatedCapacity) {
+                return { 
+                    valid: false, 
+                    message: `❌ Message texte trop long pour ce porteur. Capacité estimée: ${this.formatFileSize(estimatedCapacity)}` 
+                };
+            }
+        }
+
+        // Tout est valide
+        return { valid: true };
     }
 
     // MÉTHODE MANQUANTE - AJOUT CRITIQUE
@@ -1107,8 +1251,8 @@ class ObscuraApp {
         
         // Détection de patterns LSB
         let lsbPattern = 0;
-        for (let i = 0; i <= data.length - 3; i++) {
-            if ((data[i] & 1) !== (data[i + 1] & 1)) {
+        for (let i = 0; i < Math.min(1000, data.length); i++) {
+            if ((data[i] & 1) !== (data[i] >> 1 & 1)) {
                 lsbPattern++;
             }
         }

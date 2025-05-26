@@ -1013,35 +1013,17 @@ body::before {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-/* Secret Upload Special - Mise à jour pour texte seulement */
-#secret-upload textarea {
-    width: 100%;
-    min-height: 120px;
-    background: var(--bg-white);
-    border: 1px solid var(--border-medium);
-    border-radius: var(--radius-md);
-    padding: 0.75rem;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    resize: vertical;
-    margin-bottom: 0;
-    font-family: inherit;
-    transition: var(--transition-base);
-}
-
-#secret-upload textarea:focus {
-    outline: none;
-    border-color: var(--primary-500);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-/* Suppression des styles pour l'option fichier */
 .file-option {
-    display: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
 }
 
-.file-select-btn {
-    display: none;
+.file-option input[type="file"] {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }
 
 /* Options Grid */
@@ -2678,6 +2660,24 @@ body::before {
 }
 
 .error-details code {
+    background: rgba(239, 68, 68, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-size: 0.8rem;
+}
+
+/* Améliorations pour le décodage */
+.decode-success-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: var(--radius-lg);
+    color: var(--emerald-500);
+    font-size: 0.875rem;
     font-weight: 500;
     margin-bottom: 1rem;
 }
