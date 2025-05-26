@@ -187,12 +187,6 @@
                     
                     <div class="options-grid">
                         <div class="option-group">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="options-grid">
-                        <div class="option-group">
                             <label data-i18n="options.stego.method">Méthode de Stéganographie</label>
                             <select id="stego-method">
                                 <option value="auto">Auto-détection</option>
@@ -674,8 +668,14 @@
 
     <!-- Fichiers input cachés -->
     <input type="file" id="carrier-file" style="display: none;" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx">
-    <input type="file" id="secret-file" style="display: none;">
     <input type="file" id="decode-file" style="display: none;">
+    <input type="file" id="ultra-file" style="display: none;">
+
+    <!-- Load dependencies first -->
+    <script src="js/i18n.js"></script>
+    <script src="js/crypto.js"></script>
+    <script src="js/steganography.js"></script>
+    
     <input type="file" id="ultra-file" style="display: none;">
 
     <!-- Load dependencies first -->
