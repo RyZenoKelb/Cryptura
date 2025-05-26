@@ -1620,70 +1620,70 @@ class ObscuraApp {
 
         return {
             html: `<pre>${this.escapeHtml(displayText)}</pre>`,
-        preview.appendChild(actions);
-
-        // Masquer le bouton de sauvegarde par défaut
-        saveBtn.style.display = 'none';
+            isText: isText
+        };
     }
 
-    displayFileContent(preview, data, analysis, saveBtn) {
-        // Indicateur de type de contenu
-        const typeIndicator = document.createElement('div');
-        typeIndicator.className = 'content-type-indicator file';
-        typeIndicator.innerHTML = `<i class="fas fa-file"></i> Fichier ${analysis.fileType} Extrait`;
+    // ========== UTILITAIRES D'INTERFACE ==========
 
-        // Informations sur le fichier
-        const fileInfo = document.createElement('div');
-        fileInfo.className = 'file-info-display';
+    showProgress(progressId, message, type = 'default') {
+        const progressElement = document.getElementById(progressId);
+        const textElement = progressElement.querySelector('.progress-text');
+        const progressBar = progressElement.querySelector('.progress-fill');
 
-        const infoGrid = document.createElement('div');
-        infoGrid.className = 'file-preview-info';
-
-        // Carte Type
-        const typeCard = document.createElement('div');
-        typeCard.className = 'info-card';
-        typeCard.innerHTML = `
-            <h4>Type de Fichier</h4>
-            <p>${analysis.fileType}</p>
-        `;
-
-        // Carte Taille
-        const sizeCard = document.createElement('div');
-        sizeCard.className = 'info-card';
-        sizeCard.innerHTML = `
-            <h4>Taille</h4>
-            <p>${this.formatFileSize(analysis.size)}</p>
-        `;
-
-        // Carte Aperçu
-        const previewCard = document.createElement('div');
-        previewCard.className = 'info-card';
-        
-        let previewContent = 'Données binaires';
-        if (analysis.fileType === 'Binary') {
-            // Affichage hexadécimal limité
-            const bytes = data instanceof Uint8Array ? data : new Uint8Array(data);
-            const hexPreview = Array.from(bytes.slice(0, 16))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join(' ').toUpperCase();
-            previewContent = `${hexPreview}${bytes.length > 16 ? '...' : ''}`;
+        // Réinitialiser les classes
+        progressElement.className = 'progress-container active';
+        if (type !== 'default') {
+            progressElement.classList.add(type);
         }
 
-        previewCard.innerHTML = `
-            <h4>Aperçu</h4>
-            <p style="font-family: monospace; font-size: 0.8rem;">${previewContent}</p>
-        `;
+        textElement.textContent = message;
+        textElement.classList.add('active');
+        progressElement.style.display = 'block';
 
-        infoGrid.appendChild(typeCard);
-        infoGrid.appendChild(sizeCard);
-        infoGrid.appendChild(previewCard);
-        fileInfo.appendChild(infoGrid);
+        // Animation de la barre de progression avec pourcentage
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 90) {
+                clearInterval(interval);
+            } else {
+                width += Math.random() * 8 + 2; // Progression plus fluide
+                const finalWidth = Math.min(width, 90);
+                progressBar.style.width = `${finalWidth}%`;
+                
+                // Ajouter le pourcentage si l'élément existe
+                const percentageElement = progressElement.querySelector('.progress-percentage');
+                if (percentageElement) {
+                    percentageElement.textContent = `${Math.floor(finalWidth)}%`;
+                }
+            }
+        }, 200);
 
-        // Remplacement du contenu
-        preview.innerHTML = '';
-        preview.appendChild(typeIndicator);
-        preview.appendChild(fileInfo);
+        progressElement.dataset.interval = interval;
+    }
 
+    updateProgress(progressId, message, percentage) {
+        const progressElement = document.getElementById(progressId);
+        const textElement = progressElement.querySelector('.progress-text');
+        const progressBar = progressElement.querySelector('.progress-fill');
+
+        if (progressElement.style.display === 'block') {
+            textElement.textContent = message;
+            
+            if (percentage !== undefined) {
+                progressBar.style.width = `${percentage}%`;
+                const percentageElement = progressElement.querySelector('.progress-percentage');
+                if (percentageElement) {
+                    percentageElement.textContent = `${percentage}%`;
+                }
+            }
+        }
+    }
+
+    hideProgress(progressId, success = true) {
+        const progressElement = document.getElementById(progressId);
+        const interval = progressElement.dataset.interval;
+        const progressBar = progressElement.querySelector('.progress-fill');
         // Configuration du bouton de téléchargement
         saveBtn.style.display = 'inline-flex';
         saveBtn.onclick = () => {
