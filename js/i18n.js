@@ -22,10 +22,6 @@ class I18nSystem {
     loadTranslations() {
         this.translations = {
             fr: {
-
-    loadTranslations() {
-        this.translations = {
-            fr: {
                 // Header
                 'header.tagline': 'Stéganographie Avancée',
                 'header.status': 'Système actif',
@@ -38,18 +34,22 @@ class I18nSystem {
                 'nav.ultracrypte': 'UltraCrypte',
                 'nav.help': 'Documentation',
                 
-                // Panels
+                // Panel Titles
                 'panel.encode.title': 'Encodage Sécurisé',
-                'panel.encode.subtitle': 'Dissimulation avancée de données dans vos fichiers multimédias avec chiffrement de niveau militaire',
+                'panel.encode.subtitle': 'Dissimulation avancée de messages dans vos fichiers multimédias avec chiffrement de niveau militaire',
                 'panel.decode.title': 'Extraction & Analyse',
                 'panel.decode.subtitle': 'Détection et extraction intelligente de données cachées avec déchiffrement automatique',
                 'panel.help.title': 'Documentation',
                 'panel.help.subtitle': 'Guide complet d\'utilisation d\'Obscura et meilleures pratiques de sécurité',
                 
-                // Upload zones
+                // Upload Areas
                 'upload.carrier.title': 'Fichier Porteur',
                 'upload.carrier.desc': 'Glissez votre média ou cliquez pour sélectionner',
                 'upload.carrier.types': 'Images • Audio • Vidéo • Documents',
+                'upload.secret.title': 'Message Secret',
+                'upload.secret.desc': 'Saisissez votre message confidentiel',
+                'upload.secret.placeholder': 'Votre message secret...',
+                'upload.decode.title': 'Fichier à Analyser',
                 'upload.secret.title': 'Contenu Secret',
                 'upload.secret.desc': 'Message ou fichier à dissimuler',
                 'upload.secret.placeholder': 'Votre message confidentiel...',
