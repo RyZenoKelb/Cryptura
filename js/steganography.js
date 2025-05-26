@@ -381,16 +381,16 @@ class SteganographyEngine {
     }
 
     async performExtraction(fileBuffer, method, format) {
-                reject(new Error('Failed to read file'));
-            };
-            
-            reader.readAsArrayBuffer(file);
-        });
+        if (!format || !format.processor) {
+            return this.extractImageLSB(new Uint8Array(fileBuffer), {});
+        }
+        
+        return await format.processor(fileBuffer, 'extract', null, method, {});
     }
 
-    // ========== FORMAT-SPECIFIC PROCESSORS ==========
+    // ========== FILE PROCESSING ==========
 
-    async processImage(buffer, operation, data, method, options = {}) {
+    async readFileInChunks(file) {
         const imageData = new Uint8Array(buffer);
         
         switch (method) {
