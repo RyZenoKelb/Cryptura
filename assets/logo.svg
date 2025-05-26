@@ -1,0 +1,98 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1">
+        <animate attributeName="stop-color" 
+                 values="#6366f1;#8b5cf6;#06b6d4;#6366f1" 
+                 dur="4s" 
+                 repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1">
+        <animate attributeName="stop-color" 
+                 values="#f59e0b;#ef4444;#10b981;#f59e0b" 
+                 dur="4s" 
+                 repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="innerGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Outer rotating ring -->
+  <circle cx="50" cy="50" r="40" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8" filter="url(#glow)">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="0 50 50;360 50 50" 
+                      dur="8s" 
+                      repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Middle hexagonal ring -->
+  <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="360 50 50;0 50 50" 
+                      dur="12s" 
+                      repeatCount="indefinite"/>
+  </polygon>
+  
+  <!-- Inner diamond -->
+  <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="url(#logoGradient)" opacity="0.9" filter="url(#innerGlow)">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="0 50 50;-360 50 50" 
+                      dur="6s" 
+                      repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Central core -->
+  <circle cx="50" cy="50" r="8" fill="url(#logoGradient)" filter="url(#glow)">
+    <animate attributeName="r" 
+             values="8;12;8" 
+             dur="2s" 
+             repeatCount="indefinite"/>
+    <animate attributeName="opacity" 
+             values="1;0.7;1" 
+             dur="2s" 
+             repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Orbiting particles -->
+  <circle cx="50" cy="20" r="2" fill="#6366f1" opacity="0.8">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="0 50 50;360 50 50" 
+                      dur="3s" 
+                      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle cx="80" cy="50" r="1.5" fill="#f59e0b" opacity="0.6">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="0 50 50;360 50 50" 
+                      dur="5s" 
+                      repeatCount="indefinite"/>
+  </circle>
+  
+  <circle cx="50" cy="80" r="2" fill="#10b981" opacity="0.7">
+    <animateTransform attributeName="transform" 
+                      type="rotate" 
+                      values="0 50 50;360 50 50" 
+                      dur="4s" 
+                      repeatCount="indefinite"/>
+  </circle>
+</svg>
