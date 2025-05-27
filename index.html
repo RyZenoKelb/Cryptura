@@ -3,13 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obscura - Stéganographie Ultra-Sécurisée</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>Cryptura - Stéganographie et Chiffrement Avancé</title>
+    <meta name="description" content="Cryptura - Solution complète de stéganographie et chiffrement pour cacher et protéger vos données sensibles">
+    <meta name="keywords" content="cryptura, stéganographie, chiffrement, sécurité, confidentialité, UltraCrypte">
+    <meta name="author" content="Cryptura Team">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%233b82f6'/><path d='M35 45h30v10H35z' fill='white'/></svg>">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="assets/style.css">
-    <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
 </head>
 <body>
     <div class="app-container">
@@ -17,99 +26,58 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo-container">
-                    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1">
-                                    <animate attributeName="stop-color" 
-                                             values="#2563eb;#1d4ed8;#10b981;#2563eb" 
-                                             dur="4s" 
-                                             repeatCount="indefinite"/>
-                                </stop>
-                                <stop offset="100%" style="stop-color:#f97316;stop-opacity:1">
-                                    <animate attributeName="stop-color" 
-                                             values="#f97316;#ef4444;#10b981;#f97316" 
-                                             dur="4s" 
-                                             repeatCount="indefinite"/>
-                                </stop>
-                            </linearGradient>
-                        </defs>
-                        
-                        <!-- Outer rotating ring -->
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="url(#logoGradient)" stroke-width="2" opacity="0.8">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="8s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <!-- Middle hexagonal ring -->
-                        <polygon points="50,20 70,35 70,65 50,80 30,65 30,35" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.6">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="360 50 50;0 50 50" 
-                                              dur="12s" 
-                                              repeatCount="indefinite"/>
-                        </polygon>
-                        
-                        <!-- Inner diamond -->
-                        <path d="M35 50 L50 35 L65 50 L50 65 Z" fill="url(#logoGradient)" opacity="0.9">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;-360 50 50" 
-                                              dur="6s" 
-                                              repeatCount="indefinite"/>
-                        </path>
-                        
-                        <!-- Central core -->
-                        <circle cx="50" cy="50" r="8" fill="url(#logoGradient)">
-                            <animate attributeName="r" 
-                                     values="8;12;8" 
-                                     dur="2s" 
-                                     repeatCount="indefinite"/>
-                            <animate attributeName="opacity" 
-                                     values="1;0.7;1" 
-                                     dur="2s" 
-                                     repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <!-- Orbiting particles -->
-                        <circle cx="50" cy="20" r="2" fill="#2563eb" opacity="0.8">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="3s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <circle cx="80" cy="50" r="1.5" fill="#f97316" opacity="0.6">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="5s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                        
-                        <circle cx="50" cy="80" r="2" fill="#10b981" opacity="0.7">
-                            <animateTransform attributeName="transform" 
-                                              type="rotate" 
-                                              values="0 50 50;360 50 50" 
-                                              dur="4s" 
-                                              repeatCount="indefinite"/>
-                        </circle>
-                    </svg>
+                    <div class="logo">
+                        <div class="logo-layers">
+                            <div class="logo-layer logo-shield">
+                                <svg viewBox="0 0 100 100">
+                                    <path d="M50 10 L80 25 L80 55 Q80 75 50 90 Q20 75 20 55 L20 25 Z" 
+                                          fill="currentColor" opacity="0.2"/>
+                                </svg>
+                            </div>
+                            <div class="logo-layer logo-lock">
+                                <svg viewBox="0 0 100 100">
+                                    <rect x="35" y="45" width="30" height="25" rx="3" 
+                                          fill="currentColor" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M40 45 V35 Q40 25 50 25 Q60 25 60 35 V45" 
+                                          fill="none" stroke="currentColor" stroke-width="3"/>
+                                    <circle cx="50" cy="57" r="3" fill="white"/>
+                                </svg>
+                            </div>
+                            <div class="logo-layer logo-data">
+                                <svg viewBox="0 0 100 100">
+                                    <rect x="25" y="20" width="2" height="8" fill="currentColor" opacity="0.6"/>
+                                    <rect x="30" y="25" width="2" height="6" fill="currentColor" opacity="0.7"/>
+                                    <rect x="35" y="22" width="2" height="9" fill="currentColor" opacity="0.5"/>
+                                    <rect x="65" y="72" width="2" height="8" fill="currentColor" opacity="0.6"/>
+                                    <rect x="70" y="75" width="2" height="6" fill="currentColor" opacity="0.7"/>
+                                    <rect x="75" y="73" width="2" height="9" fill="currentColor" opacity="0.5"/>
+                                </svg>
+                            </div>
+                            <div class="logo-pulse"></div>
+                        </div>
+                    </div>
                     <div class="brand-text">
-                        <div class="brand-name">OBSCURA</div>
-                        <div class="brand-tagline" data-i18n="header.tagline">Advanced Steganography</div>
+                        <div class="brand-name">CRYPTURA</div>
+                        <div class="brand-tagline">STEGANOGRAPHY & ENCRYPTION</div>
                     </div>
                 </div>
                 
                 <div class="header-actions">
+                    <div class="status-badge">
+                        <div class="status-dot"></div>
+                        <span>Sécurisé</span>
+                    </div>
+                    
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-sun"></i>
+                        <span class="toggle-text">Light</span>
+                    </button>
+                    
                     <div class="language-selector">
                         <button class="language-toggle" id="language-toggle">
-                            <i class="fas fa-globe"></i>
-                            <span class="toggle-text" id="current-language">FR</span>
+                            <div class="language-flag fr"></div>
+                            <span>FR</span>
+                            <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="language-dropdown" id="language-dropdown">
                             <div class="language-option active" data-lang="fr">
@@ -122,21 +90,11 @@
                             </div>
                         </div>
                     </div>
-                    <!-- ADD THIS THEME TOGGLE -->
-                    <button class="theme-toggle" id="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                        <span class="toggle-text" data-i18n="theme.dark">Dark</span>
-                    </button>
-                    
-                    <div class="status-badge">
-                        <div class="status-dot"></div>
-                        <span data-i18n="header.status">Système actif</span>
-                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Modern Navigation -->
+        <!-- Navigation Simplifiée -->
         <nav class="nav-container">
             <div class="nav-content">
                 <div class="nav-tabs">
@@ -144,17 +102,20 @@
                         <i class="fas fa-shield-alt"></i>
                         <span data-i18n="nav.encode">Encoder</span>
                     </button>
+                    
                     <button class="nav-tab" data-tab="decode">
                         <i class="fas fa-search"></i>
                         <span data-i18n="nav.decode">Décoder</span>
                     </button>
-                    <button class="nav-tab" data-tab="ultracrypte">
+                    
+                    <button class="nav-tab premium" data-tab="ultracrypte">
                         <i class="fas fa-lock"></i>
-                        <span data-i18n="nav.ultracrypte">UltraCrypte</span>
+                        <span data-i18n="nav.ultracrypte">UltraCrypte™</span>
                     </button>
+                    
                     <button class="nav-tab" data-tab="help">
-                        <i class="fas fa-info-circle"></i>
-                        <span data-i18n="nav.help">Documentation</span>
+                        <i class="fas fa-question-circle"></i>
+                        <span data-i18n="nav.help">Aide</span>
                     </button>
                 </div>
             </div>
@@ -586,7 +547,7 @@
             <div class="panel" id="help-panel">
                 <div class="panel-header">
                     <h1 class="panel-title" data-i18n="panel.help.title">Documentation</h1>
-                    <p class="panel-subtitle" data-i18n="panel.help.subtitle">Guide complet d'utilisation d'Obscura et meilleures pratiques de sécurité</p>
+                    <p class="panel-subtitle" data-i18n="panel.help.subtitle">Guide complet d'utilisation de Cryptura et meilleures pratiques de sécurité</p>
                 </div>
                 
                 <div class="help-content">
@@ -645,9 +606,9 @@
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-info">
-                    <span data-i18n="footer.copyright">© 2025 Obscura</span>
+                    <span>© 2024 Cryptura</span>
                     <span class="separator">•</span>
-                    <span data-i18n="footer.tagline">Stéganographie Professionnelle</span>
+                    <span>Stéganographie Ultra-Sécurisée</span>
                     <span class="separator">•</span>
                     <span data-i18n="footer.mode">Mode Hors-ligne</span>
                 </div>

@@ -1,2 +1,2 @@
 @echo off
-powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "C:\Users\gerar\Desktop\Obscura\autopush.ps1"
+powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "C:\Users\gerar\Desktop\Cryptura\autopush.ps1"

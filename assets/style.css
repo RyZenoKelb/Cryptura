@@ -463,37 +463,281 @@ body::before {
     gap: 0.75rem;
 }
 
+/* Logo Cryptura Animé - Design Avancé */
 .logo {
-    width: 40px;
-    height: 40px;
-    color: var(--primary-500);
+    width: 48px;
+    height: 48px;
+    position: relative;
+    cursor: pointer;
     transition: var(--transition-base);
 }
 
 .logo:hover {
     transform: scale(1.05);
+}
+
+.logo-layers {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 100px;
+}
+
+.logo-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: var(--transition-slow);
+}
+
+.logo-layer svg {
+    width: 100%;
+    height: 100%;
+    color: var(--primary-500);
+}
+
+/* Bouclier de base */
+.logo-shield {
+    z-index: 1;
+    animation: shieldPulse 4s ease-in-out infinite;
+}
+
+/* Cadenas central */
+.logo-lock {
+    z-index: 3;
+    transform: scale(0.8);
+    animation: lockFloat 3s ease-in-out infinite;
+}
+
+/* Données flottantes */
+.logo-data {
+    z-index: 2;
+    opacity: 0.7;
+    animation: dataFlow 6s linear infinite;
+}
+
+/* Pulse lumineux */
+.logo-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+    animation: pulseLuminous 2s ease-in-out infinite alternate;
+}
+
+/* Animations du logo */
+@keyframes shieldPulse {
+    0%, 100% { 
+        transform: scale(1) rotateY(0deg);
+        opacity: 0.8;
+    }
+    50% { 
+        transform: scale(1.05) rotateY(5deg);
+        opacity: 1;
+    }
+}
+
+@keyframes lockFloat {
+    0%, 100% { 
+        transform: scale(0.8) translateY(0px) rotateZ(0deg);
+    }
+    33% { 
+        transform: scale(0.85) translateY(-1px) rotateZ(1deg);
+    }
+    66% { 
+        transform: scale(0.82) translateY(1px) rotateZ(-1deg);
+    }
+}
+
+@keyframes dataFlow {
+    0% { 
+        transform: translateY(0px) rotateX(0deg);
+        opacity: 0.7;
+    }
+    25% { 
+        transform: translateY(-2px) rotateX(5deg);
+        opacity: 0.9;
+    }
+    50% { 
+        transform: translateY(0px) rotateX(0deg);
+        opacity: 0.6;
+    }
+    75% { 
+        transform: translateY(2px) rotateX(-5deg);
+        opacity: 0.8;
+    }
+    100% { 
+        transform: translateY(0px) rotateX(0deg);
+        opacity: 0.7;
+    }
+}
+
+@keyframes pulseLuminous {
+    0% { 
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.2;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.6;
+    }
+}
+
+/* Effet hover spécial pour le logo */
+.logo-container:hover .logo-shield {
+    animation-duration: 2s;
+    transform: scale(1.1) rotateY(10deg);
+}
+
+.logo-container:hover .logo-lock {
+    animation-duration: 1.5s;
+    transform: scale(0.9) translateY(-2px);
+}
+
+.logo-container:hover .logo-data {
+    animation-duration: 3s;
+    opacity: 1;
+}
+
+.logo-container:hover .logo-pulse {
+    animation-duration: 1s;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, transparent 70%);
+}
+
+/* Effet de click sur le logo */
+.logo-container:active .logo {
+    transform: scale(0.95);
+    filter: brightness(1.2);
+}
+
+.logo-container:active .logo-layers {
+    transform: rotateY(15deg) rotateX(5deg);
+}
+
+/* Animations au chargement */
+.logo-container {
+    animation: logoEntrance 0.8s ease-out;
+}
+
+@keyframes logoEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive pour le logo */
+@media (max-width: 768px) {
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .logo-layers {
+        perspective: 80px;
+    }
+}
+
+/* Thème sombre pour le logo */
+[data-theme="dark"] .logo-layer svg {
+    color: var(--primary-400);
+}
+
+[data-theme="dark"] .logo-pulse {
+    background: radial-gradient(circle, rgba(96, 165, 250, 0.4) 0%, transparent 70%);
+}
+
+/* Thème clair pour le logo */
+[data-theme="light"] .logo-layer svg {
     color: var(--primary-600);
+}
+
+[data-theme="light"] .logo-pulse {
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.3) 0%, transparent 70%);
+}
+
+/* Amélioration du texte de marque - COULEURS CORRIGÉES */
+.brand-name {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: 'Inter', system-ui, sans-serif;
+    
+    /* Dégradé épuré bleu/gris uniquement */
+    background: linear-gradient(
+        135deg,
+        var(--primary-500) 0%,
+        var(--primary-600) 25%,
+        var(--text-primary) 50%,
+        var(--primary-700) 75%,
+        var(--primary-500) 100%
+    );
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: brandShimmerSubtle 6s ease-in-out infinite;
+    
+    /* Ombre très discrète */
+    filter: drop-shadow(0 1px 2px rgba(59, 130, 246, 0.2));
+    
+    /* Transition pour les interactions */
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+/* Animation subtile pour le dégradé */
+@keyframes brandShimmerSubtle {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: drop-shadow(0 1px 2px rgba(59, 130, 246, 0.2));
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: drop-shadow(0 1px 3px rgba(59, 130, 246, 0.3));
+    }
+}
+
+/* Effet hover discret pour le logo */
+.logo-container:hover .brand-name {
+    transform: scale(1.01);
+    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+    animation-duration: 3s;
+}
+
+.brand-tagline {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.8;
+    animation: taglineFade 4s ease-in-out infinite;
+}
+
+@keyframes taglineFade {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
 }
 
 .brand-text {
     display: flex;
     flex-direction: column;
     line-height: 1.2;
-}
-
-.brand-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.025em;
-}
-
-.brand-tagline {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* Header Actions with theme toggle */
@@ -736,41 +980,72 @@ body::before {
 
 /* Modern Navigation - Better Integration */
 .nav-container {
-    background: rgba(var(--bg-white-rgb), 0.98);
-    backdrop-filter: blur(20px);
+    background: var(--bg-white);
     border-bottom: 1px solid var(--border-light);
-    padding: 0;
-    transition: var(--transition-base);
+    padding: 0.75rem 0;
     position: fixed;
-    top: 64px; /* Reduced from 80px */
+    top: 64px;
     left: 0;
     right: 0;
     z-index: 99;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    /* Suppression de l'ombre trop visible */
 }
 
-/* Navigation theme consistency */
+/* Navbar transparente au scroll */
+.nav-container.scrolled {
+    background: rgba(var(--bg-white-rgb), 0.8);
+    backdrop-filter: blur(50px);
+    border-bottom-color: rgba(var(--border-light-rgb), 0.5);
+}
+
+/* Variables RGB pour les bordures */
+:root,
+:root[data-theme="dark"] {
+    --border-light-rgb: 51, 65, 85;
+}
+
+:root[data-theme="light"] {
+    --border-light-rgb: 226, 232, 240;
+}
+
+/* Thème sombre pour la navbar */
 [data-theme="dark"] .nav-container {
-    background: rgba(15, 23, 42, 0.98);
-    border-bottom-color: #334155;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: var(--bg-white);
+    border-bottom-color: var(--border-light);
 }
 
+[data-theme="dark"] .nav-container.scrolled {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom-color: rgba(51, 65, 85, 0.5);
+}
+
+/* Thème clair pour la navbar */
 [data-theme="light"] .nav-container {
-    background: rgba(255, 255, 255, 0.98);
-    border-bottom-color: #e2e8f0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: var(--bg-white);
+    border-bottom-color: var(--border-light);
+}
+
+[data-theme="light"] .nav-container.scrolled {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    border-bottom-color: rgba(226, 232, 240, 0.5);
 }
 
 .nav-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1.5rem;
+    display: flex;
+    justify-content: center;
 }
 
 .nav-tabs {
     display: flex;
-    gap: 0;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -780,67 +1055,144 @@ body::before {
     display: none;
 }
 
+/* Onglets épurés et minimalistes */
 .nav-tab {
-    background: none;
-    border: none;
-    padding: 1rem 1.5rem;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: var(--transition-base);
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
     white-space: nowrap;
+    min-width: 100px;
+    justify-content: center;
     position: relative;
-    border-bottom: 3px solid transparent;
 }
 
-.nav-tab::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.08), transparent);
-    transition: left 0.6s ease-in-out;
-}
-
-.nav-tab:hover::before {
-    left: 100%;
-}
-
-.nav-tab:hover {
-    color: var(--text-primary);
-    background: rgba(var(--bg-gray-rgb), 0.5);
-    transform: translateY(-1px);
-}
-
-.nav-tab.active {
-    color: var(--primary-500);
-    border-bottom-color: var(--primary-500);
-    background: rgba(59, 130, 246, 0.05);
-    position: relative;
-    font-weight: 600;
-}
-
-.nav-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 6px;
-    background: var(--primary-500);
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
-}
-
+/* Icônes des onglets */
 .nav-tab i {
     font-size: 1rem;
+    transition: var(--transition-base);
+}
+
+/* États des onglets - Hover épuré */
+.nav-tab:hover {
+    background: var(--bg-gray);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.nav-tab:hover i {
+    color: var(--text-primary);
+}
+
+/* Onglet actif - Style épuré */
+.nav-tab.active {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: white;
+}
+
+.nav-tab.active i {
+    color: white;
+}
+
+/* UltraCrypte avec la MÊME couleur que les autres */
+.nav-tab.premium {
+    /* Suppression de tous les styles spéciaux orange */
+}
+
+.nav-tab.premium:not(.active) {
+    /* Même style que les autres onglets */
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-secondary);
+}
+
+.nav-tab.premium:not(.active):hover {
+    /* Même hover que les autres */
+    background: var(--bg-gray);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.nav-tab.premium.active {
+    /* Même actif que les autres */
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+    color: white;
+}
+
+/* SUPPRESSION COMPLÈTE du badge PRO */
+.nav-tab.premium::after {
+    display: none !important;
+}
+
+/* Responsive pour la navbar épurée */
+@media (max-width: 1024px) {
+    .nav-tabs {
+        gap: 0.25rem;
+    }
+    
+    .nav-tab {
+        min-width: 90px;
+        padding: 0.625rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-content {
+        padding: 0 1rem;
+    }
+    
+    .nav-tabs {
+        gap: 0.25rem;
+        justify-content: flex-start;
+    }
+    
+    .nav-tab {
+        min-width: 70px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .nav-tab span {
+        display: none; /* Cache le texte sur mobile */
+    }
+    
+    .nav-tab i {
+        font-size: 0.9rem;
+    }
+    
+    .nav-tab.premium::after {
+        top: -3px;
+        right: -3px;
+        font-size: 0.45rem;
+        padding: 0.05rem 0.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0.5rem 0;
+    }
+    
+    .nav-tab {
+        min-width: 60px;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    .nav-tab i {
+        font-size: 0.85rem;
+    }
 }
 
 /* Main Content */
@@ -1165,15 +1517,43 @@ body::before {
 .btn-secondary {
     background: var(--bg-white);
     color: var(--text-primary);
-    border-color: var(--border-medium);
+    border: 2px solid var(--border-medium);
     box-shadow: var(--shadow-sm);
+    font-weight: 600;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: var(--bg-gray);
-    border-color: var(--border-medium);
+    background: var(--primary-50);
+    border-color: var(--primary-500);
+    color: var(--primary-700);
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
+}
+
+/* Correction spécifique pour le thème sombre */
+[data-theme="dark"] .btn-secondary {
+    background: var(--gray-700);
+    color: var(--gray-100);
+    border-color: var(--gray-600);
+}
+
+[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
+    background: var(--gray-600);
+    color: var(--gray-50);
+    border-color: var(--primary-500);
+}
+
+/* Correction spécifique pour le thème clair */
+[data-theme="light"] .btn-secondary {
+    background: var(--gray-50);
+    color: var(--gray-900);
+    border-color: var(--gray-300);
+}
+
+[data-theme="light"] .btn-secondary:hover:not(:disabled) {
+    background: var(--primary-50);
+    color: var (--primary-700);
+    border-color: var(--primary-500);
 }
 
 .btn-success {
@@ -1391,7 +1771,7 @@ body::before {
 .ultra-info {
     background: var(--bg-white);
     border: 1px solid var(--orange-500);
-    border-radius: var(--radius-xl);
+    border-radius: var (--radius-xl);
     padding: 2rem;
     box-shadow: var(--shadow-sm);
 }
@@ -1606,7 +1986,7 @@ body::before {
 
 .message.info {
     background: rgba(59, 130, 246, 0.15);
-    color: var(--info);
+    color: var (--info);
     border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
@@ -2039,7 +2419,7 @@ body::before {
     color: var(--text-muted);
     cursor: pointer;
     padding: 0.375rem;
-    border-radius: var(--radius-sm);
+    border-radius: var (--radius-sm);
     transition: var(--transition-base);
     width: 2rem;
     height: 2rem;
@@ -2229,6 +2609,74 @@ body::before {
     flex-shrink: 0;
 }
 
+.ultra-btn.btn-secondary {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-medium) !important;
+    box-shadow: var(--shadow-sm) !important;
+    font-weight: 600 !important;
+}
+
+.ultra-btn.btn-secondary:hover:not(:disabled) {
+    background: var(--primary-50) !important;
+    border-color: var(--primary-500) !important;
+    color: var(--primary-700) !important;
+    box-shadow: var(--shadow-md) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Correction spécifique pour le thème sombre - Boutons uniformes */
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .ultra-btn.btn-secondary,
+[data-theme="dark"] #ultra-decrypt {
+    background: var(--gray-700) !important;
+    color: var(--gray-100) !important;
+    border-color: var(--gray-600) !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover:not(:disabled),
+[data-theme="dark"] .ultra-btn.btn-secondary:hover:not(:disabled),
+[data-theme="dark"] #ultra-decrypt:hover:not(:disabled) {
+    background: var(--gray-600) !important;
+    color: var(--gray-50) !important;
+    border-color: var(--primary-500) !important;
+}
+
+/* Correction spécifique pour le thème clair - Boutons uniformes */
+[data-theme="light"] .btn-secondary,
+[data-theme="light"] .ultra-btn.btn-secondary,
+[data-theme="light"] #ultra-decrypt {
+    background: var(--gray-50) !important;
+    color: var(--gray-900) !important;
+    border-color: var(--gray-300) !important;
+}
+
+[data-theme="light"] .btn-secondary:hover:not(:disabled),
+[data-theme="light"] .ultra-btn.btn-secondary:hover:not(:disabled),
+[data-theme="light"] #ultra-decrypt:hover:not(:disabled) {
+    background: var(--primary-50) !important;
+    color: var(--primary-700) !important;
+    border-color: var(--primary-500) !important;
+}
+
+/* Suppression des styles spécifiques UltraCrypte qui causaient la différence */
+.ultra-btn.btn-secondary {
+    background: var(--bg-gray);
+    color: var(--text-primary);
+    border: 2px solid var(--orange-500);
+    font-weight: 600;
+}
+
+.ultra-btn.btn-secondary:hover:not(:disabled) {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--orange-600);
+    border-color: var(--orange-600);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* Suppression des surcharges précédentes - les styles uniformes prennent le dessus */
+
 /* Responsive pour UltraCrypte */
 @media (max-width: 1024px) {
     .ultra-container {
@@ -2318,7 +2766,7 @@ body::before {
     width: 100%;
     height: 6px;
     background: var(--bg-gray);
-    border-radius: var(--radius-lg);
+    border-radius: var (--radius-lg);
     overflow: hidden;
     margin-bottom: 0.5rem;
     border: 1px solid var(--border-light);
@@ -2807,4 +3255,15 @@ body::before {
     background: var(--emerald-600);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
+}
+
+/* Amélioration des couleurs principales pour une meilleure visibilité */
+:root[data-theme="dark"] {
+    --primary-50: #1e293b;
+    --primary-900: #0f172a;
+}
+
+:root[data-theme="light"] {
+    --primary-50: #eff6ff;
+    --primary-900: #1e3a8a;
 }

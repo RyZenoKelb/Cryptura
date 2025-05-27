@@ -1,11 +1,12 @@
 // ============= APP.JS - Logique principale de l'application =============
 // Interface utilisateur et orchestration des fonctionnalités
 
-class ObscuraApp {
+class CrypturaApp {
     constructor() {
         this.version = '2.0.0';
+        this.appName = 'Cryptura';
         this.currentTab = 'encode';
-        this.currentTheme = localStorage.getItem('obscura_theme') || 'dark';
+        this.currentTheme = localStorage.getItem('cryptura_theme') || 'dark';
         this.i18n = window.i18n || null;
         this.steganographyEngine = new SteganographyEngine();
         this.ultraCrypte = new UltraCrypte();
@@ -32,6 +33,7 @@ class ObscuraApp {
         };
         
         this.init();
+        this.initScrollEffects();
     }
 
     // ========== INITIALISATION ==========
@@ -46,6 +48,8 @@ class ObscuraApp {
         this.setupNotificationSystem();
         this.setupPluginSystem();
         this.setupAdminAccess();
+        this.setupLogoAnimations();
+        this.initScrollEffects(); // CORRECTION: Méthode maintenant présente
         this.updateStats();
 
         // Affichage du panneau initial
@@ -55,7 +59,7 @@ class ObscuraApp {
         // this.i18n.updateInterface();
 
         // Message de bienvenue
-        this.showMessage(this.i18n ? this.i18n.translate('message.welcome') || 'Bienvenue dans Obscura!' : 'Bienvenue dans Obscura!', 'success');
+        this.showMessage(this.i18n ? this.i18n.translate('message.welcome') || 'Bienvenue dans Cryptura!' : 'Bienvenue dans Cryptura!', 'success');
     }
 
     setupWebWorkers() {
@@ -250,7 +254,7 @@ class ObscuraApp {
         if (theme === 'dark' || theme === 'light') {
             this.currentTheme = theme;
             document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('obscura_theme', theme);
+            localStorage.setItem('cryptura_theme', theme);
             this.updateThemeToggle();
         }
     }
@@ -302,9 +306,9 @@ class ObscuraApp {
         this.showAdminPromptHint();
         
         setTimeout(() => {
-            const code = prompt('🔑 Code d\'accès administrateur:');
+            const code = prompt('🔑 Code d\'accès administrateur Cryptura:');
             
-            if (code === 'OBSCURA') {
+            if (code === 'CRYPTURA') {
                 this.activateAdminMode();
             } else if (code !== null) { // Si pas annulé
                 this.showMessage('Code d\'accès incorrect', 'error');
@@ -320,18 +324,25 @@ class ObscuraApp {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.95);
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(30, 41, 59, 0.95));
             color: #00ff00;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            font-family: monospace;
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
             font-size: 1.2rem;
             z-index: 9999;
-            animation: pulse 1s ease-in-out 3;
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            animation: adminPulse 1s ease-in-out 3;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5), inset 0 0 20px rgba(0, 255, 0, 0.1);
+            text-align: center;
         `;
-        hint.textContent = 'ACCESS REQUESTED...';
+        hint.innerHTML = `
+            <div style="margin-bottom: 1rem;">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; animation: spin 2s linear infinite;"></i>
+            </div>
+            <div>CRYPTURA ACCESS REQUESTED...</div>
+            <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">ADMIN MODE STANDBY</div>
+        `;
         document.body.appendChild(hint);
         
         setTimeout(() => {
@@ -340,11 +351,11 @@ class ObscuraApp {
     }
 
     activateAdminMode() {
-        // Effet visuel
+        // Effet visuel amélioré
         this.showAdminActivationEffect();
         
         // Message de confirmation
-        this.showMessage('🔓 Mode administrateur activé!', 'success');
+        this.showMessage('🔓 Mode administrateur Cryptura activé!', 'success');
         
         // Charger le script admin si pas déjà fait
         setTimeout(() => {
@@ -389,19 +400,45 @@ class ObscuraApp {
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(45deg, #00ff00, #0080ff, #ff0080);
+            background: linear-gradient(45deg, 
+                rgba(59, 130, 246, 0.3), 
+                rgba(16, 185, 129, 0.3), 
+                rgba(139, 92, 246, 0.3),
+                rgba(59, 130, 246, 0.3)
+            );
+            background-size: 400% 400%;
             opacity: 0;
             z-index: 10000;
             pointer-events: none;
-            animation: adminActivation 1.5s ease-out;
+            animation: crypturaActivation 2s ease-out;
         `;
         
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes adminActivation {
-                0% { opacity: 0; transform: scale(0); }
-                50% { opacity: 0.8; transform: scale(1.1); }
-                100% { opacity: 0; transform: scale(1); }
+            @keyframes crypturaActivation {
+                0% { 
+                    opacity: 0; 
+                    transform: scale(0);
+                    background-position: 0% 50%;
+                }
+                25% { 
+                    opacity: 0.8; 
+                    transform: scale(1.1);
+                    background-position: 100% 50%;
+                }
+                50% {
+                    opacity: 1;
+                    background-position: 0% 100%;
+                }
+                75% {
+                    opacity: 0.6;
+                    background-position: 100% 0%;
+                }
+                100% { 
+                    opacity: 0; 
+                    transform: scale(1);
+                    background-position: 50% 50%;
+                }
             }
         `;
         document.head.appendChild(style);
@@ -410,7 +447,7 @@ class ObscuraApp {
         setTimeout(() => {
             if (effect.parentNode) effect.parentNode.removeChild(effect);
             if (style.parentNode) style.parentNode.removeChild(style);
-        }, 1500);
+        }, 2000);
     }
 
     setupNotificationSystem() {
@@ -425,6 +462,30 @@ class ObscuraApp {
 
     
     setupEventListeners() {
+        // Navigation principale avec animations améliorées
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const targetTab = e.currentTarget.dataset.tab;
+                
+                // Animation de click
+                this.animateTabClick(e.currentTarget);
+                
+                // Changement d'onglet avec délai pour l'animation
+                setTimeout(() => {
+                    this.switchTab(targetTab);
+                }, 150);
+            });
+            
+            // Effets au survol améliorés
+            tab.addEventListener('mouseenter', (e) => {
+                this.animateTabHover(e.currentTarget, true);
+            });
+            
+            tab.addEventListener('mouseleave', (e) => {
+                this.animateTabHover(e.currentTarget, false);
+            });
+        });
+
         // Upload zones
         document.getElementById('carrier-upload').addEventListener('click', () => {
             document.getElementById('carrier-file').click();
@@ -448,23 +509,90 @@ class ObscuraApp {
         const decodeUpload = document.getElementById('decode-upload');
         const ultraUpload = document.getElementById('ultra-file-upload');
 
+        // CORRECTION: Empêcher le double déclenchement avec une variable de contrôle
+        let fileInputBusy = false;
+
         if (carrierUpload) {
-            carrierUpload.addEventListener('click', () => document.getElementById('carrier-file').click());
+            carrierUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (fileInputBusy) return;
+                fileInputBusy = true;
+                
+                const fileInput = document.getElementById('carrier-file');
+                if (fileInput) {
+                    fileInput.click();
+                }
+                
+                // Reset du flag après un délai
+                setTimeout(() => { fileInputBusy = false; }, 500);
+            });
         }
 
         if (secretUpload) {
-            secretUpload.addEventListener('click', () => {
-                const textarea = document.getElementById('secret-text');
-                if (textarea) textarea.focus();
+            secretUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (fileInputBusy) return;
+                fileInputBusy = true;
+                
+                // Vérifier si c'est le textarea ou la zone d'upload
+                if (e.target.tagName === 'TEXTAREA') {
+                    fileInputBusy = false;
+                    return; // Laisser le textarea fonctionner normalement
+                }
+                
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.style.display = 'none';
+                fileInput.addEventListener('change', (evt) => {
+                    if (evt.target.files && evt.target.files.length > 0) {
+                        this.handleFileDrop(evt.target.files[0], 'secret');
+                    }
+                    document.body.removeChild(fileInput);
+                });
+                
+                document.body.appendChild(fileInput);
+                fileInput.click();
+                
+                setTimeout(() => { fileInputBusy = false; }, 500);
             });
         }
 
         if (decodeUpload) {
-            decodeUpload.addEventListener('click', () => document.getElementById('decode-file').click());
+            decodeUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (fileInputBusy) return;
+                fileInputBusy = true;
+                
+                const fileInput = document.getElementById('decode-file');
+                if (fileInput) {
+                    fileInput.click();
+                }
+                
+                setTimeout(() => { fileInputBusy = false; }, 500);
+            });
         }
 
         if (ultraUpload) {
-            ultraUpload.addEventListener('click', () => document.getElementById('ultra-file').click());
+            ultraUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (fileInputBusy) return;
+                fileInputBusy = true;
+                
+                const fileInput = document.getElementById('ultra-file');
+                if (fileInput) {
+                    fileInput.click();
+                }
+                
+                setTimeout(() => { fileInputBusy = false; }, 500);
+            });
         }
 
         // Boutons d'action principaux
@@ -526,26 +654,32 @@ class ObscuraApp {
             });
         }
 
-        // Gestion des changements de fichiers - CORRECTION
+        // CORRECTION: Event listeners pour les changements de fichiers - SANS DOUBLE DÉCLENCHEMENT
         const carrierFileInput = document.getElementById('carrier-file');
         const decodeFileInput = document.getElementById('decode-file');
         const ultraFileInput = document.getElementById('ultra-file');
 
         if (carrierFileInput) {
             carrierFileInput.addEventListener('change', (e) => {
-                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'carrier');
+                if (e.target.files && e.target.files.length > 0) {
+                    this.handleFileDrop(e.target.files[0], 'carrier');
+                }
             });
         }
 
         if (decodeFileInput) {
             decodeFileInput.addEventListener('change', (e) => {
-                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'decode');
+                if (e.target.files && e.target.files.length > 0) {
+                    this.handleFileDrop(e.target.files[0], 'decode');
+                }
             });
         }
 
         if (ultraFileInput) {
             ultraFileInput.addEventListener('change', (e) => {
-                if (e.target.files[0]) this.handleFileDrop(e.target.files[0], 'ultra');
+                if (e.target.files && e.target.files.length > 0) {
+                    this.handleFileDrop(e.target.files[0], 'ultra');
+                }
             });
         }
 
@@ -565,6 +699,238 @@ class ObscuraApp {
                 this.updateOptionsInfo();
             });
         });
+    }
+
+    // Nouvelle méthode pour animer le click sur les onglets
+    animateTabClick(tab) {
+        const icon = tab.querySelector('.tab-icon');
+        const content = tab.querySelector('.tab-content');
+        
+        if (icon && content) {
+            // Animation de rebond
+            icon.style.transform = 'scale(0.9)';
+            content.style.transform = 'translateY(2px)';
+            
+            setTimeout(() => {
+                icon.style.transform = '';
+                content.style.transform = '';
+            }, 150);
+        }
+        
+        // Effet de vague
+        this.createRippleEffect(tab);
+    }
+
+    // Nouvelle méthode pour les effets de survol
+    animateTabHover(tab, isEntering) {
+        const icon = tab.querySelector('.tab-icon');
+        const subtitle = tab.querySelector('.tab-subtitle');
+        
+        if (isEntering) {
+            if (icon) {
+                icon.style.transform = 'scale(1.05) rotate(5deg)';
+            }
+            if (subtitle) {
+                subtitle.style.transform = 'translateY(-1px)';
+                subtitle.style.opacity = '1';
+            }
+        } else {
+            if (icon) {
+                icon.style.transform = '';
+            }
+            if (subtitle) {
+                subtitle.style.transform = '';
+                if (!tab.classList.contains('active')) {
+                    subtitle.style.opacity = '';
+                }
+            }
+        }
+    }
+
+    // Effet de vague (ripple) au click
+    createRippleEffect(element) {
+        const ripple = document.createElement('div');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        
+        ripple.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: ${size}px;
+            height: ${size}px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            animation: ripple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        // Ajouter l'animation CSS
+        if (!document.querySelector('#ripple-animation')) {
+            const style = document.createElement('style');
+            style.id = 'ripple-animation';
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: translate(-50%, -50%) scale(2);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        element.style.position = 'relative';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
+    }
+
+    // Amélioration de la méthode switchTab
+    switchTab(tabName) {
+        // Mise à jour des onglets avec animation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            const isActive = tab.dataset.tab === tabName;
+            
+            // Animation de sortie pour l'onglet précédent
+            if (tab.classList.contains('active') && !isActive) {
+                this.animateTabDeactivation(tab);
+            }
+            
+            tab.classList.toggle('active', isActive);
+            
+            // Animation d'entrée pour le nouvel onglet
+            if (isActive) {
+                this.animateTabActivation(tab);
+            }
+        });
+
+        // Animation des panneaux
+        this.animatePanelTransition(tabName);
+        
+        this.currentTab = tabName;
+        this.onPanelChange(tabName);
+    }
+
+    // Animation d'activation d'onglet
+    animateTabActivation(tab) {
+        const icon = tab.querySelector('.tab-icon');
+        const indicator = tab.querySelector('.tab-indicator');
+        
+        if (icon) {
+            icon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                icon.style.transform = 'scale(1.1)';
+            }, 200);
+        }
+        
+        if (indicator) {
+            indicator.style.width = '0';
+            setTimeout(() => {
+                indicator.style.width = 'calc(100% - 2rem)';
+            }, 100);
+        }
+        
+        // Effet de glow
+        this.createGlowEffect(tab);
+    }
+
+    // Animation de désactivation d'onglet
+    animateTabDeactivation(tab) {
+        const icon = tab.querySelector('.tab-icon');
+        const indicator = tab.querySelector('.tab-indicator');
+        
+        if (icon) {
+            icon.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                icon.style.transform = '';
+            }, 200);
+        }
+        
+        if (indicator) {
+            indicator.style.width = '0';
+        }
+    }
+
+    // Effet de glow pour l'onglet actif
+    createGlowEffect(tab) {
+        const glow = document.createElement('div');
+        glow.style.cssText = `
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.2) 0%, 
+                rgba(99, 102, 241, 0.2) 50%, 
+                rgba(139, 92, 246, 0.2) 100%);
+            border-radius: 18px;
+            opacity: 0;
+            animation: glowPulse 2s ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        `;
+        
+        // Ajouter l'animation CSS si elle n'existe pas
+        if (!document.querySelector('#glow-animation')) {
+            const style = document.createElement('style');
+            style.id = 'glow-animation';
+            style.textContent = `
+                @keyframes glowPulse {
+                    0% { opacity: 0; transform: scale(0.8); }
+                    50% { opacity: 1; transform: scale(1.05); }
+                    100% { opacity: 0; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        tab.style.position = 'relative';
+        tab.insertBefore(glow, tab.firstChild);
+        
+        setTimeout(() => {
+            if (glow.parentNode) {
+                glow.parentNode.removeChild(glow);
+            }
+        }, 2000);
+    }
+
+    // Animation de transition des panneaux
+    animatePanelTransition(newPanelName) {
+        const currentPanel = document.querySelector('.panel.active');
+        const newPanel = document.getElementById(`${newPanelName}-panel`);
+        
+        if (currentPanel && newPanel && currentPanel !== newPanel) {
+            // Animation de sortie
+            currentPanel.style.opacity = '0';
+            currentPanel.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                currentPanel.classList.remove('active');
+                currentPanel.style.opacity = '';
+                currentPanel.style.transform = '';
+                
+                // Animation d'entrée
+                newPanel.classList.add('active');
+                newPanel.style.opacity = '0';
+                newPanel.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    newPanel.style.opacity = '1';
+                    newPanel.style.transform = 'translateY(0)';
+                }, 50);
+            }, 150);
+        } else if (newPanel) {
+            // Premier affichage
+            newPanel.classList.add('active');
+        }
     }
 
     setupDragAndDrop() {
@@ -601,7 +967,6 @@ class ObscuraApp {
                     else if (zoneId === 'decode-upload') type = 'decode';
 
                     if (type) {
-                        this.handleFileDrop(files[0], type);
                     }
                 }
             });
@@ -637,33 +1002,172 @@ class ObscuraApp {
         });
     }
 
+    setupLogoAnimations() {
+        const logoContainer = document.querySelector('.logo-container');
+        const logo = document.querySelector('.logo');
+        
+        if (logoContainer && logo) {
+            // Animation spéciale au survol
+            logoContainer.addEventListener('mouseenter', () => {
+                logo.style.filter = 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.6))';
+            });
+            
+            logoContainer.addEventListener('mouseleave', () => {
+                logo.style.filter = 'none';
+            });
+            
+            // Effet de click avec feedback visuel
+            logoContainer.addEventListener('mousedown', () => {
+                logo.style.transform = 'scale(0.9)';
+                logo.style.filter = 'brightness(1.3) drop-shadow(0 0 30px rgba(59, 130, 246, 0.8))';
+            });
+            
+            logoContainer.addEventListener('mouseup', () => {
+                logo.style.transform = '';
+                logo.style.filter = 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.6))';
+            });
+        }
+    }
+
     // ========== GESTION DES ONGLETS ==========
 
     switchTab(tabName) {
-        // Masquer tous les panels
-        document.querySelectorAll('.panel').forEach(panel => {
-            panel.classList.remove('active');
-        });
-        
-        // Masquer toutes les barres de progression actives
-        document.querySelectorAll('.progress-container.active').forEach(progress => {
-            progress.classList.remove('active');
-            progress.style.display = 'none';
-        });
-        
-        // Désactiver tous les onglets
+        // Mise à jour des onglets avec animation
         document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.classList.remove('active');
+            const isActive = tab.dataset.tab === tabName;
+            
+            // Animation de sortie pour l'onglet précédent
+            if (tab.classList.contains('active') && !isActive) {
+                this.animateTabDeactivation(tab);
+            }
+            
+            tab.classList.toggle('active', isActive);
+            
+            // Animation d'entrée pour le nouvel onglet
+            if (isActive) {
+                this.animateTabActivation(tab);
+            }
         });
+
+        // Animation des panneaux
+        this.animatePanelTransition(tabName);
         
-        // Activer l'onglet et le panel correspondants
-        const targetPanel = document.getElementById(`${tabName}-panel`);
-        const targetTab = document.querySelector(`[data-tab="${tabName}"]`);
+        this.currentTab = tabName;
+        this.onPanelChange(tabName);
+    }
+
+    // Animation d'activation d'onglet
+    animateTabActivation(tab) {
+        const icon = tab.querySelector('.tab-icon');
+        const indicator = tab.querySelector('.tab-indicator');
         
-        if (targetPanel && targetTab) {
-            targetPanel.classList.add('active');
-            targetTab.classList.add('active');
-            this.currentTab = tabName;
+        if (icon) {
+            icon.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                icon.style.transform = 'scale(1.1)';
+            }, 200);
+        }
+        
+        if (indicator) {
+            indicator.style.width = '0';
+            setTimeout(() => {
+                indicator.style.width = 'calc(100% - 2rem)';
+            }, 100);
+        }
+        
+        // Effet de glow
+        this.createGlowEffect(tab);
+    }
+
+    // Animation de désactivation d'onglet
+    animateTabDeactivation(tab) {
+        const icon = tab.querySelector('.tab-icon');
+        const indicator = tab.querySelector('.tab-indicator');
+        
+        if (icon) {
+            icon.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                icon.style.transform = '';
+            }, 200);
+        }
+        
+        if (indicator) {
+            indicator.style.width = '0';
+        }
+    }
+
+    // Effet de glow pour l'onglet actif
+    createGlowEffect(tab) {
+        const glow = document.createElement('div');
+        glow.style.cssText = `
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, 
+                rgba(59, 130, 246, 0.2) 0%, 
+                rgba(99, 102, 241, 0.2) 50%, 
+                rgba(139, 92, 246, 0.2) 100%);
+            border-radius: 18px;
+            opacity: 0;
+            animation: glowPulse 2s ease-in-out;
+            pointer-events: none;
+            z-index: 0;
+        `;
+        
+        // Ajouter l'animation CSS si elle n'existe pas
+        if (!document.querySelector('#glow-animation')) {
+            const style = document.createElement('style');
+            style.id = 'glow-animation';
+            style.textContent = `
+                @keyframes glowPulse {
+                    0% { opacity: 0; transform: scale(0.8); }
+                    50% { opacity: 1; transform: scale(1.05); }
+                    100% { opacity: 0; transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        tab.style.position = 'relative';
+        tab.insertBefore(glow, tab.firstChild);
+        
+        setTimeout(() => {
+            if (glow.parentNode) {
+                glow.parentNode.removeChild(glow);
+            }
+        }, 2000);
+    }
+
+    // Animation de transition des panneaux
+    animatePanelTransition(newPanelName) {
+        const currentPanel = document.querySelector('.panel.active');
+        const newPanel = document.getElementById(`${newPanelName}-panel`);
+        
+        if (currentPanel && newPanel && currentPanel !== newPanel) {
+            // Animation de sortie
+            currentPanel.style.opacity = '0';
+            currentPanel.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                currentPanel.classList.remove('active');
+                currentPanel.style.opacity = '';
+                currentPanel.style.transform = '';
+                
+                // Animation d'entrée
+                newPanel.classList.add('active');
+                newPanel.style.opacity = '0';
+                newPanel.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    newPanel.style.opacity = '1';
+                    newPanel.style.transform = 'translateY(0)';
+                }, 50);
+            }, 150);
+        } else if (newPanel) {
+            // Premier affichage
+            newPanel.classList.add('active');
         }
     }
 
@@ -1227,7 +1731,7 @@ class ObscuraApp {
         const signatures = [];
         const dataStr = new TextDecoder('utf-8', { fatal: false }).decode(data);
         
-        if (dataStr.includes('OBSCURA')) {
+        if (dataStr.includes('CRYPTURA')) {
             signatures.push('METADATA_MARKER');
         }
         
@@ -2069,7 +2573,7 @@ class ObscuraApp {
         this.showMessage(`${message} (${context})`, 'error');
         
         // Log détaillé pour le debug
-        if (localStorage.getItem('obscura_debug') === 'true') {
+        if (localStorage.getItem('cryptura_debug') === 'true') {
             console.group('🔍 Debug Error Details');
             console.log('Context:', context);
             console.log('Error Object:', error);
@@ -2295,17 +2799,17 @@ class ObscuraApp {
         // Vérification de sécurité pour éviter les erreurs
         if (!originalFile || !originalFile.name) {
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-            return `obscura_encoded_${method}_${timestamp}.bin`;
+            return `cryptura_encoded_${method}_${timestamp}.bin`;
         }
 
         try {
             const baseName = originalFile.name.replace(/\.[^.]+$/, '');
             const extension = originalFile.name.split('.').pop();
-            return `${baseName}_obscura_${method}.${extension}`;
+            return `${baseName}_cryptura_${method}.${extension}`;
         } catch (error) {
             console.warn('Erreur génération nom de fichier:', error);
             const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
-            return `obscura_encoded_${method}_${timestamp}.bin`;
+            return `cryptura_encoded_${method}_${timestamp}.bin`;
         }
     }
 
@@ -2377,12 +2881,62 @@ class ObscuraApp {
         if (statsElement) {
             statsElement.textContent = `${this.filesProcessed} fichiers traités`;
         }
+        
+        // Mise à jour du titre de la page
+        document.title = `Cryptura - ${this.filesProcessed} fichiers traités`;
     }
 
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    // MÉTHODE MANQUANTE AJOUTÉE
+    initScrollEffects() {
+        // Effet de parallaxe et d'animation au scroll
+        let lastScrollY = 0;
+        let ticking = false;
+
+        const updateScrollEffects = () => {
+            const currentScrollY = window.scrollY;
+            const navbar = document.querySelector('.nav-container');
+            
+            // Effet de navbar au scroll
+            if (navbar) {
+                if (currentScrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            }
+
+            // Animation des éléments visibles
+            const animateElements = document.querySelectorAll('.card, .form-section, .upload-zone');
+            animateElements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+                
+                if (isVisible && !element.classList.contains('animate-in')) {
+                    element.classList.add('animate-in');
+                }
+            });
+
+            lastScrollY = currentScrollY;
+            ticking = false;
+        };
+
+        const requestScrollUpdate = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateScrollEffects);
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+        
+        // Exécution initiale
+        updateScrollEffects();
     }
 }
 
@@ -2391,13 +2945,13 @@ class ObscuraApp {
 // Initialisation de l'application au chargement du DOM
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        window.app = new ObscuraApp();
+        window.app = new CrypturaApp();
     } catch (error) {
         console.error('Erreur d\'initialisation:', error);
         document.body.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: Inter, sans-serif;">
                 <h1 style="color: #ef4444; margin-bottom: 1rem;">⚠️ Erreur d'initialisation</h1>
-                <p style="color: #64748b; margin-bottom: 2rem;">Impossible de charger l'application Obscura</p>
+                <p style="color: #64748b; margin-bottom: 2rem;">Impossible de charger l'application Cryptura</p>
                 <button onclick="location.reload()" style="padding: 0.75rem 1.5rem; background: #3b82f6; color: white; border: none; border-radius: 0.5rem; cursor: pointer;">
                     🔄 Recharger la page
                 </button>
@@ -2409,13 +2963,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // Gestion des erreurs globales
 window.addEventListener('error', (e) => {
     if (window.app) {
-        window.app.handleError(e.error, 'l\'application');
+        window.app.handleError(e.error, 'Cryptura');
     }
 });
 
 window.addEventListener('unhandledrejection', (e) => {
     if (window.app) {
-        window.app.handleError({ message: e.reason }, 'promesse asynchrone');
+        window.app.handleError({ message: e.reason }, 'Cryptura promesse asynchrone');
     }
     e.preventDefault();
 });
@@ -2423,5 +2977,5 @@ window.addEventListener('unhandledrejection', (e) => {
 // ========== EXPORT ==========
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = ObscuraApp;
+    module.exports = CrypturaApp;
 }
