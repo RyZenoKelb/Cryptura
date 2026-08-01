@@ -1,165 +1,79 @@
-# 🛡️ CRYPTURA - Stéganographie Ultra-Sécurisée
+# Cryptura
 
-**Cryptura** est une solution avancée de stéganographie et de chiffrement qui permet de dissimuler des données sensibles dans des fichiers multimédias avec une sécurité maximale.
+Cryptura is an experimental browser-based project focused on encryption, steganography and local file processing.
 
-## 📋 Table des Matières
+The project was created to explore how data can be transformed, encrypted and embedded inside digital files using web technologies.
 
-- [🌟 Fonctionnalités Principales](#-fonctionnalités-principales)
-- [🚀 Démarrage Rapide](#-démarrage-rapide)
-- [📁 Structure du Projet](#-structure-du-projet)
-- [🔧 Configuration Avancée](#-configuration-avancée)
-- [🛡️ Sécurité](#-sécurité)
-- [📊 Formats Supportés](#-formats-supportés)
-- [🌐 Compatibilité](#-compatibilité)
-- [⚡ Performances](#-performances)
-- [🔍 Analyse Forensique](#-analyse-forensique)
-- [🎨 Personnalisation](#-personnalisation)
-- [📈 Statistiques](#-statistiques)
-- [🔒 Respect de la Vie Privée](#-respect-de-la-vie-privée)
-- [🛠️ Support Technique](#-support-technique)
-- [📄 Licence](#-licence)
+## Overview
 
-## 🌟 Fonctionnalités Principales
+Cryptura includes several experimental features:
 
-### 🔐 Stéganographie Avancée
-- **LSB (Least Significant Bit)** - Dissimulation dans les pixels d'images
-- **Métadonnées** - Injection dans les métadonnées de fichiers
-- **Audio Spread Spectrum** - Dispersion dans le spectre audio
-- **Video Frame Injection** - Insertion dans les frames vidéo
-- **Document Hiding** - Camouflage dans les documents
+- Text and file encryption
+- Image-based data hiding
+- Metadata processing
+- Local file analysis
+- Entropy and pattern inspection
+- Dark and light themes
+- French and English interface
+- Drag-and-drop file handling
 
-### 🛡️ Chiffrement Multi-Niveaux
-- **AES-256-GCM** - Chiffrement standard militaire
-- **UltraCrypte™** - Chiffrement post-quantique exclusif
-- **Déni plausible** - Protection contre la coercition
-- **Compression** - Optimisation de l'espace
+All processing is performed locally in the browser.
 
-### 🎯 Interface Intuitive
-- **Mode Sombre/Clair** - Confort visuel adaptatif
-- **Multilingue** - Français et Anglais
-- **Drag & Drop** - Glisser-déposer simplifié
-- **Analyse Forensique** - Détection de stéganographie
+## Technologies
 
-## 🚀 Démarrage Rapide
+- JavaScript
+- HTML
+- CSS
+- Web Crypto API
+- File API
+- Canvas API
+- Web Workers
 
-1. **Ouvrez** `index.html` dans votre navigateur
-2. **Sélectionnez** un fichier porteur (image, audio, vidéo)
-3. **Saisissez** votre message secret ou fichier à cacher
-4. **Choisissez** vos paramètres de sécurité
-5. **Cliquez** sur "Encoder" et téléchargez le résultat
+## Technical concepts explored
 
-## 📁 Structure du Projet
+The project explores:
 
-```
-cryptura/
-├── index.html              # Interface principale
-├── assets/
-│   ├── style.css          # Styles et thème sombre
-│   └── logo.svg           # Logo (optionnel)
-├── js/
-│   ├── crypto.js          # Système UltraCrypte
-│   ├── steganography.js   # Moteur stéganographie
-│   ├── app.js             # Logique principale
-│   └── admin.js           # Mode backdoor admin
-├── workers/ (optionnel)
-│   └── crypto-worker.js   # Web Worker pour chiffrement
-└── README.md              # Cette documentation
-```
+- AES-GCM encryption
+- Password-based key derivation
+- Binary data manipulation
+- File encoding and decoding
+- Least Significant Bit techniques
+- Metadata extraction
+- Entropy calculation
+- Browser-based file processing
+- Asynchronous operations
 
-## 🔧 Configuration Avancée
+## Project status
 
-### Variables d'Environnement
-```javascript
-// Debug mode
-localStorage.setItem('cryptura_debug', 'true');
+Cryptura is an experimental and educational project.
 
-// Thème par défaut
-localStorage.setItem('cryptura_theme', 'dark');
-```
+It is not intended for production use or for protecting highly sensitive information.
 
-### Mode Administrateur
-- Triple-clic sur le logo Cryptura
-- Code d'accès : `CRYPTURA`
-- Accès aux fonctions avancées et statistiques
+Some features are prototypes and may require additional validation, testing and security review.
 
-## 🛡️ Sécurité
+## Security notice
 
-- **Chiffrement AES-256** avec dérivation de clé PBKDF2
-- **UltraCrypte™** résistant aux ordinateurs quantiques
-- **Détection d'intégrité** avec HMAC
-- **Effacement sécurisé** des données temporaires
+Custom cryptographic implementations should not be considered secure without independent review.
 
-## 📊 Formats Supportés
+For production systems, established cryptographic libraries, documented standards and professional security audits should be used.
 
-### Fichiers Porteurs
-- **Images** : JPG, PNG, GIF, BMP, WebP
-- **Audio** : MP3, WAV, FLAC, OGG, M4A
-- **Vidéo** : MP4, AVI, MKV, MOV, WMV
-- **Documents** : PDF, TXT, DOC, DOCX, RTF
+## Privacy
 
-### Données Secrètes
-- **Texte** : Messages jusqu'à 1M caractères
-- **Fichiers** : Tous formats jusqu'à 50MB
+- Files are processed locally
+- No file upload is required
+- No telemetry is included
+- No external storage is used
 
-## 🌐 Compatibilité
+## Repository notice
 
-- **Navigateurs** : Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Technologies** : HTML5, CSS3, ES2020, Web Crypto API
-- **Responsive** : Desktop, Tablet, Mobile
+This repository contains a private personal project.
 
-## ⚡ Performances
+The source code is shared for portfolio, recruitment and technical evaluation purposes only.
 
-- **Traitement** : Web Workers pour les gros fichiers
-- **Mémoire** : Optimisation streaming pour fichiers volumineux
-- **Vitesse** : Algorithmes optimisés GPU (WebGL)
+## License
 
-## 🔍 Analyse Forensique
+Copyright © 2026 Gabriel Sdika.
 
-- **Détection d'entropie** - Analyse statistique
-- **Signatures** - Reconnaissance de patterns
-- **Headers cachés** - Détection de fichiers intégrés
-- **Métadonnées** - Extraction d'informations
+All rights reserved.
 
-## 🎨 Personnalisation
-
-### Thèmes
-- **Sombre** : Interface optimisée pour la nuit
-- **Clair** : Mode jour avec contraste élevé
-- **Auto** : Basé sur les préférences système
-
-### Langues
-- **Français** : Interface complète
-- **English** : Full interface support
-
-## 📈 Statistiques
-
-Cryptura peut traiter :
-- Images jusqu'à **100MB**
-- Audio jusqu'à **500MB**
-- Vidéo jusqu'à **2GB**
-- Messages jusqu'à **1M caractères**
-
-## 🔒 Respect de la Vie Privée
-
-- **Aucune donnée** envoyée sur Internet
-- **Traitement local** exclusivement
-- **Pas de télémétrie** ou tracking
-- **Code source** transparent
-
-## 🛠️ Support Technique
-
-Pour toute question ou problème :
-1. Vérifiez la console développeur (F12)
-2. Activez le mode debug
-3. Consultez la documentation intégrée
-4. Utilisez l'analyse forensique pour diagnostiquer
-
-## 📄 Licence
-
-Cryptura est un logiciel libre sous licence MIT.
-Utilisation commerciale autorisée avec attribution.
-
----
-
-**Cryptura v2.0.0** - Stéganographie Ultra-Sécurisée
-🛡️ *Votre sécurité, notre priorité*
+No part of this repository may be copied, modified, distributed, published, sublicensed or used commercially without prior written permission from the author.
